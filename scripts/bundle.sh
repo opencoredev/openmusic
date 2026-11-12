@@ -14,7 +14,7 @@ mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources"
 cp "$bin/OpenMusic" "$app/Contents/MacOS/OpenMusic"
 # SwiftPM records the deployment target (15.0) as the SDK version too. macOS gives the current design
 # (Liquid Glass toolbar, floating sidebar) only to apps linked against a current SDK, so stamp the real one.
-sdk="$(xcrun --show-sdk-version)"
+sdk="$(xcrun --sdk macosx --show-sdk-version)"
 xcrun vtool -set-build-version macos 15.0 "$sdk" -replace -output "$app/Contents/MacOS/OpenMusic" "$app/Contents/MacOS/OpenMusic"
 # SwiftPM resource bundles, if any target declares resources.
 for b in "$bin"/*.bundle; do [ -e "$b" ] && cp -R "$b" "$app/Contents/Resources/"; done
