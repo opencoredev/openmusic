@@ -64,8 +64,11 @@ import Testing
         mac.ledger.answers.removeAll()
         server.remove("Made-up iPad")
         server.addAskingDevice("Made-up iPad 2", commitment: commitment, publicKey: publicKey)
-        #expect(await waitUntil { answers().count == 2 })
-        let second = try #require(answers().last)
+        // The first device's request was shown again (conflictAndShowAgain), so the Mac may answer it once more; wait
+        // for an answer to the other device rather than for "the second answer".
+        let toOther = { answers().first { $0.args["deviceId"] != first.args["deviceId"] } }
+        #expect(await waitUntil { toOther() != nil }, "answers so far: \(answers().count)")
+        let second = try #require(toOther())
         #expect(second.args["commitment"] == first.args["commitment"])
         #expect(second.args["deviceId"] != first.args["deviceId"])
         #expect(second.args["nonce"] != first.args["nonce"])
