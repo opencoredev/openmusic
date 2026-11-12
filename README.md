@@ -27,7 +27,7 @@ OpenMusic was called Medley before its first public release.
 
 | Platform | How to get it |
 | --- | --- |
-| **Windows** | Download `OpenMusic-<version>-win-x64.zip` from [Releases](https://github.com/opencoredev/openmusic/releases), extract it, and run `OpenMusic.exe` in the `OpenMusic` folder. Needs Windows 10 version 2004 or later, or Windows 11, on x64. Google sign-in needs the [WebView2 runtime](https://developer.microsoft.com/microsoft-edge/webview2/), which Windows 11 already has. |
+| **Windows** | Download `OpenMusic-<version>-windows-x64.zip` from [Releases](https://github.com/opencoredev/openmusic/releases), extract it, and run `OpenMusic.exe` in the `OpenMusic` folder. Needs Windows 10 version 2004 or later, or Windows 11, on x64. Google sign-in needs the [WebView2 runtime](https://developer.microsoft.com/microsoft-edge/webview2/), which Windows 11 already has. |
 | **Mac** | No signed build is published yet: [build it from source](CONTRIBUTING.md#mac). Needs macOS 15 or later on an Apple silicon Mac. |
 | **iPhone** | Not on the App Store, and releases include no `.ipa` yet: [build it with Xcode](iOS/README.md#install-on-your-iphone) and your own Apple ID. Needs iOS 26 or later. |
 
