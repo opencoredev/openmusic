@@ -527,7 +527,9 @@ import Testing
         server.refuseClaims(true)
         server.setLibrary(keyId: nil, rotationNeeded: false)
         let claimed = { Set(server.calls("keys:claim", by: "Leo's Mac").compactMap { $0.args["keyId"]?.stringValue }) }
-        #expect(await waitUntil { claimed().count == 1 })
+        // At least one: a repeated delivery of the same device list may already have made a second claim (with a
+        // new key, which is fine); what must never happen is a claim resending a refused key (checked below).
+        #expect(await waitUntil { claimed().count >= 1 }, "claims so far: \(claimed().count)")
         // The next device list change tries again.
         server.addAskingDevice("Leo's iPad", commitment: KeyExchange.nonce().base64EncodedString())
         #expect(await waitUntil { claimed().count >= 2 })
