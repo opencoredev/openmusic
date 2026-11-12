@@ -24,7 +24,7 @@ Download OpenMusic for macOS from [Releases](https://github.com/opencoredev/open
 
 ### Windows
 
-Download the x64 zip from [Releases](https://github.com/opencoredev/openmusic/releases), extract it anywhere and run `OpenMusic.exe`. Needs Windows 10 version 2004 or later, or Windows 11. Nothing else to install.
+Download the x64 zip from [Releases](https://github.com/opencoredev/openmusic/releases), extract it anywhere and run `OpenMusic.exe` in the `OpenMusic` folder it makes. The folder also holds `LICENSE` and `THIRD-PARTY-NOTICES.txt`, the licenses of the components it bundles. Needs Windows 10 version 2004 or later, or Windows 11. Nothing else to install.
 
 The Windows build isn't code-signed, so SmartScreen warns the first time you run it ("Windows protected your PC"). Click **More info**, then **Run anyway**. If Windows blocks the files before that, right-click the zip before extracting it, choose **Properties**, tick **Unblock** and click **OK**.
 

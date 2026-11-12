@@ -40,11 +40,14 @@ The publish folder runs as is on Windows 10 2004 (build 19041) or later and Wind
 ```bash
 scripts/windows-vm.sh build              # push windows/ to C:\medley\win and build (Debug, x64)
 scripts/windows-vm.sh publish            # Release, self-contained, to C:\medley\win\publish
+scripts/package-windows.sh               # publish, then the release zip: build/OpenMusic-<version>-windows-x64.zip
 scripts/windows-vm.sh run --play         # start it in the VM's desktop session
 scripts/windows-vm.sh shot out.png       # screenshot the VM screen
 scripts/windows-vm.sh snapshot out/      # --snapshot in the VM, PNGs copied to out/
 scripts/windows-vm.sh log                # tail the app log
 ```
+
+Every Windows release zip comes from `scripts/package-windows.sh` (`--no-publish` reuses the slot's last publish): it extracts to one `OpenMusic/` folder holding the publish, `LICENSE` and `THIRD-PARTY-NOTICES.txt`. The notices are written from the license and notice files of every package the publish contains (`windows/scripts/collect-notices.ps1` in the VM, then `scripts/windows-notices.py`), and packaging stops if a published file can't be traced to OpenMusic or to one of those packages, so a new dependency can't ship without its notice.
 
 `scripts/windows-council-shots.sh <out-dir> [--no-build] [--only demo|live|narrow]` captures every main screen in the real window (light and dark, 1440x900, plus 1024x700), cropped to the window frame, for design review: demo screens, dialogs with sample data, and a live pass with a sync probe device as a second device in a `+clerk_test` account. `scripts/windows-selftest.sh launch '<args>' -- '<command>' …` runs the Debug self-test steps one by one (`snap`, `log` and any `Services/SelfTest.cs` command).
 

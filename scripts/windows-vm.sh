@@ -9,6 +9,7 @@
 #   scripts/windows-vm.sh kill                       stop the app
 #   scripts/windows-vm.sh uia <op> <AutomationId> [text]   UI Automation in the desktop session (scripts/windows-uia.ps1):
 #                                                    click, set, text, exists, dump; prints the result, fails on ERROR
+#   scripts/windows-vm.sh vm <helper args...>       pass a command to the VM helper itself (push, pull, ps, gui, ...)
 # OPENMUSIC_VM_SLOT picks the slot (default: win). Pushed files keep the host's mtimes, which the VM reads as older than
 # its build output, so `build` touches them after each push to keep incremental builds honest (and drops build output
 # dated in the future, which a clock or time-zone jump in the VM leaves behind).
@@ -59,6 +60,7 @@ case "$cmd" in
   shot) "$W" shot "${1:?out.png}" ;;
   log) "$W" ps "Get-Content \"\$env:LOCALAPPDATA\\OpenMusic\\logs\\openmusic.log\" -Tail ${1:-40}" ;;
   kill) "$W" kill OpenMusic ;;
+  vm) "$W" "$@" ;;
   uia)
     # The script runs in the desktop session (a gui task); its answer comes back through a file.
     op="${1:?op}"; id="${2:-}"; text="${3:-}"
@@ -76,5 +78,5 @@ case "$cmd" in
     done
     echo "${out:-ERROR no answer from UI Automation}"
     [[ -n "$out" && "$out" != ERROR* ]] ;;
-  *) sed -n 2,13p "$0"; exit 2 ;;
+  *) sed -n 2,14p "$0"; exit 2 ;;
 esac
