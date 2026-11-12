@@ -1,80 +1,135 @@
-# OpenMusic
+<p align="center">
+  <img src="docs/images/icon.png" width="96" height="96" alt="OpenMusic icon">
+</p>
 
-OpenMusic (formerly Medley) is a music player for YouTube Music and Spotify on Mac, iPhone and Windows. YouTube Music works on all three. Spotify works on Mac and iPhone; Spotify on Windows is coming.
+<h1 align="center">OpenMusic</h1>
 
-Each app is written for its platform: SwiftUI on the Mac and iPhone, WinUI 3 on Windows. The Apple apps have no third-party dependencies.
+<p align="center">
+  One native player for your YouTube Music and Spotify libraries, on Mac, iPhone and Windows.<br>
+  Free and open source. In beta.
+</p>
 
-## What it does
+<p align="center">
+  <a href="https://github.com/opencoredev/openmusic/releases"><img alt="Latest release" src="https://img.shields.io/github/v/release/opencoredev/openmusic?include_prereleases&label=release"></a>
+  <a href="https://github.com/opencoredev/openmusic/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/opencoredev/openmusic/actions/workflows/ci.yml/badge.svg?branch=main"></a>
+  <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/github/license/opencoredev/openmusic"></a>
+  <img alt="Platforms: macOS, iOS, Windows" src="https://img.shields.io/badge/platforms-macOS%20%7C%20iOS%20%7C%20Windows-555">
+</p>
 
-- Home, New (new releases, moods and genres, charts), search with live suggestions and scopes, album, artist and playlist pages.
-- Your library when signed in: liked songs, songs, albums, artists, playlists, recently played. Like, save, follow, create and edit playlists.
-- A real queue: Play Next, Add to Queue, drag to reorder, shuffle, repeat, autoplay radio when the queue runs out, sleep timer.
-- Synced lyrics in a side panel and in the full-screen player. YouTube Music's own lyrics come first, then LRCLIB.
-- System media controls: media keys, Control Center, the lock screen, AirPods, the Windows media flyout.
-- Mini player, keyboard shortcuts, light and dark mode.
-- Handoff between devices: pick up on your iPhone what your Mac was playing, send playback to another device, or control it from here.
-- Sync of settings, recent searches and service sign-ins across your devices, end-to-end encrypted. The sync server sees when you play and pause, never what you play.
-- Sync is optional, and you can run your own sync server.
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/hero-dark.webp">
+  <img src="docs/images/hero-light.webp" alt="OpenMusic on a Mac showing Home, with Now Playing on an iPhone beside it">
+</picture>
 
-## Install
+OpenMusic was called Medley before its first public release.
 
-### Mac
+## Download
 
-Download OpenMusic for macOS from [Releases](https://github.com/opencoredev/openmusic/releases), open it and move OpenMusic to Applications. The Mac builds attached to releases are signed with a Developer ID and notarized by Apple, so macOS opens them without a warning; that signing happens outside this repository's scripts. A release without a Mac build means the signed build isn't ready yet: build it from source meanwhile. Needs macOS 15 or later on an Apple silicon Mac.
+| Platform | How to get it | Needs |
+| --- | --- | --- |
+| Windows | Download `OpenMusic-<version>-win-x64.zip` from [Releases](https://github.com/opencoredev/openmusic/releases), extract it, and run `OpenMusic.exe` in the `OpenMusic` folder. | Windows 10 version 2004 or later, or Windows 11, on x64. Google sign-in needs the [WebView2 runtime](https://developer.microsoft.com/microsoft-edge/webview2/), which Windows 11 already has. |
+| Mac | No signed build is published yet. [Build it from source](CONTRIBUTING.md#mac). | macOS 15 or later on an Apple silicon Mac. |
+| iPhone | Not on the App Store, and releases include no `.ipa` yet. [Build it with Xcode](iOS/README.md#install-on-your-iphone) and your own Apple ID. | iOS 26 or later. |
 
-### Windows
+The Windows build isn't code-signed, so the first launch shows SmartScreen's "Windows protected your PC": click **More info**, then **Run anyway**.
 
-Download the x64 zip from [Releases](https://github.com/opencoredev/openmusic/releases), extract it anywhere and run `OpenMusic.exe` in the `OpenMusic` folder it makes. The folder also holds `LICENSE` and `THIRD-PARTY-NOTICES.txt`, the licenses of the components it bundles. Needs Windows 10 version 2004 or later, or Windows 11. Nothing else to install.
+## Why use it
 
-The Windows build isn't code-signed, so SmartScreen warns the first time you run it ("Windows protected your PC"). Click **More info**, then **Run anyway**. If Windows blocks the files before that, right-click the zip before extracting it, choose **Properties**, tick **Unblock** and click **OK**.
+- **Both services in one place.** Search, browse and play YouTube Music and Spotify side by side, with one library, one queue, Play Next, shuffle, repeat and autoplay radio when the queue runs out.
+- **Native on each platform.** SwiftUI on the Mac and iPhone, WinUI 3 on Windows. No web views for the interface, and no CPU use while paused.
+- **Synced lyrics and system controls.** Lyrics follow the song, from YouTube Music first and [LRCLIB](https://lrclib.net) second. Media keys, Control Center, the lock screen, AirPods and the Windows media flyout all work.
+- **Move playback between devices.** Continue on your iPhone what your Mac was playing, send playback to another device, or control one from another. Optional, end-to-end encrypted, and you can run your own server.
 
-### iPhone
+## What works where
 
-There is no App Store build. Two ways to get it on your iPhone (iOS 26 or later):
+| | Mac | iPhone | Windows |
+| --- | --- | --- | --- |
+| YouTube Music: browse, search, library, playback | Yes | Yes | Yes |
+| YouTube Music signed out | Browse and play | Browse and play | Browse and play |
+| Spotify | Remote control (below) | Remote control (below) | Not yet |
+| Synced lyrics | Yes | Yes | Yes |
+| Sync and handoff between devices | Yes | Yes | Yes |
+| Sound Check and crossfade | Yes | Yes | Not yet |
 
-- **Build it with Xcode.** On a Mac with Xcode 27 and [XcodeGen](https://github.com/yonaskolb/XcodeGen) (`brew install xcodegen`), run `xcodegen generate --spec iOS/project.yml` in this repository, open `iOS/OpenMusic.xcodeproj`, under **Signing & Capabilities** for the `OpenMusic` target turn on **Automatically manage signing** and choose your Apple ID's team (change the bundle identifier if Xcode says it is taken), connect your iPhone and press Run. A free Apple ID works; apps signed with one stop opening after 7 days until you run them from Xcode again.
-- **Sideload it with [AltStore](https://altstore.io) or [SideStore](https://sidestore.io).** They sign an `.ipa` with your own Apple ID and refresh it before it expires. Releases don't include an `.ipa` yet, so build one yourself from the Xcode project.
+Spotify works as a remote control: OpenMusic browses Spotify, keeps the queue and sends each song to Spotify, and the audio plays in the Spotify app or on a Spotify Connect device.
 
-## Signing in
+- On a Mac with the Spotify app installed, OpenMusic plays through it, with a Free or Premium account. macOS asks once whether OpenMusic may control Spotify.
+- Spotify Connect (another device, a speaker, or the iPhone) needs Spotify Premium and Spotify open on that device. The iPhone app plays Spotify only this way.
 
-**YouTube Music:** Settings › Accounts › YouTube Music › Sign In, then sign in with Google in the window that opens. If Google refuses the embedded window, use "Sign in with a browser cookie (advanced)": in Safari or Chrome open music.youtube.com, open the developer tools' Network tab, copy the `Cookie` request header from any request to `music.youtube.com`, and paste it. Everything except your library works signed out, including playback.
+## Screenshots
 
-**Spotify** (Mac and iPhone): click Sign In, log in to Spotify in your browser, and you're back in OpenMusic, signed in. There's no developer app to create and no Client ID to paste. To play songs, install the Spotify app on the Mac (OpenMusic controls it; allow it when macOS asks), or have Spotify open on any device with Premium (Spotify Connect).
+<table>
+  <tr>
+    <td width="66%">
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="docs/images/mac-album-dark.webp">
+        <img src="docs/images/mac-album-light.webp" alt="An album page on the Mac">
+      </picture>
+    </td>
+    <td width="34%" rowspan="2">
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="docs/images/ios-nowplaying-dark.webp">
+        <img src="docs/images/ios-nowplaying-light.webp" alt="Now Playing on the iPhone">
+      </picture>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="docs/images/mac-lyrics-dark.webp">
+        <img src="docs/images/mac-lyrics-light.webp" alt="Synced lyrics beside an album on the Mac">
+      </picture>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2">
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="docs/images/windows-home-dark.webp">
+        <img src="docs/images/windows-home-light.webp" alt="Home in OpenMusic for Windows">
+      </picture>
+    </td>
+  </tr>
+</table>
 
-How Spotify sign-in works: OpenMusic signs in with Spotify's own desktop client ID (`65b708073fc0480ea92a077233ca87bd`), the one librespot, ncspot and spotify_player log in with, through OAuth PKCE and a one-shot listener on `http://127.0.0.1:8898/login` (any free port if 8898 is busy). Spotify's developer terms don't allow borrowing it, and Spotify could rate-limit or block it at any time. If that happens, open Settings › Accounts › Spotify › Advanced, turn on **Use my own Client ID**, and follow the steps there: create an app at developer.spotify.com/dashboard, tick **Web API**, add the redirect URI `http://127.0.0.1:43827/callback`, and paste the Client ID. Development-mode apps allow at most 5 users and need the app's owner to have Premium.
+The artists, albums and covers in these images are made up: they come from the apps' sample data.
 
-Where the client still has them, OpenMusic uses artist top tracks, related artists and new releases. Where Spotify has removed them (development-mode apps since February 2026), it builds top songs from an artist search and new releases from the `tag:new` search. Radio is always built from searches.
+## Getting started
+
+1. **Open OpenMusic.** The first launch walks you through signing in to your services and, optionally, to sync. You can skip any step and find it later in Settings.
+2. **Sign in to YouTube Music** with Google in the window OpenMusic opens. Everything except your library works signed out too, playback included.
+3. **Connect Spotify** (Mac and iPhone): sign in on Spotify's own page (in your browser on the Mac, in a sheet on the iPhone) and you're back in OpenMusic. [How Spotify sign-in works](docs/spotify.md), and what to do if it stops working.
+4. **Optional: sign in to sync** with an email code, Apple or Google, on each device you want to connect. A new device gets your sync key after you approve it on a device that has it, by comparing a six-digit code.
+
+If something doesn't work, see [Troubleshooting](docs/troubleshooting.md).
 
 ## Sync and privacy
 
-Sign in with an OpenMusic account on each device (Mac, iPhone, Windows) to pick up what another device plays, send playback to it or control it, and keep your settings, recent searches and service sign-ins the same everywhere. A new device gets your encryption key only after you approve it on a device that already has it, by comparing a six-digit code.
+What you play, your queue, your searches, your settings and your service sign-ins are encrypted on your devices with a key the server never has. The server sees your devices, their names, and when each one plays, pauses or seeks, so it can tell when and for how long you listen, but not what. The hosted sync server is a beta run by the OpenMusic maintainers: it is limited, may show a sign-in banner from its sign-in provider, and may be reset, so [running your own server](docs/self-hosting.md) is the stable option.
 
-What you play, your queue, your searches, your settings and your sign-ins are encrypted on your devices with a key the server never has. The server sees which devices you have and when they play, pause or seek, never what. [What the server can see](docs/sync-design.md#what-the-server-can-see) lists every field it stores. OpenMusic works without an account; sync is optional.
+Details: [Privacy](docs/privacy.md) and [what the server can see](docs/sync-design.md#what-the-server-can-see). Sync is optional; OpenMusic works without an account.
 
-## Run your own server
+## Build and contribute
 
-The sync server is the open-source Convex backend in `sync/convex/`, with sign-in through a Clerk app you control. Run it on any Linux or macOS machine with Docker or Podman, give it an HTTPS address (Tailscale Serve or a reverse proxy), and enter that address in OpenMusic's sign-in screen under **Use your own server**. [Running your own OpenMusic server](docs/self-hosting.md) has the steps.
+[CONTRIBUTING.md](CONTRIBUTING.md) has the repository map and the commands for each platform from a fresh clone. The [docs index](docs/README.md) lists every guide and design document. Security problems: see [SECURITY.md](SECURITY.md).
 
-## Build from source
+## Known limits
 
-- Mac: on a Mac with Xcode 27, `swift build`, `swift test`, and `scripts/bundle.sh` for `build/OpenMusic.app`. `OPENMUSIC_MOCK=1` runs the app on sample data with no network.
-- iPhone: [iOS/README.md](iOS/README.md).
-- Windows: [windows/README.md](windows/README.md). The shared C# core builds and tests on Linux too: `dotnet test windows/OpenMusic.Core.slnf`.
-- Sync backend: `sync/` (`npm ci`, then `npx vitest run`).
-
-[AGENTS.md](AGENTS.md) covers the architecture, the rules every change follows, signing and the Keychain, and the test and screenshot scripts. If your checkout lives on Linux, the scripts run Apple builds on a Mac over SSH: copy `scripts/local.env.example` to `scripts/local.env` and fill it in.
-
-## Limits
-
-- YouTube Music streams are AAC at about 128 kbps. Premium's 256 kbps needs signature deciphering, which OpenMusic does not do.
-- YouTube playback uses the visionOS InnerTube client, the one client that currently returns playable audio without a PO token. If YouTube changes that, playback stops until the client list is updated (`Sources/YouTubeMusicKit/Playback/YouTubeStreamResolver.swift`).
-- Mac builds attached to releases are signed with a Developer ID and notarized. Builds you make yourself (`scripts/bundle.sh`) are signed with a local self-signed certificate (see AGENTS.md), or ad-hoc without one; an ad-hoc build starts signed out of YouTube Music and Spotify every time.
-- The Windows app plays YouTube Music only for now, and isn't code-signed. Releases are x64; ARM64 builds from source (`-p:Platform=ARM64`).
+- YouTube Music streams are AAC at about 128 kbps. Premium's 256 kbps streams aren't used.
+- OpenMusic relies on unofficial YouTube Music and Spotify interfaces. When YouTube changes how playback works, songs can stop playing until OpenMusic is updated.
+- Spotify plays only through the Spotify app or Spotify Connect, never inside OpenMusic, and isn't available on Windows yet.
+- Mac and iPhone builds from source aren't notarized. On the Mac, sign-ins stay across rebuilds only with the local signing identity described in [CONTRIBUTING.md](CONTRIBUTING.md#mac).
+- The Windows app isn't code-signed. Releases are x64 only; ARM64 builds from source.
 
 ## Disclaimer
 
-OpenMusic is an unofficial app. It is not affiliated with, endorsed by or sponsored by Google, YouTube or Spotify. It uses unofficial interfaces to those services, which can change or stop working at any time. OpenMusic streams music for playback only; it never downloads or saves music. YouTube, YouTube Music and Spotify are trademarks of their owners, and other product names belong to their owners. You are responsible for following the terms of service of YouTube, Spotify and any other service you use with OpenMusic.
+OpenMusic is an unofficial app, not affiliated with, endorsed by or sponsored by Google, YouTube or Spotify. It uses unofficial interfaces to those services, which can change or stop working at any time and may conflict with their terms of service. Use it at your own risk. OpenMusic streams music for playback only and never downloads or saves it. YouTube, YouTube Music and Spotify are trademarks of their owners.
 
-## Licence
+## Acknowledgements
+
+- [librespot](https://github.com/librespot-org/librespot), [ncspot](https://github.com/hrkfdn/ncspot) and [spotify_player](https://github.com/aome510/spotify-player), whose use of Spotify's desktop client ID for sign-in OpenMusic follows.
+- [yt-dlp](https://github.com/yt-dlp/yt-dlp), whose work on YouTube's player clients and their versions guides OpenMusic's stream resolution.
+- [LRCLIB](https://lrclib.net), the free synced-lyrics database OpenMusic uses when YouTube Music has no lyrics.
+
+## License
 
 MIT. See [LICENSE](LICENSE).
