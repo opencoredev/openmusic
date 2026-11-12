@@ -18,9 +18,12 @@ $packs = Join-Path $env:ProgramFiles 'dotnet\packs'
 function Collect([string]$id, [string]$version, [string]$dir) {
     $dest = Join-Path $out "$id@$version"
     New-Item -ItemType Directory -Path $dest -Force | Out-Null
-    Get-ChildItem $dir -File | Where-Object { $_.Name -match '(?i)(licen[cs]e|notice)' -or $_.Extension -eq '.nuspec' } |
-        Copy-Item -Destination $dest
     $root = (Resolve-Path $dir).Path.TrimEnd('\') + '\'
+    Get-ChildItem $dir -File -Filter *.nuspec | Copy-Item -Destination $dest
+    # License and notice files anywhere in the package (some keep them under legal\ or similar), flattened as
+    # <dir>__<dir>__<name> so the writer can match the path a .nuspec <license type="file"> names.
+    Get-ChildItem $dir -Recurse -File | Where-Object { $_.Name -match '(?i)(licen[cs]e|notice|copying)' -and $_.Extension -notin '.dll', '.exe', '.msix', '.nupkg', '.p7s' } |
+        ForEach-Object { Copy-Item $_.FullName -Destination (Join-Path $dest ($_.FullName.Substring($root.Length) -replace '[\\/]', '__')) }
     $files = Get-ChildItem $dir -Recurse -File
     $names = @($files | ForEach-Object { $_.FullName.Substring($root.Length) })
     # A self-contained publish also unpacks files from the runtime MSIX packages a package carries.
