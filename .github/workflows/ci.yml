@@ -1,0 +1,126 @@
+name: CI
+
+on:
+  push:
+    branches: [main, "work/**"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  linux:
+    name: Linux (C# core, sync backend, secrets scan)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0 # the secrets scan reads every commit
+          persist-credentials: false
+
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: C# core tests
+        run: dotnet test windows/OpenMusic.Core.slnf -m:4 --nologo
+        timeout-minutes: 15
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: sync/package-lock.json
+
+      - name: Sync backend install
+        working-directory: sync
+        run: npm ci --no-audit --no-fund
+
+      - name: Sync backend typecheck
+        working-directory: sync
+        run: npm run typecheck
+
+      - name: Sync backend tests
+        working-directory: sync
+        run: npx vitest run --maxWorkers=4
+        timeout-minutes: 10
+
+      - name: Secrets scan (gitleaks, whole history)
+        env:
+          GITLEAKS_VERSION: "8.30.1"
+          GITLEAKS_SHA256: "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb"
+        run: |
+          curl -fsSL -o gitleaks.tar.gz \
+            "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          echo "${GITLEAKS_SHA256}  gitleaks.tar.gz" | sha256sum -c -
+          tar -xzf gitleaks.tar.gz gitleaks
+          ./gitleaks git --no-banner --redact --config .gitleaks.toml .
+
+  macos:
+    name: macOS (swift build, swift test)
+    runs-on: xcode-27
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Select Xcode
+        run: |
+          sudo xcode-select -s /Applications/Xcode_27.app   # Xcode 27.0, as on the maintainers' build Mac
+          xcodebuild -version
+          swift --version
+
+      - name: swift build
+        run: swift build
+        timeout-minutes: 20
+
+      - name: swift test
+        run: swift test
+        timeout-minutes: 20
+
+  windows:
+    name: Windows (app Release x64, packaged)
+    runs-on: windows-2025
+    timeout-minutes: 40
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Publish (Release, x64, self-contained)
+        working-directory: windows
+        run: dotnet publish src\OpenMusic.App\OpenMusic.App.csproj -c Release -r win-x64 -p:Platform=x64 -o publish --nologo
+        timeout-minutes: 25
+
+      # The same layout as scripts/package-windows.sh: one OpenMusic folder holding the publish, LICENSE and
+      # THIRD-PARTY-NOTICES.txt written from the license files of every package the publish contains.
+      - name: Package
+        run: |
+          windows\scripts\collect-notices.ps1 -Checkout "$PWD\windows"
+          New-Item -ItemType Directory -Path stage | Out-Null
+          Move-Item windows\publish stage\OpenMusic
+          Copy-Item LICENSE stage\OpenMusic\LICENSE
+          python -I scripts\windows-notices.py windows\notices-src stage\OpenMusic\THIRD-PARTY-NOTICES.txt
+          $files = (Get-ChildItem stage\OpenMusic -Recurse -File)
+          "OpenMusic folder: {0:N1} MB, {1} files" -f (($files | Measure-Object Length -Sum).Sum / 1MB), $files.Count
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: OpenMusic-windows-x64
+          path: stage/
+          if-no-files-found: error
+          retention-days: 14

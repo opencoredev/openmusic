@@ -1,0 +1,51 @@
+# gitleaks configuration: the default rules, plus allowlists for values that look like secrets but are public or
+# made up for tests. Each entry names its rule and matches as narrowly as it can, so a real secret anywhere else,
+# or of another kind in the same files, still fails the scan. Paths cover the names from before the rename too
+# (Medley), because CI scans the whole history.
+#   gitleaks git --no-banner --config .gitleaks.toml .
+
+title = "OpenMusic"
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Recorded YouTube Music responses (test fixtures): InnerTube entity keys, continuation and feedback tokens"
+targetRules = ["generic-api-key"]
+condition = "AND"
+paths = ['''^(Tests/YouTubeMusicKitTests|windows/tests/(Medley|OpenMusic)\.Providers\.YouTube\.Tests)/Fixtures/[^/]+$''']
+regexTarget = "match"
+regexes = ['''^(formItemEntityKey|formEntityKey|feedbackToken|commandEntityKey|collectionKey|themeKey|colorSamplePaletteEntityKey|rolloutToken|likeStatusEntityKey|dislikeEntityKey|token|key)"''']
+
+[[allowlists]]
+description = "YouTube's public web API key, as YouTube serves it in its own page data (recorded in a fixture)"
+targetRules = ["gcp-api-key"]
+regexes = ['''^AIzaSyC9XL3ZjWddXya6X74dJoCTL-WEYFDNX30$''']
+
+[[allowlists]]
+description = "Clerk publishable keys, public by design: the hosted beta's and the backend tests' made-up one"
+targetRules = ["generic-api-key"]
+regexes = [
+  '''^pk_test_aGVscGVkLXRlcnJpZXItNTMzOS5jbGVyay5hY2NvdW50cy5kZXYk''',
+  '''^pk_test_Y2xlcmsubWVkbGV5LnRlc3Qk''',
+]
+
+[[allowlists]]
+description = "A Swift type name after a property called privateKey"
+targetRules = ["generic-api-key"]
+condition = "AND"
+paths = ['''^Sources/(Medley|OpenMusic)Sync/Keys/VaultKey\.swift$''']
+regexes = ['''^Curve25519\.KeyAgreement\.PrivateKey$''']
+
+[[allowlists]]
+description = "A made-up JWT (signature 'signature-signature') that the redaction tests check is removed"
+targetRules = ["jwt"]
+regexes = ['''^eyJhbGciOiJSUzI1NiJ9\.eyJzdWIiOiJ1c2VyXzEyMyJ9\.c2lnbmF0dXJlLXNpZ25hdHVyZQ$''']
+
+[[allowlists]]
+description = "Cross-language test vectors: keys and device tokens generated for the tests"
+targetRules = ["generic-api-key"]
+condition = "AND"
+paths = ['''^windows/tests/(Medley|OpenMusic)\.Sync\.Tests/Vectors/[^/]+\.json$''']
+regexTarget = "match"
+regexes = ['''^(contentKey|deviceToken)" : "''']
