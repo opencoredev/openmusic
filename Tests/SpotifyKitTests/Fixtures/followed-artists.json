@@ -1,0 +1,68 @@
+{
+  "artists": {
+    "href": "https://api.spotify.com/v1/me/following?type=artist&limit=50",
+    "limit": 50,
+    "next": "https://api.spotify.com/v1/me/following?type=artist&after=2RdwBSPQiwcmiDo9kixcl8&limit=50",
+    "cursors": {
+      "after": "2RdwBSPQiwcmiDo9kixcl8",
+      "before": null
+    },
+    "total": 75,
+    "items": [
+      {
+        "external_urls": {
+          "spotify": "https://open.spotify.com/artist/4tZwfgrHOc3mvqYlEYSvVi"
+        },
+        "href": "https://api.spotify.com/v1/artists/4tZwfgrHOc3mvqYlEYSvVi",
+        "id": "4tZwfgrHOc3mvqYlEYSvVi",
+        "name": "Daft Punk",
+        "type": "artist",
+        "uri": "spotify:artist:4tZwfgrHOc3mvqYlEYSvVi",
+        "images": [
+          {
+            "url": "https://i.scdn.co/image/ab67616100004tZwfg640",
+            "height": 640,
+            "width": 640
+          },
+          {
+            "url": "https://i.scdn.co/image/ab67616100004tZwfg300",
+            "height": 300,
+            "width": 300
+          },
+          {
+            "url": "https://i.scdn.co/image/ab67616100004tZwfg64",
+            "height": 64,
+            "width": 64
+          }
+        ]
+      },
+      {
+        "external_urls": {
+          "spotify": "https://open.spotify.com/artist/2RdwBSPQiwcmiDo9kixcl8"
+        },
+        "href": "https://api.spotify.com/v1/artists/2RdwBSPQiwcmiDo9kixcl8",
+        "id": "2RdwBSPQiwcmiDo9kixcl8",
+        "name": "Pharrell Williams",
+        "type": "artist",
+        "uri": "spotify:artist:2RdwBSPQiwcmiDo9kixcl8",
+        "images": [
+          {
+            "url": "https://i.scdn.co/image/ab67616100002RdwBS640",
+            "height": 640,
+            "width": 640
+          },
+          {
+            "url": "https://i.scdn.co/image/ab67616100002RdwBS300",
+            "height": 300,
+            "width": 300
+          },
+          {
+            "url": "https://i.scdn.co/image/ab67616100002RdwBS64",
+            "height": 64,
+            "width": 64
+          }
+        ]
+      }
+    ]
+  }
+}

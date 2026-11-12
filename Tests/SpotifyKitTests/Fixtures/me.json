@@ -1,0 +1,12 @@
+{
+  "display_name": "Ada Listener",
+  "external_urls": { "spotify": "https://open.spotify.com/user/ada.listener" },
+  "href": "https://api.spotify.com/v1/users/ada.listener",
+  "id": "ada.listener",
+  "images": [
+    { "url": "https://i.scdn.co/image/ab67757000003b82small", "height": 64, "width": 64 },
+    { "url": "https://i.scdn.co/image/ab6775700000ee85large", "height": 300, "width": 300 }
+  ],
+  "type": "user",
+  "uri": "spotify:user:ada.listener"
+}

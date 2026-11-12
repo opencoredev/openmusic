@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Devices: this PC and your other devices in the Medley account, with handoff and remote controls (Controls/DevicesView). -->
+<Page
+    x:Class="Medley.App.Pages.DevicesPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Medley.App.Controls">
+    <ScrollViewer>
+        <StackPanel Padding="{StaticResource PagePadding}" Spacing="8" MaxWidth="720" HorizontalAlignment="Left">
+            <TextBlock Text="Devices" Style="{StaticResource PageTitleTextStyle}" />
+            <TextBlock Text="Pick up on this PC what another device is playing, or send what's playing here to it." Style="{StaticResource SecondaryBodyTextStyle}" TextWrapping="Wrap" Margin="0,0,0,12" />
+            <controls:DevicesView />
+        </StackPanel>
+    </ScrollViewer>
+</Page>

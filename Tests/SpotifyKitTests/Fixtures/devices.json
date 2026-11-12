@@ -1,0 +1,34 @@
+{
+  "devices": [
+    {
+      "id": "0d1841b0976bae2a3a310dd74c0f3df354899bc8",
+      "is_active": true,
+      "is_private_session": false,
+      "is_restricted": false,
+      "name": "Ada's MacBook",
+      "type": "Computer",
+      "volume_percent": 59,
+      "supports_volume": true
+    },
+    {
+      "id": "a8b2c3d4e5",
+      "is_active": false,
+      "is_private_session": false,
+      "is_restricted": true,
+      "name": "Kitchen TV",
+      "type": "TV",
+      "volume_percent": null,
+      "supports_volume": false
+    },
+    {
+      "id": null,
+      "is_active": false,
+      "is_private_session": false,
+      "is_restricted": false,
+      "name": "Ghost",
+      "type": "Speaker",
+      "volume_percent": 10,
+      "supports_volume": true
+    }
+  ]
+}

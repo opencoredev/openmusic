@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:c="using:Medley.App.Styles">
+    <c:BoolToVisibilityConverter x:Key="BoolToVisibility" />
+    <c:BoolToVisibilityConverter x:Key="InverseBoolToVisibility" Invert="True" />
+    <c:NullToVisibilityConverter x:Key="NullToVisibility" />
+    <c:DurationConverter x:Key="Duration" />
+</ResourceDictionary>

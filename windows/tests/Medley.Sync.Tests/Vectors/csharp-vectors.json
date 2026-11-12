@@ -1,0 +1,22 @@
+﻿{
+  "privateA": "N7Gs3PEdoWo5vYZCINGA7afSKORB5gW52oYII20KC5c=",
+  "privateB": "JG6UlTHECuAnQLMrlR0o6btbhUMF1omolz1M4q5C6OA=",
+  "publicA": "Mqu/nbJVWVXS0tgT6VddZxaTYeEZpKpNas3ztT\u002B1zX4=",
+  "publicB": "fYqrdhG4oqGo5ySTE9ncMagpb\u002BsI2oL8H89tfRmEOHc=",
+  "k1": "SVQ4epeWwzX8MHtB4eW98u_2Md5pnNj0UnBC2zU3bw4",
+  "k1Id": "eb6c812f3a0359a36400456ef4c3d18a",
+  "k2": "dZaYudeNuK6VXKphW_1jTlB2qOHnd0m-XuWxzEKN-Eg",
+  "libraryId": "kh7vector0library",
+  "holderId": "jd7vectorholderA",
+  "requesterId": "jd7vectorrequestB",
+  "requesterNonce": "w\u002BIW1PAxvKzo8odttKNNH41nIbom59qv1Lka9zFsOc0=",
+  "commitment": "d8VqcHu48z0buGuqgISQkq\u002B7Cwrd5Cvb7dcDJZXN/4c=",
+  "holderNonce": "rpGDEPBvpbilfHeJs4RSFXXBW\u002B4oH25mbNOVV2SqfW4=",
+  "code": "331 379",
+  "grant": "tPFZf0D3daHaqaVWAGSVgOSGOG1sNwaQfybvLMwFK0oSELWp0c4s1lRG0d6pvXHZH13e1lKyNNSF\u002BQSi",
+  "rotation": "/ngKBo9QIWMTvKtu8JrudJ9auj2QeS\u002BbeZtGbFA/b19xv99ona9MQeN920lINa3Zu6Q0DZuU1tmmf0PX94ZSXsFaXWffaeqW\u002BSNz9rVHDtNgrxp2SxqUZ9h6CI0=",
+  "plaintext": "eyJjb29raWUiOiJTSUQ9dmVjdG9yOyBIU0lEPcO8IiwiY2hhbm5lbCI6IlVDMTIzIn0=",
+  "sealed": "RMTL5S3uWR2WFenP5axaFF1GQWGBpNh0iq9Sw4ZYh7TZMgCxpcdZMXonRqX3NqNMvfPx3FTEhbP\u002Bjf6xCPDIT7rLCI6ZIVtaLYEqLOxk",
+  "sealedRevision": 7,
+  "legacy": "ZG8ajJZ8znhWmd31kkfZAbXxbICIP\u002BJwea2nXEAeJ69BtY/B3gA1Uwo="
+}

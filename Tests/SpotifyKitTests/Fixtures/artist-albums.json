@@ -1,0 +1,142 @@
+{
+  "href": "https://api.spotify.com/v1/artists/4tZwfgrHOc3mvqYlEYSvVi/albums?include_groups=album&offset=0&limit=10",
+  "items": [
+    {
+      "album_type": "album",
+      "total_tracks": 13,
+      "external_urls": {
+        "spotify": "https://open.spotify.com/album/4m2880jivSbbyEGAKfITCa"
+      },
+      "href": "https://api.spotify.com/v1/albums/4m2880jivSbbyEGAKfITCa",
+      "id": "4m2880jivSbbyEGAKfITCa",
+      "images": [
+        {
+          "url": "https://i.scdn.co/image/ab67616d00004m2880640",
+          "height": 640,
+          "width": 640
+        },
+        {
+          "url": "https://i.scdn.co/image/ab67616d00004m2880300",
+          "height": 300,
+          "width": 300
+        },
+        {
+          "url": "https://i.scdn.co/image/ab67616d00004m288064",
+          "height": 64,
+          "width": 64
+        }
+      ],
+      "name": "Random Access Memories",
+      "release_date": "2013-05-17",
+      "release_date_precision": "day",
+      "type": "album",
+      "uri": "spotify:album:4m2880jivSbbyEGAKfITCa",
+      "artists": [
+        {
+          "external_urls": {
+            "spotify": "https://open.spotify.com/artist/4tZwfgrHOc3mvqYlEYSvVi"
+          },
+          "href": "https://api.spotify.com/v1/artists/4tZwfgrHOc3mvqYlEYSvVi",
+          "id": "4tZwfgrHOc3mvqYlEYSvVi",
+          "name": "Daft Punk",
+          "type": "artist",
+          "uri": "spotify:artist:4tZwfgrHOc3mvqYlEYSvVi"
+        }
+      ],
+      "is_playable": true
+    },
+    {
+      "album_type": "album",
+      "total_tracks": 14,
+      "external_urls": {
+        "spotify": "https://open.spotify.com/album/2noRn2Aes5aoNVsU6iWThc"
+      },
+      "href": "https://api.spotify.com/v1/albums/2noRn2Aes5aoNVsU6iWThc",
+      "id": "2noRn2Aes5aoNVsU6iWThc",
+      "images": [
+        {
+          "url": "https://i.scdn.co/image/ab67616d00002noRn2640",
+          "height": 640,
+          "width": 640
+        },
+        {
+          "url": "https://i.scdn.co/image/ab67616d00002noRn2300",
+          "height": 300,
+          "width": 300
+        },
+        {
+          "url": "https://i.scdn.co/image/ab67616d00002noRn264",
+          "height": 64,
+          "width": 64
+        }
+      ],
+      "name": "Discovery",
+      "release_date": "2001-03-12",
+      "release_date_precision": "day",
+      "type": "album",
+      "uri": "spotify:album:2noRn2Aes5aoNVsU6iWThc",
+      "artists": [
+        {
+          "external_urls": {
+            "spotify": "https://open.spotify.com/artist/4tZwfgrHOc3mvqYlEYSvVi"
+          },
+          "href": "https://api.spotify.com/v1/artists/4tZwfgrHOc3mvqYlEYSvVi",
+          "id": "4tZwfgrHOc3mvqYlEYSvVi",
+          "name": "Daft Punk",
+          "type": "artist",
+          "uri": "spotify:artist:4tZwfgrHOc3mvqYlEYSvVi"
+        }
+      ],
+      "is_playable": true
+    },
+    {
+      "album_type": "album",
+      "total_tracks": 16,
+      "external_urls": {
+        "spotify": "https://open.spotify.com/album/5uRdvUR7xCnHmUW8n64n9y"
+      },
+      "href": "https://api.spotify.com/v1/albums/5uRdvUR7xCnHmUW8n64n9y",
+      "id": "5uRdvUR7xCnHmUW8n64n9y",
+      "images": [
+        {
+          "url": "https://i.scdn.co/image/ab67616d00005uRdvU640",
+          "height": 640,
+          "width": 640
+        },
+        {
+          "url": "https://i.scdn.co/image/ab67616d00005uRdvU300",
+          "height": 300,
+          "width": 300
+        },
+        {
+          "url": "https://i.scdn.co/image/ab67616d00005uRdvU64",
+          "height": 64,
+          "width": 64
+        }
+      ],
+      "name": "Homework",
+      "release_date": "1997-01-20",
+      "release_date_precision": "day",
+      "type": "album",
+      "uri": "spotify:album:5uRdvUR7xCnHmUW8n64n9y",
+      "artists": [
+        {
+          "external_urls": {
+            "spotify": "https://open.spotify.com/artist/4tZwfgrHOc3mvqYlEYSvVi"
+          },
+          "href": "https://api.spotify.com/v1/artists/4tZwfgrHOc3mvqYlEYSvVi",
+          "id": "4tZwfgrHOc3mvqYlEYSvVi",
+          "name": "Daft Punk",
+          "type": "artist",
+          "uri": "spotify:artist:4tZwfgrHOc3mvqYlEYSvVi"
+        }
+      ],
+      "is_playable": true
+    }
+  ],
+  "limit": 10,
+  "next": null,
+  "offset": 0,
+  "previous": null,
+  "total": 3
+}

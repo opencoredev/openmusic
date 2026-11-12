@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The bar across the bottom of the window: the song (opens Now Playing), the transport and scrubber in the middle,
+     and lyrics, queue, devices, volume and the mini player on the right. -->
+<UserControl
+    x:Class="Medley.App.Controls.NowPlayingBar"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Medley.App.Controls"
+    xmlns:svc="using:Medley.App.Services">
+
+    <Grid
+        x:Name="BarRoot"
+        Height="{StaticResource PlayerBarHeight}"
+        Padding="12,0,16,0"
+        ColumnSpacing="12"
+        Background="{ThemeResource PlayerBarBackgroundBrush}"
+        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+        BorderThickness="0,1,0,0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition x:Name="LeftColumn" Width="*" MinWidth="180" />
+            <ColumnDefinition x:Name="CenterColumn" Width="Auto" />
+            <ColumnDefinition x:Name="RightColumn" Width="*" MinWidth="120" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Song, and its heart -->
+        <StackPanel Orientation="Horizontal" Spacing="4" HorizontalAlignment="Left" VerticalAlignment="Center">
+        <Button
+            x:Name="TrackButton"
+            Padding="4"
+            HorizontalAlignment="Left"
+            HorizontalContentAlignment="Left"
+            Background="Transparent"
+            BorderThickness="0"
+            Click="TrackButton_Click"
+            AutomationProperties.AutomationId="NowPlayingTrack" AutomationProperties.Name="Open Now Playing"
+            ToolTipService.Placement="Top">
+            <ToolTipService.ToolTip>
+                <ToolTip x:Name="TrackToolTip" Content="Now Playing" Placement="Top" VerticalOffset="4" />
+            </ToolTipService.ToolTip>
+            <Grid ColumnSpacing="12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="56" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <controls:ArtworkView Width="56" Height="56" CornerRadius="6" Source="{x:Bind ViewModel.Artwork, Mode=OneWay}" Pixels="128" />
+                <FontIcon Glyph="&#xEC4F;" FontSize="20" Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                          Visibility="{x:Bind controls:ShelfView.Not(ViewModel.HasTrack), Mode=OneWay}" />
+                <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="1">
+                    <TextBlock AutomationProperties.AutomationId="BarTitle" Text="{x:Bind ViewModel.Title, Mode=OneWay}" Style="{StaticResource BodyStrongTextBlockStyle}" TextTrimming="CharacterEllipsis" MaxLines="1" />
+                    <TextBlock Text="{x:Bind ViewModel.Artist, Mode=OneWay}" Style="{StaticResource CardSubtitleTextStyle}" />
+                </StackPanel>
+            </Grid>
+        </Button>
+        <Button
+            x:Name="LikeButton"
+            Style="{StaticResource BarIconButtonStyle}"
+            VerticalAlignment="Center"
+            Command="{x:Bind ViewModel.ToggleLikeCommand}"
+            Visibility="{x:Bind ViewModel.CanLike, Mode=OneWay}"
+            AutomationProperties.AutomationId="BarLike"
+            AutomationProperties.Name="{x:Bind ViewModel.LikeLabel, Mode=OneWay}"
+            ToolTipService.ToolTip="{x:Bind ViewModel.LikeLabel, Mode=OneWay}">
+            <Grid>
+                <FontIcon Glyph="&#xEB51;" FontSize="16" Visibility="{x:Bind controls:ShelfView.Not(ViewModel.IsLiked), Mode=OneWay}" />
+                <FontIcon Glyph="&#xEB52;" FontSize="16" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" Visibility="{x:Bind ViewModel.IsLiked, Mode=OneWay}" />
+            </Grid>
+        </Button>
+        </StackPanel>
+
+        <!-- Transport and scrubber -->
+        <StackPanel x:Name="Center" Grid.Column="1" Width="560" VerticalAlignment="Center" Spacing="0">
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Spacing="6">
+                <ToggleButton
+                    Style="{StaticResource TransportToggleButtonStyle}"
+                    Content="&#xE8B1;"
+                    IsChecked="{x:Bind ViewModel.IsShuffle, Mode=TwoWay}"
+                    IsEnabled="{x:Bind ViewModel.HasTrack, Mode=OneWay}"
+                    AutomationProperties.AutomationId="ShuffleButton" AutomationProperties.Name="Shuffle"
+                    ToolTipService.ToolTip="Shuffle" />
+                <Button
+                    Style="{StaticResource TransportButtonStyle}"
+                    Content="&#xE892;"
+                    Command="{x:Bind ViewModel.PreviousCommand}"
+                    AutomationProperties.AutomationId="PreviousButton"
+                    AutomationProperties.Name="Previous"
+                    ToolTipService.ToolTip="Previous (Ctrl+Left)" />
+                <Button
+                    x:Name="PlayPauseButton"
+                    Style="{StaticResource PlayPauseButtonStyle}"
+                    Content="{x:Bind ViewModel.PlayPauseGlyphText, Mode=OneWay}"
+                    Command="{x:Bind ViewModel.PlayPauseCommand}"
+                    AutomationProperties.AutomationId="PlayPauseButton"
+                    AutomationProperties.Name="{x:Bind ViewModel.PlayPauseLabel, Mode=OneWay}"
+                    ToolTipService.ToolTip="{x:Bind ViewModel.PlayPauseLabel, Mode=OneWay}" />
+                <Button
+                    Style="{StaticResource TransportButtonStyle}"
+                    Content="&#xE893;"
+                    Command="{x:Bind ViewModel.NextCommand}"
+                    AutomationProperties.AutomationId="NextButton"
+                    AutomationProperties.Name="Next"
+                    ToolTipService.ToolTip="Next (Ctrl+Right)" />
+                <ToggleButton
+                    x:Name="RepeatButton"
+                    Style="{StaticResource TransportToggleButtonStyle}"
+                    Content="{x:Bind ViewModel.RepeatGlyph, Mode=OneWay}"
+                    IsChecked="{x:Bind ViewModel.IsRepeatOn, Mode=OneWay}"
+                    IsEnabled="{x:Bind ViewModel.HasTrack, Mode=OneWay}"
+                    Click="RepeatButton_Click"
+                    AutomationProperties.Name="{x:Bind ViewModel.RepeatLabel, Mode=OneWay}"
+                    ToolTipService.ToolTip="{x:Bind ViewModel.RepeatLabel, Mode=OneWay}" />
+            </StackPanel>
+            <Grid x:Name="ScrubberRow" ColumnSpacing="10" Margin="0,-2,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="44" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="44" />
+                </Grid.ColumnDefinitions>
+                <TextBlock x:Name="PositionLabel" AutomationProperties.AutomationId="PositionLabel" Text="{x:Bind ViewModel.PositionText, Mode=OneWay}" Style="{StaticResource TimeTextStyle}" HorizontalAlignment="Right" />
+                <Slider
+                    x:Name="Scrubber"
+                    Grid.Column="1"
+                    IsEnabled="{x:Bind ViewModel.HasTrack, Mode=OneWay}"
+                    Minimum="0"
+                    Maximum="{x:Bind ViewModel.DurationSeconds, Mode=OneWay}"
+                    StepFrequency="1"
+                    SmallChange="5"
+                    LargeChange="15"
+                    IsThumbToolTipEnabled="True"
+                    ThumbToolTipValueConverter="{StaticResource Duration}"
+                    VerticalAlignment="Center"
+                    AutomationProperties.AutomationId="Scrubber" AutomationProperties.Name="Position" />
+                <TextBlock Grid.Column="2" Text="{x:Bind ViewModel.DurationText, Mode=OneWay}" Style="{StaticResource TimeTextStyle}" />
+            </Grid>
+        </StackPanel>
+
+        <!-- Right side -->
+        <StackPanel Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal" Spacing="2">
+            <ToggleButton
+                x:Name="LyricsButton"
+                Style="{StaticResource BarIconToggleStyle}"
+                Content="&#xE90A;"
+                Click="LyricsButton_Click"
+                AutomationProperties.AutomationId="LyricsButton" AutomationProperties.Name="Lyrics"
+                ToolTipService.ToolTip="Lyrics (Ctrl+L)" />
+            <ToggleButton
+                x:Name="QueueButton"
+                Style="{StaticResource BarIconToggleStyle}"
+                Content="&#xE8FD;"
+                Click="QueueButton_Click"
+                AutomationProperties.AutomationId="QueueButton" AutomationProperties.Name="Up Next"
+                ToolTipService.ToolTip="Up Next (Ctrl+U)" />
+            <Button
+                x:Name="DevicesButton"
+                Style="{StaticResource BarIconButtonStyle}"
+                Content="&#xE772;"
+                AutomationProperties.AutomationId="DevicesButton"
+                AutomationProperties.Name="Devices"
+                ToolTipService.ToolTip="Devices (Ctrl+D)">
+                <Button.Flyout>
+                    <Flyout x:Name="DevicesFlyout" Placement="TopEdgeAlignedRight" Opening="DevicesFlyout_Opening" Closed="DevicesFlyout_Closed">
+                        <Flyout.FlyoutPresenterStyle>
+                            <Style TargetType="FlyoutPresenter" BasedOn="{StaticResource DefaultFlyoutPresenterStyle}">
+                                <Setter Property="MaxWidth" Value="480" />
+                                <Setter Property="Padding" Value="16,14,16,16" />
+                            </Style>
+                        </Flyout.FlyoutPresenterStyle>
+                    </Flyout>
+                </Button.Flyout>
+            </Button>
+            <Button
+                x:Name="VolumeButton"
+                Style="{StaticResource BarIconButtonStyle}"
+                Content="{x:Bind ViewModel.VolumeGlyph, Mode=OneWay}"
+                AutomationProperties.Name="Volume"
+                ToolTipService.ToolTip="Volume">
+                <Button.Flyout>
+                    <Flyout Placement="Top">
+                        <Slider Width="180" Minimum="0" Maximum="100" Value="{x:Bind ViewModel.Volume, Mode=TwoWay}" AutomationProperties.Name="Volume" />
+                    </Flyout>
+                </Button.Flyout>
+            </Button>
+            <Slider
+                x:Name="VolumeSlider"
+                Width="96"
+                Margin="2,0,6,0"
+                VerticalAlignment="Center"
+                Minimum="0"
+                Maximum="100"
+                Value="{x:Bind ViewModel.Volume, Mode=TwoWay}"
+                AutomationProperties.Name="Volume" />
+            <Button
+                x:Name="MiniButton"
+                Style="{StaticResource BarIconButtonStyle}"
+                Content="&#xE8A7;"
+                Click="MiniButton_Click"
+                AutomationProperties.AutomationId="MiniButton" AutomationProperties.Name="Mini player"
+                ToolTipService.ToolTip="Mini player" />
+        </StackPanel>
+    </Grid>
+</UserControl>

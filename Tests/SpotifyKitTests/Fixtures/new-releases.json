@@ -1,0 +1,120 @@
+{
+  "albums": {
+    "href": "https://api.spotify.com/v1/browse/new-releases?offset=0&limit=20",
+    "items": [
+      {
+        "album_type": "single",
+        "total_tracks": 1,
+        "external_urls": {
+          "spotify": "https://open.spotify.com/album/1Kx5hDFr9yLXyJyT2h3sRJ"
+        },
+        "href": "https://api.spotify.com/v1/albums/1Kx5hDFr9yLXyJyT2h3sRJ",
+        "id": "1Kx5hDFr9yLXyJyT2h3sRJ",
+        "images": [
+          {
+            "url": "https://i.scdn.co/image/ab67616d00001Kx5hD640",
+            "height": 640,
+            "width": 640
+          },
+          {
+            "url": "https://i.scdn.co/image/ab67616d00001Kx5hD300",
+            "height": 300,
+            "width": 300
+          },
+          {
+            "url": "https://i.scdn.co/image/ab67616d00001Kx5hD64",
+            "height": 64,
+            "width": 64
+          }
+        ],
+        "name": "Get Lucky (Radio Edit)",
+        "release_date": "2013-04-19",
+        "release_date_precision": "day",
+        "type": "album",
+        "uri": "spotify:album:1Kx5hDFr9yLXyJyT2h3sRJ",
+        "artists": [
+          {
+            "external_urls": {
+              "spotify": "https://open.spotify.com/artist/4tZwfgrHOc3mvqYlEYSvVi"
+            },
+            "href": "https://api.spotify.com/v1/artists/4tZwfgrHOc3mvqYlEYSvVi",
+            "id": "4tZwfgrHOc3mvqYlEYSvVi",
+            "name": "Daft Punk",
+            "type": "artist",
+            "uri": "spotify:artist:4tZwfgrHOc3mvqYlEYSvVi"
+          },
+          {
+            "external_urls": {
+              "spotify": "https://open.spotify.com/artist/2RdwBSPQiwcmiDo9kixcl8"
+            },
+            "href": "https://api.spotify.com/v1/artists/2RdwBSPQiwcmiDo9kixcl8",
+            "id": "2RdwBSPQiwcmiDo9kixcl8",
+            "name": "Pharrell Williams",
+            "type": "artist",
+            "uri": "spotify:artist:2RdwBSPQiwcmiDo9kixcl8"
+          },
+          {
+            "external_urls": {
+              "spotify": "https://open.spotify.com/artist/3yDIp0kaq9EFKe07X1X2rz"
+            },
+            "href": "https://api.spotify.com/v1/artists/3yDIp0kaq9EFKe07X1X2rz",
+            "id": "3yDIp0kaq9EFKe07X1X2rz",
+            "name": "Nile Rodgers",
+            "type": "artist",
+            "uri": "spotify:artist:3yDIp0kaq9EFKe07X1X2rz"
+          }
+        ],
+        "is_playable": true
+      },
+      {
+        "album_type": "album",
+        "total_tracks": 14,
+        "external_urls": {
+          "spotify": "https://open.spotify.com/album/2noRn2Aes5aoNVsU6iWThc"
+        },
+        "href": "https://api.spotify.com/v1/albums/2noRn2Aes5aoNVsU6iWThc",
+        "id": "2noRn2Aes5aoNVsU6iWThc",
+        "images": [
+          {
+            "url": "https://i.scdn.co/image/ab67616d00002noRn2640",
+            "height": 640,
+            "width": 640
+          },
+          {
+            "url": "https://i.scdn.co/image/ab67616d00002noRn2300",
+            "height": 300,
+            "width": 300
+          },
+          {
+            "url": "https://i.scdn.co/image/ab67616d00002noRn264",
+            "height": 64,
+            "width": 64
+          }
+        ],
+        "name": "Discovery",
+        "release_date": "2001-03-12",
+        "release_date_precision": "day",
+        "type": "album",
+        "uri": "spotify:album:2noRn2Aes5aoNVsU6iWThc",
+        "artists": [
+          {
+            "external_urls": {
+              "spotify": "https://open.spotify.com/artist/4tZwfgrHOc3mvqYlEYSvVi"
+            },
+            "href": "https://api.spotify.com/v1/artists/4tZwfgrHOc3mvqYlEYSvVi",
+            "id": "4tZwfgrHOc3mvqYlEYSvVi",
+            "name": "Daft Punk",
+            "type": "artist",
+            "uri": "spotify:artist:4tZwfgrHOc3mvqYlEYSvVi"
+          }
+        ],
+        "is_playable": true
+      }
+    ],
+    "limit": 20,
+    "next": null,
+    "offset": 0,
+    "previous": null,
+    "total": 2
+  }
+}

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- One shelf: a header and its items, drawn by style: a carousel of cards, a row of round artists, big hero cards, or
+     songs in columns. Home, New, artist pages and search all use it. -->
+<UserControl
+    x:Class="Medley.App.Controls.ShelfView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Medley.App.Controls"
+    xmlns:vm="using:Medley.App.ViewModels">
+
+    <UserControl.Resources>
+        <DataTemplate x:Key="CardTemplate" x:DataType="vm:CardItem">
+            <StackPanel Width="{StaticResource CardWidth}" Padding="0,0,0,6">
+                <Grid Width="{StaticResource CardArtworkSize}" Height="{StaticResource CardArtworkSize}">
+                    <controls:ArtworkView Source="{x:Bind Artwork}" Pixels="200" CornerRadius="{StaticResource ArtworkCornerRadius}" />
+                    <Border CornerRadius="{StaticResource ArtworkCornerRadius}" Visibility="{x:Bind IsCategory}"
+                            Background="{x:Bind controls:ShelfView.CategoryBrush(CategoryColor)}">
+                        <TextBlock Text="{x:Bind Title}" Margin="14" VerticalAlignment="Bottom" Foreground="White"
+                                   Style="{StaticResource SubtitleTextBlockStyle}" TextWrapping="Wrap" />
+                    </Border>
+                </Grid>
+                <TextBlock Text="{x:Bind Title}" Style="{StaticResource CardTwoLineTitleTextStyle}" ToolTipService.ToolTip="{x:Bind Title}" Margin="0,8,0,0"
+                           Visibility="{x:Bind controls:ShelfView.Not(IsCategory)}" />
+                <TextBlock Text="{x:Bind Subtitle}" Style="{StaticResource CardSubtitleTextStyle}"
+                           Visibility="{x:Bind controls:ShelfView.Not(IsCategory)}" />
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="ArtistTemplate" x:DataType="vm:CardItem">
+            <StackPanel Width="{StaticResource ArtistCardSize}" Spacing="8" Padding="0,0,0,6">
+                <controls:ArtworkView Source="{x:Bind Artwork}" Pixels="200" CornerRadius="74"
+                                      Width="{StaticResource ArtistCardSize}" Height="{StaticResource ArtistCardSize}" />
+                <TextBlock Text="{x:Bind Title}" Style="{StaticResource CardTitleTextStyle}" HorizontalAlignment="Center" />
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="HeroTemplate" x:DataType="vm:CardItem">
+            <Grid Width="{StaticResource HeroCardWidth}" Height="200" CornerRadius="{StaticResource ArtworkCornerRadius}">
+                <controls:ArtworkView Source="{x:Bind Artwork}" Pixels="400" CornerRadius="{StaticResource ArtworkCornerRadius}" />
+                <Border CornerRadius="{StaticResource ArtworkCornerRadius}">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                            <GradientStop Offset="0.35" Color="#00000000" />
+                            <GradientStop Offset="1" Color="#CC000000" />
+                        </LinearGradientBrush>
+                    </Border.Background>
+                </Border>
+                <StackPanel VerticalAlignment="Bottom" Padding="16,0,16,14">
+                    <TextBlock Text="{x:Bind Title}" Foreground="White" Style="{StaticResource SubtitleTextBlockStyle}" TextTrimming="CharacterEllipsis" />
+                    <TextBlock Text="{x:Bind Subtitle}" Foreground="#CCFFFFFF" Style="{StaticResource CaptionTextBlockStyle}" TextTrimming="CharacterEllipsis" MaxLines="2" TextWrapping="Wrap" />
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="SongTemplate" x:DataType="vm:TrackRow">
+            <Grid Height="52" ColumnSpacing="12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="44" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <controls:ArtworkView Source="{x:Bind Artwork}" Pixels="64" Width="44" Height="44" CornerRadius="{StaticResource SmallArtworkCornerRadius}" />
+                <Border Width="44" Height="44" CornerRadius="{StaticResource SmallArtworkCornerRadius}" Background="#99000000"
+                        Visibility="{x:Bind IsCurrent, Mode=OneWay}">
+                    <FontIcon Glyph="{x:Bind IndicatorGlyph, Mode=OneWay}" FontSize="16" Foreground="White" />
+                </Border>
+                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                    <TextBlock Text="{x:Bind Title}" TextTrimming="CharacterEllipsis" MaxLines="1" />
+                    <TextBlock Text="{x:Bind Artist}" Style="{StaticResource CardSubtitleTextStyle}" />
+                </StackPanel>
+                <TextBlock Grid.Column="2" Text="{x:Bind DurationText, Mode=OneWay}" Style="{StaticResource TimeTextStyle}" />
+            </Grid>
+        </DataTemplate>
+
+        <Style x:Key="ShelfListStyle" TargetType="ListView">
+            <Setter Property="SelectionMode" Value="None" />
+            <Setter Property="IsItemClickEnabled" Value="True" />
+            <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Enabled" />
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
+            <Setter Property="ScrollViewer.VerticalScrollMode" Value="Disabled" />
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled" />
+            <Setter Property="ScrollViewer.IsHorizontalRailEnabled" Value="True" />
+            <Setter Property="Margin" Value="-12,0,-12,0" />
+            <Setter Property="Padding" Value="4,0" />
+        </Style>
+        <!-- Song columns: the column width comes from the shelf's width (ShelfView.FitSongColumns), 16 px apart. -->
+        <Style x:Key="SongItemStyle" TargetType="GridViewItem" BasedOn="{StaticResource DefaultGridViewItemStyle}">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="Margin" Value="0,0,16,4" />
+            <Setter Property="Padding" Value="6,0" />
+        </Style>
+        <Style x:Key="CardItemStyle" TargetType="ListViewItem" BasedOn="{StaticResource DefaultListViewItemStyle}">
+            <Setter Property="Padding" Value="8,8,8,4" />
+            <Setter Property="Margin" Value="0" />
+        </Style>
+    </UserControl.Resources>
+
+    <StackPanel>
+        <Grid Margin="{StaticResource ShelfHeaderMargin}">
+            <StackPanel>
+                <TextBlock x:Name="TitleText" Style="{StaticResource ShelfTitleTextStyle}" />
+                <TextBlock x:Name="SubtitleText" Style="{StaticResource SecondaryBodyTextStyle}" Visibility="Collapsed" />
+            </StackPanel>
+            <HyperlinkButton x:Name="SeeAll" Content="See All" HorizontalAlignment="Right" VerticalAlignment="Bottom" Visibility="Collapsed" Click="SeeAll_Click" />
+        </Grid>
+
+        <ListView x:Name="Cards" Style="{StaticResource ShelfListStyle}" ItemContainerStyle="{StaticResource CardItemStyle}" ItemClick="Card_ItemClick">
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <!-- One viewport of cards realized beyond the visible ones (half each side), not the default four. -->
+                    <ItemsStackPanel Orientation="Horizontal" CacheLength="1" />
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+        </ListView>
+
+        <GridView
+            x:Name="Songs"
+            Margin="-6,0"
+            ItemContainerStyle="{StaticResource SongItemStyle}"
+            SizeChanged="Songs_SizeChanged"
+            SelectionMode="None"
+            IsItemClickEnabled="True"
+            ItemClick="Song_ItemClick"
+            ItemTemplate="{StaticResource SongTemplate}"
+            ScrollViewer.HorizontalScrollMode="Enabled"
+            ScrollViewer.HorizontalScrollBarVisibility="Auto"
+            ScrollViewer.VerticalScrollMode="Disabled"
+            ScrollViewer.VerticalScrollBarVisibility="Disabled"
+            Visibility="Collapsed">
+            <GridView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <ItemsWrapGrid Orientation="Vertical" MaximumRowsOrColumns="4" CacheLength="1" ItemWidth="300" />
+                </ItemsPanelTemplate>
+            </GridView.ItemsPanel>
+        </GridView>
+    </StackPanel>
+</UserControl>

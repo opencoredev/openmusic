@@ -1,0 +1,52 @@
+# An OpenMusic sync server: the open-source Convex backend, plus its dashboard if you ask for it.
+# Works with `docker compose`, `podman compose` and `podman-compose`. See docs/self-hosting.md.
+#
+# Settings come from .env next to this file (copy .env.example). Everything listens on 127.0.0.1 only:
+# put HTTPS in front of port OPENMUSIC_PORT (Tailscale Serve or a reverse proxy) to reach it from your devices.
+name: ${COMPOSE_PROJECT_NAME:-openmusic-sync}
+
+services:
+  backend:
+    image: ghcr.io/convex/convex-backend:${CONVEX_VERSION:-e631122891a73f26aa8a97ecadaf135217bd1994}
+    restart: unless-stopped
+    stop_grace_period: 10s
+    stop_signal: SIGINT
+    ports:
+      # The client URL (what OpenMusic talks to). OpenMusic has no HTTP actions, so the backend's port 3211 isn't published.
+      - "127.0.0.1:${OPENMUSIC_PORT:-3210}:3210"
+    volumes:
+      - data:/convex/data
+    environment:
+      # How the outside world reaches the backend. Shows up in URLs the backend hands out.
+      - CONVEX_CLOUD_ORIGIN=${OPENMUSIC_SERVER_URL:-http://127.0.0.1:3210}
+      - CONVEX_SITE_ORIGIN=http://127.0.0.1:3211
+      # Don't send anonymous usage reports to Convex. Set to empty in .env to allow them.
+      - DISABLE_BEACON=${DISABLE_BEACON-true}
+      - DISABLE_METRICS_ENDPOINT=true
+      # Keep deleted documents' history for 2 days (the backend's own default keeps more).
+      - DOCUMENT_RETENTION_DELAY=172800
+      # Function logs stay on the server; clients get no stack traces.
+      - REDACT_LOGS_TO_CLIENT=true
+      - RUST_LOG=${RUST_LOG:-info}
+    healthcheck:
+      test: curl -f http://localhost:3210/version
+      interval: 5s
+      start_period: 10s
+
+  # Optional web dashboard (browse tables, logs, env vars): `docker compose --profile dashboard up -d`.
+  # It asks for the admin key in the browser.
+  dashboard:
+    profiles: [dashboard]
+    image: ghcr.io/convex/convex-dashboard:${CONVEX_VERSION:-e631122891a73f26aa8a97ecadaf135217bd1994}
+    restart: unless-stopped
+    stop_grace_period: 10s
+    stop_signal: SIGINT
+    ports:
+      - "127.0.0.1:${DASHBOARD_PORT:-6791}:6791"
+    environment:
+      - NEXT_PUBLIC_DEPLOYMENT_URL=http://127.0.0.1:${OPENMUSIC_PORT:-3210}
+    depends_on:
+      - backend
+
+volumes:
+  data:

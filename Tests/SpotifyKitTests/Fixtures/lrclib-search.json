@@ -1,0 +1,6 @@
+[
+  { "id": 101, "name": "Get Lucky", "trackName": "Get Lucky", "artistName": "Daft Punk", "albumName": "Get Lucky (Radio Edit)", "duration": 248.0, "instrumental": false, "plainLyrics": "Like the legend of the phoenix", "syncedLyrics": "[00:20.00] Like the legend of the phoenix" },
+  { "id": 102, "name": "Get Lucky", "trackName": "Get Lucky", "artistName": "Daft Punk", "albumName": "Random Access Memories", "duration": 369.0, "instrumental": false, "plainLyrics": "Like the legend of the phoenix\nAll ends with beginnings", "syncedLyrics": null },
+  { "id": 103, "name": "Get Lucky", "trackName": "Get Lucky", "artistName": "Daft Punk", "albumName": "Random Access Memories", "duration": 368.0, "instrumental": false, "plainLyrics": "Like the legend of the phoenix\nAll ends with beginnings", "syncedLyrics": "[00:31.48] Like the legend of the phoenix, huh\n[00:35.40] All ends with beginnings" },
+  { "id": 104, "name": "Get Lucky", "trackName": "Get Lucky", "artistName": "Daft Punk", "albumName": "Live", "duration": 370.0, "instrumental": false, "plainLyrics": "", "syncedLyrics": "" }
+]

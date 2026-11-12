@@ -1,0 +1,58 @@
+{
+  "artists": [
+    {
+      "external_urls": {
+        "spotify": "https://open.spotify.com/artist/4tZwfgrHOc3mvqYlEYSvVi"
+      },
+      "href": "https://api.spotify.com/v1/artists/4tZwfgrHOc3mvqYlEYSvVi",
+      "id": "4tZwfgrHOc3mvqYlEYSvVi",
+      "name": "Daft Punk",
+      "type": "artist",
+      "uri": "spotify:artist:4tZwfgrHOc3mvqYlEYSvVi",
+      "images": [
+        {
+          "url": "https://i.scdn.co/image/ab67616100004tZwfg640",
+          "height": 640,
+          "width": 640
+        },
+        {
+          "url": "https://i.scdn.co/image/ab67616100004tZwfg300",
+          "height": 300,
+          "width": 300
+        },
+        {
+          "url": "https://i.scdn.co/image/ab67616100004tZwfg64",
+          "height": 64,
+          "width": 64
+        }
+      ]
+    },
+    {
+      "external_urls": {
+        "spotify": "https://open.spotify.com/artist/3yDIp0kaq9EFKe07X1X2rz"
+      },
+      "href": "https://api.spotify.com/v1/artists/3yDIp0kaq9EFKe07X1X2rz",
+      "id": "3yDIp0kaq9EFKe07X1X2rz",
+      "name": "Nile Rodgers",
+      "type": "artist",
+      "uri": "spotify:artist:3yDIp0kaq9EFKe07X1X2rz",
+      "images": [
+        {
+          "url": "https://i.scdn.co/image/ab67616100003yDIp0640",
+          "height": 640,
+          "width": 640
+        },
+        {
+          "url": "https://i.scdn.co/image/ab67616100003yDIp0300",
+          "height": 300,
+          "width": 300
+        },
+        {
+          "url": "https://i.scdn.co/image/ab67616100003yDIp064",
+          "height": 64,
+          "width": 64
+        }
+      ]
+    }
+  ]
+}

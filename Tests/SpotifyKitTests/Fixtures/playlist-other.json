@@ -1,0 +1,30 @@
+{
+  "collaborative": false,
+  "description": "This is Daft Punk.",
+  "external_urls": {
+    "spotify": "https://open.spotify.com/playlist/37i9dQZF1DZ06evO1NpUHo"
+  },
+  "href": "https://api.spotify.com/v1/playlists/37i9dQZF1DZ06evO1NpUHo",
+  "id": "37i9dQZF1DZ06evO1NpUHo",
+  "images": [
+    {
+      "url": "https://i.scdn.co/image/ab67706c000037i9dQ640",
+      "height": 640,
+      "width": 640
+    }
+  ],
+  "name": "This Is Daft Punk",
+  "owner": {
+    "external_urls": {
+      "spotify": "https://open.spotify.com/user/spotify"
+    },
+    "href": "https://api.spotify.com/v1/users/spotify",
+    "id": "spotify",
+    "type": "user",
+    "uri": "spotify:user:spotify",
+    "display_name": "Spotify"
+  },
+  "public": true,
+  "snapshot_id": "AAAAB8C+GgTnK5bU2H0jzA4sKLjUbmaQ",
+  "uri": "spotify:playlist:37i9dQZF1DZ06evO1NpUHo"
+}

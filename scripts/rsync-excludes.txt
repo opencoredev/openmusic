@@ -1,0 +1,17 @@
+# Never copied to another machine by the scripts that sync this checkout (rsync --exclude-from).
+# Build output and tooling state
+.build/
+build/
+.git
+.swiftpm/
+*.xcodeproj/
+node_modules/
+# Private, per-machine files: local config, agent notes, credentials, backups
+scripts/local.env
+scripts/private-patterns.txt
+AGENTS.local.md
+CLAUDE.local.md
+.env
+.env.*
+*.admin-key
+*-backup.zip

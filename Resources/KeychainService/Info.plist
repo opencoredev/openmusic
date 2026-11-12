@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleIdentifier</key><string>dev.openmusic.keychain-service</string>
+    <key>CFBundleName</key><string>openmusic-keychain-service</string>
+    <key>CFBundleExecutable</key><string>openmusic-keychain-service</string>
+    <key>CFBundlePackageType</key><string>XPC!</string>
+    <key>CFBundleInfoDictionaryVersion</key><string>6.0</string>
+    <key>CFBundleShortVersionString</key><string>1.0</string>
+    <key>CFBundleVersion</key><string>1</string>
+    <key>LSMinimumSystemVersion</key><string>15.0</string>
+    <key>XPCService</key>
+    <dict>
+        <key>ServiceType</key><string>Application</string>
+        <!-- Run in the app's security session: in a new one (the default) the login keychain reads as locked. -->
+        <key>JoinExistingSession</key><true/>
+    </dict>
+</dict>
+</plist>

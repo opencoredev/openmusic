@@ -1,0 +1,375 @@
+{
+  "href": "https://api.spotify.com/v1/me/player/recently-played?limit=50",
+  "limit": 50,
+  "next": "https://api.spotify.com/v1/me/player/recently-played?before=1761900000000&limit=50",
+  "cursors": {
+    "after": "1761990000000",
+    "before": "1761900000000"
+  },
+  "total": null,
+  "items": [
+    {
+      "track": {
+        "artists": [
+          {
+            "external_urls": {
+              "spotify": "https://open.spotify.com/artist/4tZwfgrHOc3mvqYlEYSvVi"
+            },
+            "href": "https://api.spotify.com/v1/artists/4tZwfgrHOc3mvqYlEYSvVi",
+            "id": "4tZwfgrHOc3mvqYlEYSvVi",
+            "name": "Daft Punk",
+            "type": "artist",
+            "uri": "spotify:artist:4tZwfgrHOc3mvqYlEYSvVi"
+          },
+          {
+            "external_urls": {
+              "spotify": "https://open.spotify.com/artist/2RdwBSPQiwcmiDo9kixcl8"
+            },
+            "href": "https://api.spotify.com/v1/artists/2RdwBSPQiwcmiDo9kixcl8",
+            "id": "2RdwBSPQiwcmiDo9kixcl8",
+            "name": "Pharrell Williams",
+            "type": "artist",
+            "uri": "spotify:artist:2RdwBSPQiwcmiDo9kixcl8"
+          },
+          {
+            "external_urls": {
+              "spotify": "https://open.spotify.com/artist/3yDIp0kaq9EFKe07X1X2rz"
+            },
+            "href": "https://api.spotify.com/v1/artists/3yDIp0kaq9EFKe07X1X2rz",
+            "id": "3yDIp0kaq9EFKe07X1X2rz",
+            "name": "Nile Rodgers",
+            "type": "artist",
+            "uri": "spotify:artist:3yDIp0kaq9EFKe07X1X2rz"
+          }
+        ],
+        "disc_number": 1,
+        "duration_ms": 369626,
+        "explicit": false,
+        "external_urls": {
+          "spotify": "https://open.spotify.com/track/69kOkLUCkxIZYexIgSG8rq"
+        },
+        "href": "https://api.spotify.com/v1/tracks/69kOkLUCkxIZYexIgSG8rq",
+        "id": "69kOkLUCkxIZYexIgSG8rq",
+        "is_playable": true,
+        "name": "Get Lucky (feat. Pharrell Williams and Nile Rodgers)",
+        "track_number": 8,
+        "type": "track",
+        "uri": "spotify:track:69kOkLUCkxIZYexIgSG8rq",
+        "is_local": false,
+        "album": {
+          "album_type": "album",
+          "total_tracks": 13,
+          "external_urls": {
+            "spotify": "https://open.spotify.com/album/4m2880jivSbbyEGAKfITCa"
+          },
+          "href": "https://api.spotify.com/v1/albums/4m2880jivSbbyEGAKfITCa",
+          "id": "4m2880jivSbbyEGAKfITCa",
+          "images": [
+            {
+              "url": "https://i.scdn.co/image/ab67616d00004m2880640",
+              "height": 640,
+              "width": 640
+            },
+            {
+              "url": "https://i.scdn.co/image/ab67616d00004m2880300",
+              "height": 300,
+              "width": 300
+            },
+            {
+              "url": "https://i.scdn.co/image/ab67616d00004m288064",
+              "height": 64,
+              "width": 64
+            }
+          ],
+          "name": "Random Access Memories",
+          "release_date": "2013-05-17",
+          "release_date_precision": "day",
+          "type": "album",
+          "uri": "spotify:album:4m2880jivSbbyEGAKfITCa",
+          "artists": [
+            {
+              "external_urls": {
+                "spotify": "https://open.spotify.com/artist/4tZwfgrHOc3mvqYlEYSvVi"
+              },
+              "href": "https://api.spotify.com/v1/artists/4tZwfgrHOc3mvqYlEYSvVi",
+              "id": "4tZwfgrHOc3mvqYlEYSvVi",
+              "name": "Daft Punk",
+              "type": "artist",
+              "uri": "spotify:artist:4tZwfgrHOc3mvqYlEYSvVi"
+            }
+          ],
+          "is_playable": true
+        },
+        "external_ids": {
+          "isrc": "USQX91300008"
+        }
+      },
+      "played_at": "2026-10-30T21:00:00.000Z",
+      "context": {
+        "type": "album",
+        "uri": "spotify:album:4m2880jivSbbyEGAKfITCa",
+        "href": "https://api.spotify.com/v1/albums/4m2880jivSbbyEGAKfITCa",
+        "external_urls": {
+          "spotify": "x"
+        }
+      }
+    },
+    {
+      "track": {
+        "artists": [
+          {
+            "external_urls": {
+              "spotify": "https://open.spotify.com/artist/4tZwfgrHOc3mvqYlEYSvVi"
+            },
+            "href": "https://api.spotify.com/v1/artists/4tZwfgrHOc3mvqYlEYSvVi",
+            "id": "4tZwfgrHOc3mvqYlEYSvVi",
+            "name": "Daft Punk",
+            "type": "artist",
+            "uri": "spotify:artist:4tZwfgrHOc3mvqYlEYSvVi"
+          }
+        ],
+        "disc_number": 1,
+        "duration_ms": 320357,
+        "explicit": false,
+        "external_urls": {
+          "spotify": "https://open.spotify.com/track/0DiWol3AO6WpXZgp0goxAV"
+        },
+        "href": "https://api.spotify.com/v1/tracks/0DiWol3AO6WpXZgp0goxAV",
+        "id": "0DiWol3AO6WpXZgp0goxAV",
+        "is_playable": true,
+        "name": "One More Time",
+        "track_number": 1,
+        "type": "track",
+        "uri": "spotify:track:0DiWol3AO6WpXZgp0goxAV",
+        "is_local": false,
+        "album": {
+          "album_type": "album",
+          "total_tracks": 14,
+          "external_urls": {
+            "spotify": "https://open.spotify.com/album/2noRn2Aes5aoNVsU6iWThc"
+          },
+          "href": "https://api.spotify.com/v1/albums/2noRn2Aes5aoNVsU6iWThc",
+          "id": "2noRn2Aes5aoNVsU6iWThc",
+          "images": [
+            {
+              "url": "https://i.scdn.co/image/ab67616d00002noRn2640",
+              "height": 640,
+              "width": 640
+            },
+            {
+              "url": "https://i.scdn.co/image/ab67616d00002noRn2300",
+              "height": 300,
+              "width": 300
+            },
+            {
+              "url": "https://i.scdn.co/image/ab67616d00002noRn264",
+              "height": 64,
+              "width": 64
+            }
+          ],
+          "name": "Discovery",
+          "release_date": "2001-03-12",
+          "release_date_precision": "day",
+          "type": "album",
+          "uri": "spotify:album:2noRn2Aes5aoNVsU6iWThc",
+          "artists": [
+            {
+              "external_urls": {
+                "spotify": "https://open.spotify.com/artist/4tZwfgrHOc3mvqYlEYSvVi"
+              },
+              "href": "https://api.spotify.com/v1/artists/4tZwfgrHOc3mvqYlEYSvVi",
+              "id": "4tZwfgrHOc3mvqYlEYSvVi",
+              "name": "Daft Punk",
+              "type": "artist",
+              "uri": "spotify:artist:4tZwfgrHOc3mvqYlEYSvVi"
+            }
+          ],
+          "is_playable": true
+        },
+        "external_ids": {
+          "isrc": "USQX91300001"
+        }
+      },
+      "played_at": "2026-10-30T20:50:00.000Z",
+      "context": null
+    },
+    {
+      "track": {
+        "artists": [
+          {
+            "external_urls": {
+              "spotify": "https://open.spotify.com/artist/4tZwfgrHOc3mvqYlEYSvVi"
+            },
+            "href": "https://api.spotify.com/v1/artists/4tZwfgrHOc3mvqYlEYSvVi",
+            "id": "4tZwfgrHOc3mvqYlEYSvVi",
+            "name": "Daft Punk",
+            "type": "artist",
+            "uri": "spotify:artist:4tZwfgrHOc3mvqYlEYSvVi"
+          },
+          {
+            "external_urls": {
+              "spotify": "https://open.spotify.com/artist/2RdwBSPQiwcmiDo9kixcl8"
+            },
+            "href": "https://api.spotify.com/v1/artists/2RdwBSPQiwcmiDo9kixcl8",
+            "id": "2RdwBSPQiwcmiDo9kixcl8",
+            "name": "Pharrell Williams",
+            "type": "artist",
+            "uri": "spotify:artist:2RdwBSPQiwcmiDo9kixcl8"
+          },
+          {
+            "external_urls": {
+              "spotify": "https://open.spotify.com/artist/3yDIp0kaq9EFKe07X1X2rz"
+            },
+            "href": "https://api.spotify.com/v1/artists/3yDIp0kaq9EFKe07X1X2rz",
+            "id": "3yDIp0kaq9EFKe07X1X2rz",
+            "name": "Nile Rodgers",
+            "type": "artist",
+            "uri": "spotify:artist:3yDIp0kaq9EFKe07X1X2rz"
+          }
+        ],
+        "disc_number": 1,
+        "duration_ms": 369626,
+        "explicit": false,
+        "external_urls": {
+          "spotify": "https://open.spotify.com/track/69kOkLUCkxIZYexIgSG8rq"
+        },
+        "href": "https://api.spotify.com/v1/tracks/69kOkLUCkxIZYexIgSG8rq",
+        "id": "69kOkLUCkxIZYexIgSG8rq",
+        "is_playable": true,
+        "name": "Get Lucky (feat. Pharrell Williams and Nile Rodgers)",
+        "track_number": 8,
+        "type": "track",
+        "uri": "spotify:track:69kOkLUCkxIZYexIgSG8rq",
+        "is_local": false,
+        "album": {
+          "album_type": "album",
+          "total_tracks": 13,
+          "external_urls": {
+            "spotify": "https://open.spotify.com/album/4m2880jivSbbyEGAKfITCa"
+          },
+          "href": "https://api.spotify.com/v1/albums/4m2880jivSbbyEGAKfITCa",
+          "id": "4m2880jivSbbyEGAKfITCa",
+          "images": [
+            {
+              "url": "https://i.scdn.co/image/ab67616d00004m2880640",
+              "height": 640,
+              "width": 640
+            },
+            {
+              "url": "https://i.scdn.co/image/ab67616d00004m2880300",
+              "height": 300,
+              "width": 300
+            },
+            {
+              "url": "https://i.scdn.co/image/ab67616d00004m288064",
+              "height": 64,
+              "width": 64
+            }
+          ],
+          "name": "Random Access Memories",
+          "release_date": "2013-05-17",
+          "release_date_precision": "day",
+          "type": "album",
+          "uri": "spotify:album:4m2880jivSbbyEGAKfITCa",
+          "artists": [
+            {
+              "external_urls": {
+                "spotify": "https://open.spotify.com/artist/4tZwfgrHOc3mvqYlEYSvVi"
+              },
+              "href": "https://api.spotify.com/v1/artists/4tZwfgrHOc3mvqYlEYSvVi",
+              "id": "4tZwfgrHOc3mvqYlEYSvVi",
+              "name": "Daft Punk",
+              "type": "artist",
+              "uri": "spotify:artist:4tZwfgrHOc3mvqYlEYSvVi"
+            }
+          ],
+          "is_playable": true
+        },
+        "external_ids": {
+          "isrc": "USQX91300008"
+        }
+      },
+      "played_at": "2026-10-30T20:40:00.000Z",
+      "context": null
+    },
+    {
+      "track": {
+        "artists": [
+          {
+            "external_urls": {
+              "spotify": "https://open.spotify.com/artist/4tZwfgrHOc3mvqYlEYSvVi"
+            },
+            "href": "https://api.spotify.com/v1/artists/4tZwfgrHOc3mvqYlEYSvVi",
+            "id": "4tZwfgrHOc3mvqYlEYSvVi",
+            "name": "Daft Punk",
+            "type": "artist",
+            "uri": "spotify:artist:4tZwfgrHOc3mvqYlEYSvVi"
+          }
+        ],
+        "disc_number": 1,
+        "duration_ms": 429533,
+        "explicit": false,
+        "external_urls": {
+          "spotify": "https://open.spotify.com/track/1pKYYY0dkg23sQQXi0Q5zN"
+        },
+        "href": "https://api.spotify.com/v1/tracks/1pKYYY0dkg23sQQXi0Q5zN",
+        "id": "1pKYYY0dkg23sQQXi0Q5zN",
+        "is_playable": true,
+        "name": "Around the World",
+        "track_number": 7,
+        "type": "track",
+        "uri": "spotify:track:1pKYYY0dkg23sQQXi0Q5zN",
+        "is_local": false,
+        "album": {
+          "album_type": "album",
+          "total_tracks": 16,
+          "external_urls": {
+            "spotify": "https://open.spotify.com/album/5uRdvUR7xCnHmUW8n64n9y"
+          },
+          "href": "https://api.spotify.com/v1/albums/5uRdvUR7xCnHmUW8n64n9y",
+          "id": "5uRdvUR7xCnHmUW8n64n9y",
+          "images": [
+            {
+              "url": "https://i.scdn.co/image/ab67616d00005uRdvU640",
+              "height": 640,
+              "width": 640
+            },
+            {
+              "url": "https://i.scdn.co/image/ab67616d00005uRdvU300",
+              "height": 300,
+              "width": 300
+            },
+            {
+              "url": "https://i.scdn.co/image/ab67616d00005uRdvU64",
+              "height": 64,
+              "width": 64
+            }
+          ],
+          "name": "Homework",
+          "release_date": "1997-01-20",
+          "release_date_precision": "day",
+          "type": "album",
+          "uri": "spotify:album:5uRdvUR7xCnHmUW8n64n9y",
+          "artists": [
+            {
+              "external_urls": {
+                "spotify": "https://open.spotify.com/artist/4tZwfgrHOc3mvqYlEYSvVi"
+              },
+              "href": "https://api.spotify.com/v1/artists/4tZwfgrHOc3mvqYlEYSvVi",
+              "id": "4tZwfgrHOc3mvqYlEYSvVi",
+              "name": "Daft Punk",
+              "type": "artist",
+              "uri": "spotify:artist:4tZwfgrHOc3mvqYlEYSvVi"
+            }
+          ],
+          "is_playable": true
+        },
+        "external_ids": {
+          "isrc": "USQX91300007"
+        }
+      },
+      "played_at": "2026-10-30T20:30:00.000Z",
+      "context": null
+    }
+  ]
+}

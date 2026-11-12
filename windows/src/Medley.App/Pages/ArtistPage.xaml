@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- An artist: portrait header with Play and Radio, top songs, albums, singles, similar artists and the bio. -->
+<Page
+    x:Class="Medley.App.Pages.ArtistPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Medley.App.Controls">
+    <ScrollViewer>
+        <StackPanel Padding="{StaticResource PagePadding}">
+            <Grid ColumnSpacing="28" Margin="0,8,0,8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <controls:ArtworkView x:Name="Portrait" Width="200" Height="200" CornerRadius="100" Source="{x:Bind ViewModel.Artwork, Mode=OneWay}" Pixels="400" />
+                <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="4">
+                    <TextBlock Text="Artist" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <TextBlock Text="{x:Bind ViewModel.Name, Mode=OneWay}" Style="{StaticResource DisplayTextBlockStyle}" FontSize="46" TextTrimming="CharacterEllipsis" />
+                    <TextBlock Text="{x:Bind ViewModel.Subtitle, Mode=OneWay}" Style="{StaticResource SecondaryBodyTextStyle}"
+                               Visibility="{x:Bind controls:TrackList.VisibleIfText(ViewModel.Subtitle), Mode=OneWay}" />
+                    <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,16,0,0">
+                        <Button Style="{StaticResource AccentButtonStyle}" Command="{x:Bind ViewModel.PlayCommand}" MinWidth="112">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xE768;" FontSize="14" />
+                                <TextBlock Text="Play" />
+                            </StackPanel>
+                        </Button>
+                        <Button Command="{x:Bind ViewModel.RadioCommand}" MinWidth="112">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xEC05;" FontSize="14" />
+                                <TextBlock Text="Radio" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+
+            <TextBlock Text="Top Songs" Style="{StaticResource ShelfTitleTextStyle}" Margin="{StaticResource ShelfHeaderMargin}" />
+            <controls:TrackList x:Name="TopSongs" />
+
+            <StackPanel x:Name="ShelfHost" />
+
+            <TextBlock Text="About" Style="{StaticResource ShelfTitleTextStyle}" Margin="{StaticResource ShelfHeaderMargin}"
+                       Visibility="{x:Bind ViewModel.Bio, Mode=OneWay, Converter={StaticResource NullToVisibility}}" />
+            <TextBlock Text="{x:Bind ViewModel.Bio, Mode=OneWay}" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="Wrap" MaxWidth="880" HorizontalAlignment="Left" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+        </StackPanel>
+    </ScrollViewer>
+</Page>

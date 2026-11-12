@@ -1,0 +1,31 @@
+{
+  "external_urls": {
+    "spotify": "https://open.spotify.com/artist/4tZwfgrHOc3mvqYlEYSvVi"
+  },
+  "href": "https://api.spotify.com/v1/artists/4tZwfgrHOc3mvqYlEYSvVi",
+  "id": "4tZwfgrHOc3mvqYlEYSvVi",
+  "name": "Daft Punk",
+  "type": "artist",
+  "uri": "spotify:artist:4tZwfgrHOc3mvqYlEYSvVi",
+  "images": [
+    {
+      "url": "https://i.scdn.co/image/ab67616100004tZwfg640",
+      "height": 640,
+      "width": 640
+    },
+    {
+      "url": "https://i.scdn.co/image/ab67616100004tZwfg300",
+      "height": 300,
+      "width": 300
+    },
+    {
+      "url": "https://i.scdn.co/image/ab67616100004tZwfg64",
+      "height": 64,
+      "width": 64
+    }
+  ],
+  "genres": [
+    "french house",
+    "electro"
+  ]
+}

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The collapsible right pane: Lyrics and Up Next (with History). -->
+<UserControl
+    x:Class="Medley.App.Controls.SidePane"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Medley.App.Controls"
+    xmlns:local="using:Medley.App.Controls"
+    xmlns:vm="using:Medley.App.ViewModels"
+    xmlns:svc="using:Medley.App.Services">
+
+    <UserControl.Resources>
+        <DataTemplate x:Key="QueueRowTemplate" x:DataType="vm:QueueRow">
+            <Grid Height="52" ColumnSpacing="12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="40" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <controls:ArtworkView Width="40" Height="40" CornerRadius="{StaticResource SmallArtworkCornerRadius}" Source="{x:Bind Artwork}" Pixels="64" />
+                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                    <TextBlock Text="{x:Bind Title}" TextTrimming="CharacterEllipsis" MaxLines="1" />
+                    <TextBlock Text="{x:Bind Artist}" Style="{StaticResource CardSubtitleTextStyle}" />
+                </StackPanel>
+                <TextBlock Grid.Column="2" Text="{x:Bind DurationText}" Style="{StaticResource TimeTextStyle}" />
+            </Grid>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Grid
+        x:Name="PaneRoot"
+        Background="{ThemeResource SidePaneBackgroundBrush}"
+        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+        BorderThickness="1,0,0,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Border x:Name="OverlayBackground" Grid.RowSpan="2" Background="{ThemeResource SolidBackgroundFillColorBaseBrush}" Visibility="Collapsed" />
+        <Grid Padding="8,4,8,0">
+            <SelectorBar x:Name="Tabs" SelectionChanged="Tabs_SelectionChanged">
+                <SelectorBarItem x:Name="LyricsTab" Text="Lyrics" />
+                <SelectorBarItem x:Name="UpNextTab" Text="Up Next" />
+            </SelectorBar>
+            <Button
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Style="{StaticResource BarIconButtonStyle}"
+                Content="&#xE711;"
+                FontSize="12"
+                Click="Close_Click"
+                AutomationProperties.Name="Close pane"
+                ToolTipService.ToolTip="Close" />
+        </Grid>
+
+        <local:LyricsView x:Name="Lyrics" Grid.Row="1" Margin="8,12,0,0" />
+
+        <ScrollViewer x:Name="UpNextPanel" Grid.Row="1" Visibility="Collapsed" Padding="8,0,8,16">
+            <StackPanel Spacing="2">
+                <!-- Now Playing: the song the queue continues from, with its state. -->
+                <TextBlock Text="Now Playing" Style="{StaticResource BodyStrongTextBlockStyle}" Margin="12,12,12,4"
+                           Visibility="{x:Bind Player.HasTrack, Mode=OneWay}" />
+                <Grid Height="52" ColumnSpacing="12" Padding="12,0" Visibility="{x:Bind Player.HasTrack, Mode=OneWay}" AutomationProperties.AutomationId="UpNextNowPlaying">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="40" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <controls:ArtworkView Width="40" Height="40" CornerRadius="{StaticResource SmallArtworkCornerRadius}" Source="{x:Bind Player.Artwork, Mode=OneWay}" />
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                        <TextBlock Text="{x:Bind Player.Title, Mode=OneWay}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" MaxLines="1" />
+                        <TextBlock Text="{x:Bind Player.Artist, Mode=OneWay}" Style="{StaticResource CardSubtitleTextStyle}" />
+                    </StackPanel>
+                    <FontIcon Grid.Column="2" Glyph="{x:Bind local:SidePane.Indicator(Player.IsPlaying), Mode=OneWay}" FontSize="14"
+                              Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                </Grid>
+                <Grid Margin="12,16,4,4">
+                    <TextBlock Text="{x:Bind Player.UpNextHeader, Mode=OneWay}" Style="{StaticResource BodyStrongTextBlockStyle}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0,0,64,0" />
+                    <HyperlinkButton Content="Clear" HorizontalAlignment="Right" Padding="8,2" Click="Clear_Click" AutomationProperties.AutomationId="UpNextClear"
+                                     Visibility="{x:Bind local:SidePane.CountVisibility(Player.UpNext.Count), Mode=OneWay}" ToolTipService.ToolTip="Clear Up Next" />
+                </Grid>
+                <ListView
+                    x:Name="UpNextList"
+                    ItemsSource="{x:Bind Player.UpNext}"
+                    ItemTemplate="{StaticResource QueueRowTemplate}"
+                    SelectionMode="Single"
+                    IsItemClickEnabled="True"
+                    ItemClick="UpNextList_ItemClick"
+                    CanDragItems="True"
+                    CanReorderItems="True"
+                    AllowDrop="True"
+                    DragItemsStarting="UpNextList_DragItemsStarting"
+                    DragItemsCompleted="UpNextList_DragItemsCompleted"
+                    KeyDown="UpNextList_KeyDown"
+                    AutomationProperties.AutomationId="UpNextList"
+                    AutomationProperties.Name="Up Next" />
+                <TextBlock
+                    Text="Nothing queued. Autoplay adds similar songs when the queue runs out."
+                    Style="{StaticResource SecondaryBodyTextStyle}"
+                    TextWrapping="Wrap"
+                    Margin="12,8"
+                    Visibility="{x:Bind local:SidePane.EmptyVisibility(Player.UpNext.Count), Mode=OneWay}" />
+                <!-- Autoplay, as in Settings › Playback (it follows your Medley account). -->
+                <Grid Margin="12,12,4,0" ColumnSpacing="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="Autoplay" />
+                        <TextBlock Text="Keep playing similar songs" Style="{StaticResource CardSubtitleTextStyle}" />
+                    </StackPanel>
+                    <ToggleSwitch x:Name="AutoplaySwitch" Grid.Column="1" OnContent="" OffContent="" MinWidth="0" Toggled="AutoplaySwitch_Toggled"
+                                  AutomationProperties.AutomationId="UpNextAutoplay" AutomationProperties.Name="Autoplay" />
+                </Grid>
+                <TextBlock Text="History" Style="{StaticResource BodyStrongTextBlockStyle}" Margin="12,20,12,4"
+                           Visibility="{x:Bind local:SidePane.CountVisibility(Player.History.Count), Mode=OneWay}" />
+                <ListView
+                    x:Name="HistoryList"
+                    ItemsSource="{x:Bind Player.History}"
+                    ItemTemplate="{StaticResource QueueRowTemplate}"
+                    SelectionMode="None"
+                    IsItemClickEnabled="True"
+                    ItemClick="History_ItemClick"
+                    AutomationProperties.Name="History" />
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

@@ -1,0 +1,14 @@
+{
+  "country": "US",
+  "display_name": null,
+  "email": "ada@example.com",
+  "explicit_content": { "filter_enabled": false, "filter_locked": false },
+  "external_urls": { "spotify": "https://open.spotify.com/user/ada.listener" },
+  "followers": { "href": null, "total": 3 },
+  "href": "https://api.spotify.com/v1/users/ada.listener",
+  "id": "ada.listener",
+  "images": [],
+  "product": "premium",
+  "type": "user",
+  "uri": "spotify:user:ada.listener"
+}

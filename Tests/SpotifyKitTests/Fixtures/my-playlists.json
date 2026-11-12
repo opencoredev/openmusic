@@ -1,0 +1,109 @@
+{
+  "href": "https://api.spotify.com/v1/me/playlists?offset=0&limit=50",
+  "items": [
+    {
+      "collaborative": false,
+      "description": "",
+      "external_urls": {
+        "spotify": "https://open.spotify.com/playlist/3cEYpjA9oz9GiPac4AsH4n"
+      },
+      "href": "https://api.spotify.com/v1/playlists/3cEYpjA9oz9GiPac4AsH4n",
+      "id": "3cEYpjA9oz9GiPac4AsH4n",
+      "images": [
+        {
+          "url": "https://i.scdn.co/image/ab67706c00003cEYpj640",
+          "height": 640,
+          "width": 640
+        }
+      ],
+      "name": "Late Night Drive",
+      "owner": {
+        "external_urls": {
+          "spotify": "https://open.spotify.com/user/ada.listener"
+        },
+        "href": "https://api.spotify.com/v1/users/ada.listener",
+        "id": "ada.listener",
+        "type": "user",
+        "uri": "spotify:user:ada.listener",
+        "display_name": "Ada Listener"
+      },
+      "public": true,
+      "snapshot_id": "AAAAB8C+GgTnK5bU2H0jzA4sKLjUbmaQ",
+      "items": {
+        "href": "https://api.spotify.com/v1/playlists/3cEYpjA9oz9GiPac4AsH4n/items",
+        "total": 104
+      },
+      "type": "playlist",
+      "uri": "spotify:playlist:3cEYpjA9oz9GiPac4AsH4n"
+    },
+    {
+      "collaborative": true,
+      "description": "",
+      "external_urls": {
+        "spotify": "https://open.spotify.com/playlist/7d2D2S200NyUE5KYs80PwO"
+      },
+      "href": "https://api.spotify.com/v1/playlists/7d2D2S200NyUE5KYs80PwO",
+      "id": "7d2D2S200NyUE5KYs80PwO",
+      "images": null,
+      "name": "Shared Mix",
+      "owner": {
+        "external_urls": {
+          "spotify": "https://open.spotify.com/user/friend"
+        },
+        "href": "https://api.spotify.com/v1/users/friend",
+        "id": "friend",
+        "type": "user",
+        "uri": "spotify:user:friend",
+        "display_name": "Friend"
+      },
+      "public": true,
+      "snapshot_id": "AAAAB8C+GgTnK5bU2H0jzA4sKLjUbmaQ",
+      "items": {
+        "href": "https://api.spotify.com/v1/playlists/7d2D2S200NyUE5KYs80PwO/items",
+        "total": 12
+      },
+      "type": "playlist",
+      "uri": "spotify:playlist:7d2D2S200NyUE5KYs80PwO"
+    },
+    {
+      "collaborative": false,
+      "description": "",
+      "external_urls": {
+        "spotify": "https://open.spotify.com/playlist/37i9dQZF1DZ06evO1NpUHo"
+      },
+      "href": "https://api.spotify.com/v1/playlists/37i9dQZF1DZ06evO1NpUHo",
+      "id": "37i9dQZF1DZ06evO1NpUHo",
+      "images": [
+        {
+          "url": "https://i.scdn.co/image/ab67706c000037i9dQ640",
+          "height": 640,
+          "width": 640
+        }
+      ],
+      "name": "This Is Daft Punk",
+      "owner": {
+        "external_urls": {
+          "spotify": "https://open.spotify.com/user/spotify"
+        },
+        "href": "https://api.spotify.com/v1/users/spotify",
+        "id": "spotify",
+        "type": "user",
+        "uri": "spotify:user:spotify",
+        "display_name": "Spotify"
+      },
+      "public": true,
+      "snapshot_id": "AAAAB8C+GgTnK5bU2H0jzA4sKLjUbmaQ",
+      "items": {
+        "href": "https://api.spotify.com/v1/playlists/37i9dQZF1DZ06evO1NpUHo/items",
+        "total": 50
+      },
+      "type": "playlist",
+      "uri": "spotify:playlist:37i9dQZF1DZ06evO1NpUHo"
+    }
+  ],
+  "limit": 50,
+  "next": "https://api.spotify.com/v1/me/playlists?offset=50&limit=50",
+  "offset": 0,
+  "previous": null,
+  "total": 53
+}

@@ -1,0 +1,136 @@
+{
+  "href": "https://api.spotify.com/v1/me/albums?offset=0&limit=50",
+  "items": [
+    {
+      "added_at": "2026-10-01T12:00:00Z",
+      "album": {
+        "album_type": "album",
+        "total_tracks": 13,
+        "external_urls": {
+          "spotify": "https://open.spotify.com/album/4m2880jivSbbyEGAKfITCa"
+        },
+        "href": "https://api.spotify.com/v1/albums/4m2880jivSbbyEGAKfITCa",
+        "id": "4m2880jivSbbyEGAKfITCa",
+        "images": [
+          {
+            "url": "https://i.scdn.co/image/ab67616d00004m2880640",
+            "height": 640,
+            "width": 640
+          },
+          {
+            "url": "https://i.scdn.co/image/ab67616d00004m2880300",
+            "height": 300,
+            "width": 300
+          },
+          {
+            "url": "https://i.scdn.co/image/ab67616d00004m288064",
+            "height": 64,
+            "width": 64
+          }
+        ],
+        "name": "Random Access Memories",
+        "release_date": "2013-05-17",
+        "release_date_precision": "day",
+        "type": "album",
+        "uri": "spotify:album:4m2880jivSbbyEGAKfITCa",
+        "artists": [
+          {
+            "external_urls": {
+              "spotify": "https://open.spotify.com/artist/4tZwfgrHOc3mvqYlEYSvVi"
+            },
+            "href": "https://api.spotify.com/v1/artists/4tZwfgrHOc3mvqYlEYSvVi",
+            "id": "4tZwfgrHOc3mvqYlEYSvVi",
+            "name": "Daft Punk",
+            "type": "artist",
+            "uri": "spotify:artist:4tZwfgrHOc3mvqYlEYSvVi"
+          }
+        ],
+        "tracks": {
+          "href": "https://api.spotify.com/v1/albums/4m2880jivSbbyEGAKfITCa/tracks?offset=0&limit=2",
+          "items": [
+            {
+              "artists": [
+                {
+                  "external_urls": {
+                    "spotify": "https://open.spotify.com/artist/4tZwfgrHOc3mvqYlEYSvVi"
+                  },
+                  "href": "https://api.spotify.com/v1/artists/4tZwfgrHOc3mvqYlEYSvVi",
+                  "id": "4tZwfgrHOc3mvqYlEYSvVi",
+                  "name": "Daft Punk",
+                  "type": "artist",
+                  "uri": "spotify:artist:4tZwfgrHOc3mvqYlEYSvVi"
+                }
+              ],
+              "disc_number": 1,
+              "duration_ms": 274000,
+              "explicit": false,
+              "external_urls": {
+                "spotify": "https://open.spotify.com/track/5nTtCOCds6I0PHMNtqelas"
+              },
+              "href": "https://api.spotify.com/v1/tracks/5nTtCOCds6I0PHMNtqelas",
+              "id": "5nTtCOCds6I0PHMNtqelas",
+              "is_playable": true,
+              "name": "Give Life Back to Music",
+              "track_number": 1,
+              "type": "track",
+              "uri": "spotify:track:5nTtCOCds6I0PHMNtqelas",
+              "is_local": false
+            },
+            {
+              "artists": [
+                {
+                  "external_urls": {
+                    "spotify": "https://open.spotify.com/artist/4tZwfgrHOc3mvqYlEYSvVi"
+                  },
+                  "href": "https://api.spotify.com/v1/artists/4tZwfgrHOc3mvqYlEYSvVi",
+                  "id": "4tZwfgrHOc3mvqYlEYSvVi",
+                  "name": "Daft Punk",
+                  "type": "artist",
+                  "uri": "spotify:artist:4tZwfgrHOc3mvqYlEYSvVi"
+                }
+              ],
+              "disc_number": 1,
+              "duration_ms": 321000,
+              "explicit": false,
+              "external_urls": {
+                "spotify": "https://open.spotify.com/track/2KHRENHQzTIQ001nlP9Gdc"
+              },
+              "href": "https://api.spotify.com/v1/tracks/2KHRENHQzTIQ001nlP9Gdc",
+              "id": "2KHRENHQzTIQ001nlP9Gdc",
+              "is_playable": true,
+              "name": "The Game of Love",
+              "track_number": 2,
+              "type": "track",
+              "uri": "spotify:track:2KHRENHQzTIQ001nlP9Gdc",
+              "is_local": false
+            }
+          ],
+          "limit": 2,
+          "next": "https://api.spotify.com/v1/albums/4m2880jivSbbyEGAKfITCa/tracks?offset=2&limit=2",
+          "offset": 0,
+          "previous": null,
+          "total": 4
+        },
+        "copyrights": [
+          {
+            "text": "2013 Daft Life Limited",
+            "type": "C"
+          },
+          {
+            "text": "2013 Daft Life Limited under exclusive license to Columbia Records",
+            "type": "P"
+          }
+        ],
+        "external_ids": {
+          "upc": "886443919266"
+        },
+        "genres": []
+      }
+    }
+  ],
+  "limit": 50,
+  "next": null,
+  "offset": 0,
+  "previous": null,
+  "total": 1
+}

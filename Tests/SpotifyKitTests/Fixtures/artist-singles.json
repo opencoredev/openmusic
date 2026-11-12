@@ -1,0 +1,118 @@
+{
+  "href": "https://api.spotify.com/v1/artists/4tZwfgrHOc3mvqYlEYSvVi/albums?include_groups=single&offset=0&limit=10",
+  "items": [
+    {
+      "album_type": "single",
+      "total_tracks": 1,
+      "external_urls": {
+        "spotify": "https://open.spotify.com/album/1Kx5hDFr9yLXyJyT2h3sRJ"
+      },
+      "href": "https://api.spotify.com/v1/albums/1Kx5hDFr9yLXyJyT2h3sRJ",
+      "id": "1Kx5hDFr9yLXyJyT2h3sRJ",
+      "images": [
+        {
+          "url": "https://i.scdn.co/image/ab67616d00001Kx5hD640",
+          "height": 640,
+          "width": 640
+        },
+        {
+          "url": "https://i.scdn.co/image/ab67616d00001Kx5hD300",
+          "height": 300,
+          "width": 300
+        },
+        {
+          "url": "https://i.scdn.co/image/ab67616d00001Kx5hD64",
+          "height": 64,
+          "width": 64
+        }
+      ],
+      "name": "Get Lucky (Radio Edit)",
+      "release_date": "2013-04-19",
+      "release_date_precision": "day",
+      "type": "album",
+      "uri": "spotify:album:1Kx5hDFr9yLXyJyT2h3sRJ",
+      "artists": [
+        {
+          "external_urls": {
+            "spotify": "https://open.spotify.com/artist/4tZwfgrHOc3mvqYlEYSvVi"
+          },
+          "href": "https://api.spotify.com/v1/artists/4tZwfgrHOc3mvqYlEYSvVi",
+          "id": "4tZwfgrHOc3mvqYlEYSvVi",
+          "name": "Daft Punk",
+          "type": "artist",
+          "uri": "spotify:artist:4tZwfgrHOc3mvqYlEYSvVi"
+        },
+        {
+          "external_urls": {
+            "spotify": "https://open.spotify.com/artist/2RdwBSPQiwcmiDo9kixcl8"
+          },
+          "href": "https://api.spotify.com/v1/artists/2RdwBSPQiwcmiDo9kixcl8",
+          "id": "2RdwBSPQiwcmiDo9kixcl8",
+          "name": "Pharrell Williams",
+          "type": "artist",
+          "uri": "spotify:artist:2RdwBSPQiwcmiDo9kixcl8"
+        },
+        {
+          "external_urls": {
+            "spotify": "https://open.spotify.com/artist/3yDIp0kaq9EFKe07X1X2rz"
+          },
+          "href": "https://api.spotify.com/v1/artists/3yDIp0kaq9EFKe07X1X2rz",
+          "id": "3yDIp0kaq9EFKe07X1X2rz",
+          "name": "Nile Rodgers",
+          "type": "artist",
+          "uri": "spotify:artist:3yDIp0kaq9EFKe07X1X2rz"
+        }
+      ],
+      "is_playable": true
+    },
+    {
+      "album_type": "single",
+      "total_tracks": 4,
+      "external_urls": {
+        "spotify": "https://open.spotify.com/album/6ux53RXuEn1Jm0r0P6Nr9l"
+      },
+      "href": "https://api.spotify.com/v1/albums/6ux53RXuEn1Jm0r0P6Nr9l",
+      "id": "6ux53RXuEn1Jm0r0P6Nr9l",
+      "images": [
+        {
+          "url": "https://i.scdn.co/image/ab67616d00006ux53R640",
+          "height": 640,
+          "width": 640
+        },
+        {
+          "url": "https://i.scdn.co/image/ab67616d00006ux53R300",
+          "height": 300,
+          "width": 300
+        },
+        {
+          "url": "https://i.scdn.co/image/ab67616d00006ux53R64",
+          "height": 64,
+          "width": 64
+        }
+      ],
+      "name": "Alive 1997",
+      "release_date": "2001",
+      "release_date_precision": "year",
+      "type": "album",
+      "uri": "spotify:album:6ux53RXuEn1Jm0r0P6Nr9l",
+      "artists": [
+        {
+          "external_urls": {
+            "spotify": "https://open.spotify.com/artist/4tZwfgrHOc3mvqYlEYSvVi"
+          },
+          "href": "https://api.spotify.com/v1/artists/4tZwfgrHOc3mvqYlEYSvVi",
+          "id": "4tZwfgrHOc3mvqYlEYSvVi",
+          "name": "Daft Punk",
+          "type": "artist",
+          "uri": "spotify:artist:4tZwfgrHOc3mvqYlEYSvVi"
+        }
+      ],
+      "is_playable": true
+    }
+  ],
+  "limit": 10,
+  "next": null,
+  "offset": 0,
+  "previous": null,
+  "total": 2
+}

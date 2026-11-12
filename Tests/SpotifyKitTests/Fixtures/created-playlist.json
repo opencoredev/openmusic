@@ -1,0 +1,34 @@
+{
+  "collaborative": false,
+  "description": "Songs for the car",
+  "external_urls": {
+    "spotify": "https://open.spotify.com/playlist/1Ar7G1FX0HxwSxWJ2mT0gq"
+  },
+  "href": "https://api.spotify.com/v1/playlists/1Ar7G1FX0HxwSxWJ2mT0gq",
+  "id": "1Ar7G1FX0HxwSxWJ2mT0gq",
+  "images": [],
+  "name": "Road Trip",
+  "owner": {
+    "external_urls": {
+      "spotify": "https://open.spotify.com/user/ada.listener"
+    },
+    "href": "https://api.spotify.com/v1/users/ada.listener",
+    "id": "ada.listener",
+    "type": "user",
+    "uri": "spotify:user:ada.listener",
+    "display_name": "Ada Listener"
+  },
+  "public": false,
+  "snapshot_id": "AAAAB8C+GgTnK5bU2H0jzA4sKLjUbmaQ",
+  "items": {
+    "href": "https://api.spotify.com/v1/playlists/1Ar7G1FX0HxwSxWJ2mT0gq/items",
+    "items": [],
+    "limit": 100,
+    "next": null,
+    "offset": 0,
+    "previous": null,
+    "total": 0
+  },
+  "type": "playlist",
+  "uri": "spotify:playlist:1Ar7G1FX0HxwSxWJ2mT0gq"
+}

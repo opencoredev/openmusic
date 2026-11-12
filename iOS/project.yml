@@ -1,0 +1,97 @@
+# XcodeGen spec for the iPhone app. Generate with `xcodegen generate --spec iOS/project.yml` (scripts/ios.sh does it).
+# The generated MedleyMobile.xcodeproj is gitignored.
+name: MedleyMobile
+options:
+  bundleIdPrefix: dev.openmusic
+  deploymentTarget:
+    iOS: "26.0"
+  createIntermediateGroups: true
+packages:
+  Medley:
+    path: ..
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    SWIFT_DEFAULT_ACTOR_ISOLATION: MainActor
+    SWIFT_APPROACHABLE_CONCURRENCY: YES
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+targets:
+  MedleyMobile:
+    type: application
+    platform: iOS
+    # The council's UI tests run from this scheme (scripts/ios-council-shots.sh); building it builds only the app.
+    scheme:
+      testTargets: [CouncilUITests]
+    sources:
+      - path: Medley
+    dependencies:
+      - package: Medley
+        product: MedleyCore
+      - package: Medley
+        product: YouTubeMusicKit
+      - package: Medley
+        product: SpotifyKit
+      - package: Medley
+        product: MedleySync
+    info:
+      path: Medley/Info.plist
+      properties:
+        CFBundleDisplayName: OpenMusic
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        UILaunchScreen:
+          UIColorName: ""
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+        UIBackgroundModes: [audio]
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        ITSAppUsesNonExemptEncryption: false
+        # openmusic:// carries the Clerk social sign-in callback (openmusic://oauth-callback), the Spotify custom-scheme
+        # redirect and Debug self-test links.
+        CFBundleURLTypes:
+          - CFBundleURLName: dev.openmusic.OpenMusicMobile
+            CFBundleURLSchemes: [openmusic]
+        # Convex deployment for cross-device sync (docs/sync-design.md). Override per build with OPENMUSIC_SYNC_URL.
+        OpenMusicSyncURL: $(OPENMUSIC_SYNC_URL)
+        # Plain http only to a self-hosted sync server on the local network; the app refuses http anywhere else
+        # (SyncServer.validate). Asked before the first connection to a server on the local network.
+        NSAppTransportSecurity:
+          NSAllowsLocalNetworking: true
+        NSLocalNetworkUsageDescription: OpenMusic connects to your own sync server when it runs on your local network.
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: dev.openmusic.OpenMusicMobile
+        PRODUCT_NAME: OpenMusic
+        TARGETED_DEVICE_FAMILY: "1"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        # No Apple signing identity yet: sign to run locally (simulator).
+        CODE_SIGN_STYLE: Manual
+        CODE_SIGN_IDENTITY: "-"
+        DEVELOPMENT_TEAM: ""
+        ENABLE_PREVIEWS: YES
+      # Release talks to the production deployment; Debug (tests, self-tests, the live scripts) to dev.
+      configs:
+        Debug:
+          OPENMUSIC_SYNC_URL: https://sensible-barracuda-214.convex.cloud
+        Release:
+          OPENMUSIC_SYNC_URL: https://insightful-roadrunner-835.convex.cloud
+  # Touch-driven screenshots for the design council (scripts/ios-council-shots.sh): a long press, typing, a drag.
+  # Debug only and never shipped; it drives the app through the same -MedleyScreen states as the snapshots.
+  CouncilUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: CouncilUITests
+    dependencies:
+      - target: MedleyMobile
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: dev.openmusic.OpenMusicMobile.CouncilUITests
+        TEST_TARGET_NAME: MedleyMobile
+        CODE_SIGN_STYLE: Manual
+        CODE_SIGN_IDENTITY: "-"
+        DEVELOPMENT_TEAM: ""
+        GENERATE_INFOPLIST_FILE: YES
+        SWIFT_DEFAULT_ACTOR_ISOLATION: nonisolated

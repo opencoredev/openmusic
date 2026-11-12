@@ -1,0 +1,170 @@
+{
+  "href": "https://api.spotify.com/v1/me/top/tracks?time_range=short_term&limit=20",
+  "items": [
+    {
+      "artists": [
+        {
+          "external_urls": {
+            "spotify": "https://open.spotify.com/artist/4tZwfgrHOc3mvqYlEYSvVi"
+          },
+          "href": "https://api.spotify.com/v1/artists/4tZwfgrHOc3mvqYlEYSvVi",
+          "id": "4tZwfgrHOc3mvqYlEYSvVi",
+          "name": "Daft Punk",
+          "type": "artist",
+          "uri": "spotify:artist:4tZwfgrHOc3mvqYlEYSvVi"
+        }
+      ],
+      "disc_number": 1,
+      "duration_ms": 224693,
+      "explicit": false,
+      "external_urls": {
+        "spotify": "https://open.spotify.com/track/5W3cjX2J3tjhG8zb6u0qHn"
+      },
+      "href": "https://api.spotify.com/v1/tracks/5W3cjX2J3tjhG8zb6u0qHn",
+      "id": "5W3cjX2J3tjhG8zb6u0qHn",
+      "is_playable": true,
+      "name": "Harder, Better, Faster, Stronger",
+      "track_number": 4,
+      "type": "track",
+      "uri": "spotify:track:5W3cjX2J3tjhG8zb6u0qHn",
+      "is_local": false,
+      "album": {
+        "album_type": "album",
+        "total_tracks": 14,
+        "external_urls": {
+          "spotify": "https://open.spotify.com/album/2noRn2Aes5aoNVsU6iWThc"
+        },
+        "href": "https://api.spotify.com/v1/albums/2noRn2Aes5aoNVsU6iWThc",
+        "id": "2noRn2Aes5aoNVsU6iWThc",
+        "images": [
+          {
+            "url": "https://i.scdn.co/image/ab67616d00002noRn2640",
+            "height": 640,
+            "width": 640
+          },
+          {
+            "url": "https://i.scdn.co/image/ab67616d00002noRn2300",
+            "height": 300,
+            "width": 300
+          },
+          {
+            "url": "https://i.scdn.co/image/ab67616d00002noRn264",
+            "height": 64,
+            "width": 64
+          }
+        ],
+        "name": "Discovery",
+        "release_date": "2001-03-12",
+        "release_date_precision": "day",
+        "type": "album",
+        "uri": "spotify:album:2noRn2Aes5aoNVsU6iWThc",
+        "artists": [
+          {
+            "external_urls": {
+              "spotify": "https://open.spotify.com/artist/4tZwfgrHOc3mvqYlEYSvVi"
+            },
+            "href": "https://api.spotify.com/v1/artists/4tZwfgrHOc3mvqYlEYSvVi",
+            "id": "4tZwfgrHOc3mvqYlEYSvVi",
+            "name": "Daft Punk",
+            "type": "artist",
+            "uri": "spotify:artist:4tZwfgrHOc3mvqYlEYSvVi"
+          }
+        ],
+        "is_playable": true
+      },
+      "external_ids": {
+        "isrc": "USQX91300004"
+      }
+    },
+    {
+      "artists": [
+        {
+          "external_urls": {
+            "spotify": "https://open.spotify.com/artist/4tZwfgrHOc3mvqYlEYSvVi"
+          },
+          "href": "https://api.spotify.com/v1/artists/4tZwfgrHOc3mvqYlEYSvVi",
+          "id": "4tZwfgrHOc3mvqYlEYSvVi",
+          "name": "Daft Punk",
+          "type": "artist",
+          "uri": "spotify:artist:4tZwfgrHOc3mvqYlEYSvVi"
+        },
+        {
+          "external_urls": {
+            "spotify": "https://open.spotify.com/artist/2RdwBSPQiwcmiDo9kixcl8"
+          },
+          "href": "https://api.spotify.com/v1/artists/2RdwBSPQiwcmiDo9kixcl8",
+          "id": "2RdwBSPQiwcmiDo9kixcl8",
+          "name": "Pharrell Williams",
+          "type": "artist",
+          "uri": "spotify:artist:2RdwBSPQiwcmiDo9kixcl8"
+        }
+      ],
+      "disc_number": 1,
+      "duration_ms": 353893,
+      "explicit": false,
+      "external_urls": {
+        "spotify": "https://open.spotify.com/track/5CMjjywI0eZMixPeqNd75R"
+      },
+      "href": "https://api.spotify.com/v1/tracks/5CMjjywI0eZMixPeqNd75R",
+      "id": "5CMjjywI0eZMixPeqNd75R",
+      "is_playable": true,
+      "name": "Lose Yourself to Dance (feat. Pharrell Williams)",
+      "track_number": 6,
+      "type": "track",
+      "uri": "spotify:track:5CMjjywI0eZMixPeqNd75R",
+      "is_local": false,
+      "album": {
+        "album_type": "album",
+        "total_tracks": 13,
+        "external_urls": {
+          "spotify": "https://open.spotify.com/album/4m2880jivSbbyEGAKfITCa"
+        },
+        "href": "https://api.spotify.com/v1/albums/4m2880jivSbbyEGAKfITCa",
+        "id": "4m2880jivSbbyEGAKfITCa",
+        "images": [
+          {
+            "url": "https://i.scdn.co/image/ab67616d00004m2880640",
+            "height": 640,
+            "width": 640
+          },
+          {
+            "url": "https://i.scdn.co/image/ab67616d00004m2880300",
+            "height": 300,
+            "width": 300
+          },
+          {
+            "url": "https://i.scdn.co/image/ab67616d00004m288064",
+            "height": 64,
+            "width": 64
+          }
+        ],
+        "name": "Random Access Memories",
+        "release_date": "2013-05-17",
+        "release_date_precision": "day",
+        "type": "album",
+        "uri": "spotify:album:4m2880jivSbbyEGAKfITCa",
+        "artists": [
+          {
+            "external_urls": {
+              "spotify": "https://open.spotify.com/artist/4tZwfgrHOc3mvqYlEYSvVi"
+            },
+            "href": "https://api.spotify.com/v1/artists/4tZwfgrHOc3mvqYlEYSvVi",
+            "id": "4tZwfgrHOc3mvqYlEYSvVi",
+            "name": "Daft Punk",
+            "type": "artist",
+            "uri": "spotify:artist:4tZwfgrHOc3mvqYlEYSvVi"
+          }
+        ],
+        "is_playable": true
+      },
+      "external_ids": {
+        "isrc": "USQX91300006"
+      }
+    }
+  ],
+  "limit": 20,
+  "next": null,
+  "offset": 0,
+  "previous": null,
+  "total": 2
+}

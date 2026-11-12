@@ -1,0 +1,352 @@
+{
+  "code" : "331 379",
+  "codes" : [
+    {
+      "code" : "495 126",
+      "digest" : "\/gsEtwat2OtDA7xrZkyEkVxeIHA\/4h4cegx1XLkf09E=",
+      "holderNonce" : "paTOxskHzwyMD2OYDcTjo0VDg5wyxnb3DvmE7OsFkpg="
+    },
+    {
+      "code" : "534 413",
+      "digest" : "9wLiQQz\/gUmXO8SsYi1ZWZTj2wS4hXzz1mgtnVZJoK8=",
+      "holderNonce" : "Ub1mOf7XwLSCavbAa\/5PTM46p6jbNlOXjNTYitChioo="
+    },
+    {
+      "code" : "178 306",
+      "digest" : "icSUes623kz1n95zFyGLNs5iywc4OkGFEh87Q3jN94Q=",
+      "holderNonce" : "DKqIwlfXEiJo9klFOfrt9rHSE0Cf8N0mQQcYLxdOoUo="
+    },
+    {
+      "code" : "341 851",
+      "digest" : "kaEHsVfHeYPtLnXUo70u3HBzghRKmSC\/9K4bL1NH4MA=",
+      "holderNonce" : "AofAciZU9sC1sT1RXiZfoP5oUsEC1taiuniXu7RmaBc="
+    },
+    {
+      "code" : "653 187",
+      "digest" : "R+7IjGWKsnmzWvV3+BZ8KqB9z3IthwbDcvhCJUqVMiU=",
+      "holderNonce" : "fu19\/xi3T+V5YKCz7HVUgOalKy4KOOb+wy4Ot\/WD6Ss="
+    },
+    {
+      "code" : "393 615",
+      "digest" : "8PE\/4dJVVWHh0C5cFNovgQq1IjDIgbL\/nHn\/mwNiijM=",
+      "holderNonce" : "hg42IensW06ynAY7S7jr3wjxKRjKbp2jiQA2HFPvcJ8="
+    },
+    {
+      "code" : "120 724",
+      "digest" : "d3WbIARyOYGcAkVLcER8Q9DylbmiCa+JHwAOXu1yvVc=",
+      "holderNonce" : "FvwJMS\/HW\/Ff5obivzMsU3TccX3DgTabhHFz+1c5nT4="
+    },
+    {
+      "code" : "722 033",
+      "digest" : "iZpS17NsB7f2a4zFmwSbNnxq0ANqR2p1e1KZxkNPTVc=",
+      "holderNonce" : "WsdSTC1Q5\/0K2sOQF+IejUHwXNScBBDLH21fWlANye4="
+    },
+    {
+      "code" : "075 741",
+      "digest" : "YdeyzCiz94uT7fgiYczglQQhve9qFonUE6Iv23do8pY=",
+      "holderNonce" : "54PlQ2oMcdse7fy6IN0v\/YxPa2JqKgZK69XEeY1hHNc="
+    },
+    {
+      "code" : "643 891",
+      "digest" : "SDUCTKA1GVgA6kKx95mCpTNI26n8Hx8rJVJxmjVJcdw=",
+      "holderNonce" : "r2ajhFMmIt+ieRHGLk2w33WQuxkAJDRe9a0mPLpRZxY="
+    },
+    {
+      "code" : "119 654",
+      "digest" : "QRXEyyGniFq4HBFLni3GmVBoyE\/KfN0kg\/anw0b\/UtE=",
+      "holderNonce" : "VlFEDZosLSv0adbemEe2cQkzMs\/aI2mdva+\/iw1vjMk="
+    },
+    {
+      "code" : "414 870",
+      "digest" : "HDI5zcVIzQO0fn+Ut\/lefWP+J4\/DGi4\/aZm2gxcEyao=",
+      "holderNonce" : "bXuucVsNy6ctk1jjEfD6poXD5Hwg0VT4i7Y2GYp1ppY="
+    },
+    {
+      "code" : "616 417",
+      "digest" : "nrTcMPQTgyePUCd\/54zhV8RN7c\/truAQOwgWu5b+WNs=",
+      "holderNonce" : "5bn7y2B+LbSmFpdUNbjq3tvk1nad31WkTq9r6FpM+JY="
+    },
+    {
+      "code" : "929 025",
+      "digest" : "MWQNLzw1Ob0HwlE5yWaj3HXRie75iRR3J5s\/EPVjc5U=",
+      "holderNonce" : "5xS892fZKNF6LwQ7rI4S+Sh6sK7174wfmPp1ViqD6x4="
+    },
+    {
+      "code" : "705 946",
+      "digest" : "nOZdgnQaI7nMYG755Da5JdtsUinNg26lJ9fJsFk6MP8=",
+      "holderNonce" : "QoFpBDDZUXEu3qMQyt1zBvzIaMj1\/bNND6bL6fdq28o="
+    },
+    {
+      "code" : "308 154",
+      "digest" : "KJ88YwpFNj3xANVkLfLje1EbhIpfPpwXVTmcBZKJFjI=",
+      "holderNonce" : "6awrbnfFkEKnf2wSbWLVcpXqJUVElkn1vwAPI\/4v2AI="
+    },
+    {
+      "code" : "957 244",
+      "digest" : "uS8tFrSbc3DPcIRZFEVuUQzb1PXEQc+l7cQ\/564UXE0=",
+      "holderNonce" : "yQhLRHG3xfs6OzH\/3OPBl0C5UPLPAf\/ioPgAda6smMI="
+    },
+    {
+      "code" : "144 572",
+      "digest" : "G+a\/BQEc0uFp0WBsEfhP50drusR8Y7WQYJ4y4TB1kqs=",
+      "holderNonce" : "CK7KscxsCkgokCB0EfrxPdxzWN1ED7FS7kUxoxoZfWE="
+    },
+    {
+      "code" : "317 882",
+      "digest" : "Ns4P1b9EGmlpeQbQ9DV6zFzs2+V5UWXXIpv17q571ZM=",
+      "holderNonce" : "v4QncOGg3Rf5WxicYEflAnddQyIykXOvbt5l4cP4Q1Q="
+    },
+    {
+      "code" : "796 563",
+      "digest" : "OY8iCXL8NaZKZ5BhSq3tv\/ZZGxnFXzYQjAtPuWK5TiA=",
+      "holderNonce" : "wQ6rNKVue9XPhvwt1pTnAUdgxlLku+Zb4eVDhcqJ1rc="
+    },
+    {
+      "code" : "378 762",
+      "digest" : "B+stRIr6Duuv07aLFZCt6JFnL7RFskLNixHRm9cPwRc=",
+      "holderNonce" : "yTxt+D4krUdG3ML9teRPcDHPW7XAFEb19iXuA3p7BM4="
+    },
+    {
+      "code" : "152 410",
+      "digest" : "8D13qMDwYL9JDNE\/dHrrp9MGZXuL5L\/J60krJCVjM5o=",
+      "holderNonce" : "m27LiqbfCvyaltIOtly7L1WMqsy9l6S24JbzhR66LRs="
+    },
+    {
+      "code" : "944 114",
+      "digest" : "LkBWUpexqlr9j8jhk5ZQOGXGn2ZTgUd64lnwm9ElUIw=",
+      "holderNonce" : "HYzw18MEaN2SIOy1FtGNksjJdWS92B7uuLofS6Bp\/uY="
+    },
+    {
+      "code" : "864 604",
+      "digest" : "w2jTN4YboGnc1qDSi1YVJjuBT7N84Rp\/0KxPCdUi4V0=",
+      "holderNonce" : "sTSwjy45u4PWMYkVsCrbSiBBj1xsx9wyQk9mg66WD6I="
+    },
+    {
+      "code" : "636 420",
+      "digest" : "CPWKooZdlXezhUKFCiU6EnKY\/3+7PPPpZsTnmGhGF7E=",
+      "holderNonce" : "TQL2\/rsXAo9ueRowMSikfbMMVanWoO0vEnIvRVfpPdI="
+    },
+    {
+      "code" : "632 776",
+      "digest" : "be8iH8hn0KRTJmfN\/WMEcbLWjYQ81MB+wuR2Wpv7Jjc=",
+      "holderNonce" : "y3xIIjYm+dkI0HmlA+O16jBfXujumPdHtPbYMmmX1fs="
+    },
+    {
+      "code" : "295 095",
+      "digest" : "IUMXrMQ8nvR8tX2uCU8+l1GjnNvs1EZ8G9HqwV+wx5M=",
+      "holderNonce" : "YGB86pIbgUSEsvBuYMZq+H3Jqg0CccUKDuj6EN228\/E="
+    },
+    {
+      "code" : "685 403",
+      "digest" : "Xcu7H9MX4wRK2Fmh85WlGKcMxyiIu0SCaSGT8DWBcgQ=",
+      "holderNonce" : "4yHveCEQgE55Ao\/WXUMgvTVlWoZ0e3aVaQAXBvBkqSQ="
+    },
+    {
+      "code" : "875 799",
+      "digest" : "iSjLcvTDXktdluy+1Ry5j8sdokQzzFD1yzP\/TbI+Scw=",
+      "holderNonce" : "H9JojwtK4TOCi\/X2w\/e\/isKrA7nCzEEl\/C8bk6ftFFo="
+    },
+    {
+      "code" : "178 746",
+      "digest" : "XFbjGTYMI2e\/abJRnTUojMduN2kiuiKqC+lBSi5QVnM=",
+      "holderNonce" : "qD8FQPHdlgxg1hLGIe8UcqIBagIWfbt4eKyvu+f+BvY="
+    },
+    {
+      "code" : "973 367",
+      "digest" : "rI6TK2HC8poigX69eDCvgMOMl3pnksF5fprkFWv9Gco=",
+      "holderNonce" : "SaxY67mz4YccSbPX+Zy9Ec83oG+xRCS0ekggN\/FOWGY="
+    },
+    {
+      "code" : "296 326",
+      "digest" : "S01egF9UZrAtFURq13dM6U948zoZNgzGDOIjKpkkriw=",
+      "holderNonce" : "ktuMxXF91ecR6T2wQcY3boKVFW6ojlnMm4p4wzL3caI="
+    },
+    {
+      "code" : "680 486",
+      "digest" : "tmZ2d4RZlsFokNY2StjeyBKH3awOveMgBC48kZj\/2Wc=",
+      "holderNonce" : "+BIAgZSzgyb4w\/oT5wshFP4Offz6rsWIKQkJ3U2pBm4="
+    },
+    {
+      "code" : "567 392",
+      "digest" : "xsdfGlFL4hQxihX2zhjpr0Xh6hUKV7PtDAYyzrwgggA=",
+      "holderNonce" : "C0Vt3PntYyXuuUECFQyr4f2GMTF6snIoW5WDIbGVPJY="
+    },
+    {
+      "code" : "647 914",
+      "digest" : "q\/kK+zKRNE9GJ7efvPZaWpdbVU9uFjVUIk8yN1\/vqBk=",
+      "holderNonce" : "76D5wG97Wg9c4ZhNhHJCjoKQ8UgD7EezGwOES1EG1rM="
+    },
+    {
+      "code" : "571 250",
+      "digest" : "\/kv9Mpk0L9eYxteeGnHZXn084pQ1oNVpMgMNGBKGAyE=",
+      "holderNonce" : "7hgkblbTfmI7iINt6iSYUU1JnJG\/1u3vFtYerRxrTBk="
+    },
+    {
+      "code" : "997 903",
+      "digest" : "t9SmtTKoi70EEnvhNQdMWUMZp1wgcHln6u4JntcBK1c=",
+      "holderNonce" : "IFpn3A6Mf\/uovbZx8Tp3\/NWF9sWlRTFf6TcT0yJPZOc="
+    },
+    {
+      "code" : "401 961",
+      "digest" : "\/oeJnIdyA37WzIZmOPE3wKguZprAdRy8bmtNVhE3RGM=",
+      "holderNonce" : "0i0rL784icJApBSZezQBxEw9cUQsSuWFavZIoY6U3sg="
+    },
+    {
+      "code" : "798 251",
+      "digest" : "4vv+h7RDIAEObnQ4WwIWMzN\/gPRa6XkjTT0AUMAE5FM=",
+      "holderNonce" : "ohwF8kNIaTg\/6\/m3Aq8kPEXG2TBa57HWnCogID6mtlo="
+    },
+    {
+      "code" : "422 586",
+      "digest" : "GuBETQzpaGMT0cxHhiX7\/rGOV\/I1Gg2wLqK3N4Qcsc8=",
+      "holderNonce" : "AjOB2lwIGgchgJFzxiGc9hUfdzDwiVosZ7VdRxQKALQ="
+    },
+    {
+      "code" : "506 868",
+      "digest" : "8F4IPoKtPQK0Ld8YXVRALn9C+AWP7HorwTf3I6sC6to=",
+      "holderNonce" : "EGaqVTvAJP3qdMwYGTdf65Lx8DjTuPzVZf\/9W8m4pAc="
+    },
+    {
+      "code" : "082 342",
+      "digest" : "C+zI624oPp3\/pD2T9DHEZVnyR+ilcLQux3JvloZksrQ=",
+      "holderNonce" : "CS3TzMqCCtfTezxONkARjsHcUnmEEGwYgtbbO5UENR8="
+    },
+    {
+      "code" : "003 579",
+      "digest" : "Y\/2vjc\/vxF7\/vpFkln1ylDGuIE8mXo\/8n8qmB5VQInU=",
+      "holderNonce" : "RJsak+xNP7bvuBpLyWOKSwKMMwH3FpKvMCQFfTbf88U="
+    },
+    {
+      "code" : "602 489",
+      "digest" : "MEBxONn8Cj7SAdTHthSDuuGYtLl6lbCS2PyScFuxVu4=",
+      "holderNonce" : "Lo+Mvz8Z4bl\/R5s+e97mahdxyvOcKFLUXsUmSMICrGU="
+    },
+    {
+      "code" : "382 459",
+      "digest" : "\/4tko1i\/9Htgcki+v6xrTPJT5tB+PfKnRkqQ8GGQLzE=",
+      "holderNonce" : "2mi7RLUU9tmITyKa0rYKdxSDXV7lWxSM8r6FC819hps="
+    },
+    {
+      "code" : "574 737",
+      "digest" : "P5yFPaoZVJFbPq\/PGq0dB\/wIIGaDE6VEOoI\/lzIfWTI=",
+      "holderNonce" : "787vmgynfri02Yk2onCly97nISozxMKSFr1KPMcTIco="
+    },
+    {
+      "code" : "673 784",
+      "digest" : "70BFg730+SwJTu7RSKR\/X6DRo7YalUbI\/9\/eIHxCOoU=",
+      "holderNonce" : "4IMHSvNV3KfsUCYp1RsJwmYQPXT6G0VmoFbXeLA38p4="
+    },
+    {
+      "code" : "604 225",
+      "digest" : "SysZedFGTUyvmdKIjSXH3LTZCzgZdudAx9QnHqC0bko=",
+      "holderNonce" : "O9D2GJEw+ARtqKY78xjLMe4uNwqqu3rgvBR9NDkmjNY="
+    },
+    {
+      "code" : "330 152",
+      "digest" : "NAM21SMZGNaLKLDrx35v3HvdvCaZKAzkvzlmqp\/FZAQ=",
+      "holderNonce" : "3QCZd2faAj0iLs58k1xUoShezAhtbeLamSWVjF1kH34="
+    },
+    {
+      "code" : "885 905",
+      "digest" : "21F\/biyYQxYlV2Bdd6tSWvNHxPnWpErearWvdAMR7dU=",
+      "holderNonce" : "Y2a3NIDluNy6IOmkcRVTC0SFK37FIRK1Ys9HYFd3llQ="
+    },
+    {
+      "code" : "588 420",
+      "digest" : "UQ1MNWY35waJ\/vJI6hO+fz\/GdwLjSNNqD0rHN5+Cx70=",
+      "holderNonce" : "wMHf7jiac0ojOYJGGImo9hm2b6nj5MG3GsVsTi8xSCI="
+    },
+    {
+      "code" : "940 306",
+      "digest" : "2GD\/osKdruyucGPSbsA+bOs4v3RPlofyhJm\/MVyxz5M=",
+      "holderNonce" : "VYvYyr\/3wqxfZ9ozX8xQ4hi3xUVL6wpfNZE8XwfeQSA="
+    },
+    {
+      "code" : "525 497",
+      "digest" : "RoyGvN7bsbzil3xS+6sd5InfNarM7\/ktFGELtXtKbAs=",
+      "holderNonce" : "ApqiY1JXFI\/y0WUjQ2s1IWauIp9WhZpp0xDqnuuYdxo="
+    },
+    {
+      "code" : "992 115",
+      "digest" : "1ntn+tEt\/6asTnfP0kDzjaSGJVHjkzG02+Mbzg9cDh4=",
+      "holderNonce" : "kzJ1V4GlYj5HjeaeNV86\/j5LM6ykKpLyDEa6f3VcYto="
+    },
+    {
+      "code" : "300 073",
+      "digest" : "2qB0rjnEczglPSuAgvOQhEc2xxhOmOrv6f2gLZY3tos=",
+      "holderNonce" : "Lrw5WpxTkB3xcraqUNs\/Uacz5\/HLuJcRTbzJQ3mTIms="
+    },
+    {
+      "code" : "215 306",
+      "digest" : "1G1aDIN4n3XCv3E8TDBowp2+z8zwgLPfutESMRL8P1o=",
+      "holderNonce" : "FWddpShaTRw+Q4xtIHI4geQaEy1TuTm5fIUDwmHvpWc="
+    },
+    {
+      "code" : "344 798",
+      "digest" : "5QY0NenolDOKhDenUWUb9hLwkXoqPc+kifX0989J3Zs=",
+      "holderNonce" : "k9o6J05pXaMfcVkQl5RGcVJZemIyuo6IlNqlCPpb3so="
+    },
+    {
+      "code" : "951 674",
+      "digest" : "W3A10zs010wl8ZhZu2FJfJcIWVHFv4jFIvtI5kKrjTg=",
+      "holderNonce" : "WwhtiPTotewnMeKIUbKPFWZk0wr5ip17AE6WhLj5ESM="
+    },
+    {
+      "code" : "793 930",
+      "digest" : "hw8m9kvrhuKqm74LqV74vLq5ZSqASw2e2CMeeit1Ok0=",
+      "holderNonce" : "XdN269FcNZQgfwfnVy0ZV4R4QAU3Obkjfdb8uSSFb0k="
+    },
+    {
+      "code" : "634 543",
+      "digest" : "6nfsfAeabCTS34FTuRBD+imiuY38y2N3piOofvK3bQk=",
+      "holderNonce" : "CTNDSjG+WyNJrUM9D7Ude1or1tpR+7fJt\/xPOl6n7lQ="
+    },
+    {
+      "code" : "737 079",
+      "digest" : "f8pD5Ij2rHVrcROzQq+RS9gKwlI9Jr1fSQGmefTq54Y=",
+      "holderNonce" : "aVRk2\/uLmyEBZwhetd4XYkpR8VoYtlmjA+nQAWCxlbc="
+    },
+    {
+      "code" : "539 231",
+      "digest" : "oGSEnP\/9J+ldJVTijDOHrdscP+pxuph8iV8l27oAUVY=",
+      "holderNonce" : "6B9BF7\/ZC+E6B6aN2Wp5FraTjz3Ts2s\/ZJbvKMC+xSQ="
+    },
+    {
+      "code" : "387 261",
+      "digest" : "Y6LUcycoEl+WGBd+jVgMz4sI1BbUTox1m0JkxDpfZY8=",
+      "holderNonce" : "beAE3Mh0+45AOAZHJDXu6pMM60vFLze3hHtOM5aPTKw="
+    },
+    {
+      "code" : "486 822",
+      "digest" : "yy0bQtaUCdD81xGiKU\/XJ6F09MvOwby9XiCcNreuhfc=",
+      "holderNonce" : "eqWKmTiBRn9tNIARcqZ1whvHdTYCPlkNGaIROWSrEUs="
+    }
+  ],
+  "commitment" : "d8VqcHu48z0buGuqgISQkq+7Cwrd5Cvb7dcDJZXN\/4c=",
+  "deviceToken" : "78xVNrfkA8A_Ame9ee7Q8olz3icwrbVVXOMZZmh4mUg",
+  "digest" : "uagddXGXoMjW7iaVUoiuyVcM2EIVBMVbLW2n76aTFrw=",
+  "grant" : "yPtd8f3j7kmXvN2HVQHXg+7tyxpN5vbMoJi3pu5kii3PNbu7KkVaRSu0RRa7+bO+f90qwFNzr2Ja429H",
+  "holderId" : "jd7vectorholderA",
+  "holderNonce" : "rpGDEPBvpbilfHeJs4RSFXXBW+4oH25mbNOVV2SqfW4=",
+  "k1" : "SVQ4epeWwzX8MHtB4eW98u_2Md5pnNj0UnBC2zU3bw4",
+  "k1Id" : "eb6c812f3a0359a36400456ef4c3d18a",
+  "k2" : "dZaYudeNuK6VXKphW_1jTlB2qOHnd0m-XuWxzEKN-Eg",
+  "k2Id" : "d7ec08b59e4e3cb6d45a6a0bf5fea585",
+  "legacy" : "SI533OtvfkPxi6GHV6148z9FtD9axroev0KZZWpw8V4\/NhasXly1QpI=",
+  "libraryId" : "kh7vector0library",
+  "nativePeerPublic" : "ScnqGOmeEw\/Kbu98K+g5jLe1inHsMBYrzPGWSlWKhhU=",
+  "nativePrivate" : "uCXfvsqMec32vM4xpFiew1+oIxFX8fk1c\/1QsMzA5H0=",
+  "nativePublic" : "exrEAMqS7YRtj0eo\/MzPyxas8R5OmXuTyuFO7uAePS0=",
+  "nativeShared" : "T11HFs4HsxsatQFS3MEVfdIN4+WCo5chGH85m5fGs1M=",
+  "plaintext" : "eyJjb29raWUiOiJTSUQ9dmVjdG9yOyBIU0lEPcO8IiwiY2hhbm5lbCI6IlVDMTIzIn0=",
+  "privateA" : "N7Gs3PEdoWo5vYZCINGA7afSKORB5gW52oYII20KC5c=",
+  "privateB" : "JG6UlTHECuAnQLMrlR0o6btbhUMF1omolz1M4q5C6OA=",
+  "publicA" : "Mqu\/nbJVWVXS0tgT6VddZxaTYeEZpKpNas3ztT+1zX4=",
+  "publicB" : "fYqrdhG4oqGo5ySTE9ncMagpb+sI2oL8H89tfRmEOHc=",
+  "requesterId" : "jd7vectorrequestB",
+  "requesterNonce" : "w+IW1PAxvKzo8odttKNNH41nIbom59qv1Lka9zFsOc0=",
+  "rotation" : "N4IlMGGzck7wgY5eYed5Y0LSqyuHW3Ev6bgiNLraTyWaHeSRxtCHE3mwtSuRh8vv9XskWFKB4SILyv4phwX2FxvI7+jrGgoPnZatYEkWKCc7rYK4OaLwJh0CuyY=",
+  "sealed" : "nhCgSJsapsbEOWc4r6W7U\/tOWGDBwNvOZptdv7o5OJHnRcWGs+Nk5LjRgwa9Z7MewYCWoPucNp1IT+THLDN0QufM2Wg1N5ZRYt6tpU6W",
+  "sealedRevision" : 3,
+  "sealedSpotify" : "3uQodfoCS7OsVT36S002ngfA\/e0tijdnkw2jWrfEnA+IFcjyiuT1qgCGNBqNTe4P"
+}
