@@ -156,8 +156,13 @@ public actor ConvexClient {
         /// The last value handed to the subscriber, over either transport. A poll that returns it again is dropped.
         var lastDelivered: ConvexValue?
         let deliver: @Sendable (QueryResult) -> Void
+        /// The identity it was subscribed for (`AuthScope.value`), or nil for a query of any identity.
+        let scope: Int?
     }
     private var queries: [Int: LocalQuery] = [:]
+    /// Queries of an identity that is no longer current: out of the query set and never polled again, kept here only
+    /// until their subscriber unsubscribes (`removeQuery`).
+    private var retiredQueries: Set<Int> = []
     private var cancelledQueries: Set<Int> = []
     private nonisolated let ids = Mutex(0)
     private var querySetVersion = 0
@@ -589,18 +594,21 @@ public actor ConvexClient {
     // MARK: Queries
 
     /// Subscribes to a query. The stream yields the current result and every change; cancel the consuming task
-    /// (or drop the stream) to unsubscribe.
-    public nonisolated func subscribe(_ path: String, args: ConvexValue) -> AsyncStream<QueryResult> {
+    /// (or drop the stream) to unsubscribe. With `scope` (what `setAuth` returned), the query belongs to that identity:
+    /// it is taken out of the query set the moment `setAuth` names another identity (or none), before anything is sent
+    /// for the new one, so its arguments (a device token) never go out with another identity's token. Its stream
+    /// then yields nothing more.
+    public nonisolated func subscribe(_ path: String, args: ConvexValue, scope: AuthScope? = nil) -> AsyncStream<QueryResult> {
         let id = ids.withLock { value in value += 1; return value }
         let (stream, continuation) = AsyncStream.makeStream(of: QueryResult.self, bufferingPolicy: .bufferingNewest(1))
         continuation.onTermination = { [weak self] _ in Task { await self?.removeQuery(id) } }
-        Task { await self.addQuery(id, path: canonicalUdfPath(path), args: args) { continuation.yield($0) } }
+        Task { await self.addQuery(id, path: canonicalUdfPath(path), args: args, scope: scope?.value) { continuation.yield($0) } }
         return stream
     }
 
     /// Typed subscription: encodes `args` and decodes each result off the main actor.
     public nonisolated func subscribe<Args: Encodable & Sendable, Value: Decodable & Sendable>(
-        _ path: String, args: Args, as type: Value.Type
+        _ path: String, args: Args, as type: Value.Type, scope: AuthScope? = nil
     ) -> AsyncStream<Result<Value, ConvexClientError>> {
         let id = ids.withLock { value in value += 1; return value }
         let (stream, continuation) = AsyncStream.makeStream(of: Result<Value, ConvexClientError>.self, bufferingPolicy: .bufferingNewest(1))
@@ -614,7 +622,7 @@ public actor ConvexClient {
             return stream
         }
         Task {
-            await self.addQuery(id, path: canonicalUdfPath(path), args: encoded) { result in
+            await self.addQuery(id, path: canonicalUdfPath(path), args: encoded, scope: scope?.value) { result in
                 continuation.yield(result.flatMap { value in
                     do { return .success(try value.decode(Value.self)) } catch { return .failure(.decoding("\(path): \(error)")) }
                 })
@@ -623,9 +631,14 @@ public actor ConvexClient {
         return stream
     }
 
-    private func addQuery(_ id: Int, path: String, args: ConvexValue, deliver: @escaping @Sendable (QueryResult) -> Void) {
+    private func addQuery(_ id: Int, path: String, args: ConvexValue, scope: Int?, deliver: @escaping @Sendable (QueryResult) -> Void) {
         if cancelledQueries.remove(id) != nil { return }
-        queries[id] = LocalQuery(path: path, args: args, journal: nil, lastDelivered: nil, deliver: deliver)
+        // Made for an identity that was replaced before the query got here: never added.
+        if let scope, scope != authScope {
+            retiredQueries.insert(id)
+            return
+        }
+        queries[id] = LocalQuery(path: path, args: args, journal: nil, lastDelivered: nil, deliver: deliver, scope: scope)
         if state == .connected {
             let base = querySetVersion
             querySetVersion += 1
@@ -636,6 +649,7 @@ public actor ConvexClient {
     }
 
     private func removeQuery(_ id: Int) {
+        if retiredQueries.remove(id) != nil { return }
         guard queries.removeValue(forKey: id) != nil else {
             cancelledQueries.insert(id)
             return
@@ -803,7 +817,7 @@ public actor ConvexClient {
             guard let q = queries[id] else { continue }
             let epoch = socketEpoch
             do {
-                let value = try await httpCall("query", path: q.path, args: q.args)
+                let value = try await httpCall("query", path: q.path, args: q.args, scope: q.scope)
                 // A socket opened while this was in flight: its results are newer than this answer.
                 guard epoch == socketEpoch, httpFallback, state != .connected else { return }
                 guard queries[id] != nil, queries[id]?.lastDelivered != value else { continue }
@@ -819,7 +833,7 @@ public actor ConvexClient {
         }
     }
 
-    /// `scope`: for a mutation, the identity it was made for. It is sent only with a token of that identity.
+    /// `scope`: the identity a mutation or query was made for. It is sent only with a token of that identity.
     private func httpCall(_ kind: String, path: String, args: ConvexValue, scope: Int? = nil) async throws -> ConvexValue {
         if isBlocked { throw ConvexClientError.transport("network unavailable") }
         let body = ConvexValue.object([
@@ -888,6 +902,7 @@ extension ConvexClient {
             for (id, request) in requests where request.scope != authScope {
                 if case .notSent = request.status { failForIdentity(id) }
             }
+            retireQueries()
             // The old identity's token goes now, and the open socket stops speaking for it, before anything awaits:
             // nothing of the new identity can go out with it, whether or not its own token can be fetched.
             dropIdentity()
@@ -971,6 +986,22 @@ extension ConvexClient {
     /// there is no token).
     private func maySendOnSocket(scope: Int) -> Bool {
         maySend(scope: scope) && socketToken == authToken?.value
+    }
+
+    /// Takes the queries of an identity that is no longer current out of the query set (on the open socket too, before
+    /// its identity changes), so the server never runs them for the new one and polling never sends them.
+    private func retireQueries() {
+        let stale = queries.filter { $0.value.scope.map { $0 != authScope } ?? false }.keys.sorted()
+        guard !stale.isEmpty else { return }
+        for id in stale {
+            queries[id] = nil
+            retiredQueries.insert(id)
+        }
+        if state == .connected {
+            let base = querySetVersion
+            querySetVersion += 1
+            connection?.send(ClientMessage.modifyQuerySet(base: base, new: querySetVersion, adds: [], removes: stale))
+        }
     }
 
     /// Sends the calls that waited for their identity's token, now that it's here (or the provider said signed out).

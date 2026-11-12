@@ -30,6 +30,12 @@ func identityTransition(querySet: (Int, Int), ts: (UInt64, UInt64), identity: (I
     #"{"type":"Transition","startVersion":{"querySet":\#(querySet.0),"ts":"\#(ConvexTimestamp(value: ts.0).encoded)","identity":\#(identity.0)},"endVersion":{"querySet":\#(querySet.1),"ts":"\#(ConvexTimestamp(value: ts.1).encoded)","identity":\#(identity.1)},"modifications":[]}"#
 }
 
+/// Whether `message` is a ModifyQuerySet with a modification of `kind` ("Add" or "Remove").
+func changesQuerySet(_ message: ConvexValue, _ kind: String) -> Bool {
+    guard message["type"]?.stringValue == "ModifyQuerySet", case .array(let mods)? = message["modifications"] else { return false }
+    return mods.contains { $0["type"]?.stringValue == kind }
+}
+
 @Suite(.serialized) struct ConvexAuthTests {
     func makeClient(_ transport: FakeTransport, http: HTTPPoster = FakeHTTP(), fallbackAfter: Int = 3) -> ConvexClient {
         ConvexClient(deploymentURL: URL(string: "https://x.convex.cloud")!, transport: transport, http: http, options: fastOptions(fallbackAfter: fallbackAfter))
@@ -75,6 +81,44 @@ func identityTransition(querySet: (Int, Int), ts: (UInt64, UInt64), identity: (I
         let again = transport.sockets[1].messages.compactMap { $0["type"]?.stringValue }
         #expect(Array(again.prefix(3)) == ["Connect", "Authenticate", "ModifyQuerySet"])
         #expect(transport.sockets[1].messages(ofType: "Authenticate").first?["baseVersion"] == .float64(0))
+        await client.stop()
+    }
+
+    /// A live query belongs to the identity it was subscribed for. When another identity signs in, it leaves the
+    /// query set before the new token goes out, a new socket never adds it again, and one subscribed for the old
+    /// identity after the switch is never added: its arguments (a device token) never run under another user.
+    @Test func aQueryOfOneIdentityNeverRunsUnderTheNext() async throws {
+        let transport = FakeTransport()
+        let client = makeClient(transport)
+        let a = await client.setAuth(FakeTokens([jwt("a")]), identity: "a")
+        // Kept for the whole test: dropping a stream unsubscribes.
+        let devices = client.subscribe("devices:list", args: .object(["token": .string("token-of-a")]), scope: a)
+        await client.start()
+        #expect(await eventually { transport.sockets.count == 1 })
+        transport.sockets[0].open()
+        #expect(await eventually { transport.sockets[0].messages.contains { changesQuerySet($0, "Add") } })
+        let setsBefore = transport.sockets[0].messages(ofType: "ModifyQuerySet").count
+
+        await client.setAuth(FakeTokens([jwt("b")]), identity: "b")
+        #expect(await eventually { transport.sockets[0].messages(ofType: "Authenticate").contains { $0["value"] == .string(jwt("b")) } })
+        let messages = transport.sockets[0].messages
+        let removal = try #require(messages.firstIndex { changesQuerySet($0, "Remove") })
+        let bToken = try #require(messages.firstIndex { $0["type"]?.stringValue == "Authenticate" && $0["value"] == .string(jwt("b")) })
+        #expect(removal < bToken)
+
+        // Subscribed for A after B signed in: never added.
+        let vault = client.subscribe("vault:list", args: .object(["token": .string("token-of-a")]), scope: a)
+        try await Task.sleep(for: .milliseconds(100))
+        #expect(transport.sockets[0].messages(ofType: "ModifyQuerySet").count == setsBefore + 1)
+
+        // A new socket replays the query set without A's queries.
+        transport.sockets[0].serverClose()
+        #expect(await eventually { transport.sockets.count == 2 })
+        transport.sockets[1].open()
+        #expect(await eventually { transport.sockets[1].messages(ofType: "ModifyQuerySet").count >= 1 })
+        let replay = try #require(transport.sockets[1].messages(ofType: "ModifyQuerySet").first)
+        #expect(replay["modifications"] == .array([]))
+        withExtendedLifetime((devices, vault)) {}
         await client.stop()
     }
 

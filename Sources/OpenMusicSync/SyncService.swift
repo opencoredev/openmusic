@@ -891,26 +891,28 @@ public final class SyncService: SyncServicing, VaultEndpoint, SettingsEndpoint {
         closeSubscriptions()
         guard let token = credentials?.token else { return }
         let args = TokenArgs(token: token)
+        // The queries belong to this session's identity: the client drops them the moment it changes.
+        let scope = authScope
         subscriptionTasks = [
-            follow(client.subscribe("devices:list", args: args, as: DeviceListResult.self), token: token) { service, list in
+            follow(client.subscribe("devices:list", args: args, as: DeviceListResult.self, scope: scope), token: token) { service, list in
                 service.apply(list, token: token)
             },
-            follow(client.subscribe("vault:list", args: args, as: [VaultEntry].self), token: token) { service, entries in
+            follow(client.subscribe("vault:list", args: args, as: [VaultEntry].self, scope: scope), token: token) { service, entries in
                 service.vaultEntries = entries
                 service.signIns.reconcileAll()
             },
-            follow(client.subscribe("settings:list", args: args, as: [SealedSettingEntry].self), token: token) { service, entries in
+            follow(client.subscribe("settings:list", args: args, as: [SealedSettingEntry].self, scope: scope), token: token) { service, entries in
                 service.sealedSettings = entries
                 service.applySettings()
             },
-            follow(client.subscribe("playback:list", args: args, as: [PlaybackRow].self), token: token) { service, rows in
+            follow(client.subscribe("playback:list", args: args, as: [PlaybackRow].self, scope: scope), token: token) { service, rows in
                 service.playbackRows = rows
                 service.openPlayback()
             },
-            follow(client.subscribe("commands:incoming", args: args, as: [WireIncomingCommand].self), token: token) { service, commands in
+            follow(client.subscribe("commands:incoming", args: args, as: [WireIncomingCommand].self, scope: scope), token: token) { service, commands in
                 service.receive(commands)
             },
-            follow(client.subscribe("commands:outgoing", args: args, as: [WireOutgoingCommand].self), token: token) { service, commands in
+            follow(client.subscribe("commands:outgoing", args: args, as: [WireOutgoingCommand].self, scope: scope), token: token) { service, commands in
                 service.wireOutgoing = commands
                 service.openOutgoing()
                 service.resolveAckWaiters()
