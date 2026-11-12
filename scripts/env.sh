@@ -6,14 +6,19 @@
 #   remote_ssh <host> args...   plain ssh to <host> with the shared options
 # Commands go to the remote `bash -ls` on stdin, so the remote login shell (fish, zsh) doesn't matter.
 # Variables already in the environment win over local.env. Variables from before the rename still work: each
-# MEDLEY_<name> in the environment also sets OPENMUSIC_<name> unless that is set (the apps do the same).
+# MEDLEY_<name> also sets OPENMUSIC_<name> unless that is set (the apps do the same). Precedence, highest first:
+# OPENMUSIC_<name> in the environment, MEDLEY_<name> in the environment, OPENMUSIC_<name> in local.env,
+# MEDLEY_<name> in local.env.
 
-for _legacy in $(compgen -e); do
-  [[ "$_legacy" == MEDLEY_* ]] || continue
-  _name="OPENMUSIC_${_legacy#MEDLEY_}"
-  [[ -n "${!_name+x}" ]] || export "$_name=${!_legacy}"
-done
-unset _legacy _name
+_openmusic_legacy_aliases() {
+  local _legacy _name
+  for _legacy in $(compgen -e); do
+    [[ "$_legacy" == MEDLEY_* ]] || continue
+    _name="OPENMUSIC_${_legacy#MEDLEY_}"
+    [[ -n "${!_name+x}" ]] || export "$_name=${!_legacy}"
+  done
+}
+_openmusic_legacy_aliases
 
 _openmusic_env="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/local.env"
 if [[ -f "$_openmusic_env" ]]; then
@@ -35,6 +40,8 @@ if [[ -f "$_openmusic_env" ]]; then
   done < "$_openmusic_env"
   unset _line _lineno _name _value
 fi
+# local.env may still use the old names.
+_openmusic_legacy_aliases
 
 OPENMUSIC_SSH_OPTS=(-o ConnectTimeout=8 -o BatchMode=yes -o ServerAliveInterval=15)
 

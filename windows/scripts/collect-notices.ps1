@@ -18,9 +18,28 @@ $packs = Join-Path $env:ProgramFiles 'dotnet\packs'
 function Collect([string]$id, [string]$version, [string]$dir) {
     $dest = Join-Path $out "$id@$version"
     New-Item -ItemType Directory -Path $dest -Force | Out-Null
-    Get-ChildItem $dir -File | Where-Object { $_.Name -match '(?i)(licen[cs]e|notice)' -or $_.Extension -eq '.nuspec' } |
-        Copy-Item -Destination $dest
     $root = (Resolve-Path $dir).Path.TrimEnd('\') + '\'
+    $nuspecs = @(Get-ChildItem $dir -File -Filter *.nuspec)
+    $nuspecs | Copy-Item -Destination $dest
+    # License and notice files anywhere in the package (some keep them under legal\ or similar), plus the file a
+    # .nuspec <license type="file"> names whatever it is called. Copied to <dest>\notices\ under their own relative
+    # paths, so two files with the same name in different folders both arrive.
+    $wanted = @(Get-ChildItem $dir -Recurse -File | Where-Object { $_.Name -match '(?i)(licen[cs]e|notice|copying)' -and $_.Extension -notin '.dll', '.exe', '.msix', '.nupkg', '.p7s' })
+    foreach ($nuspec in $nuspecs) {
+        $license = ([xml](Get-Content $nuspec.FullName -Raw)).package.metadata.license
+        if ($license -and $license.type -eq 'file') {
+            $declared = Join-Path $dir ($license.'#text'.Trim())
+            # Only a file inside the package; the writer rejects a declared path that leaves it.
+            if ((Test-Path $declared -PathType Leaf) -and (Get-Item $declared).FullName.StartsWith($root, [StringComparison]::OrdinalIgnoreCase)) {
+                $wanted += Get-Item $declared
+            }
+        }
+    }
+    foreach ($file in $wanted | Sort-Object FullName -Unique) {
+        $target = Join-Path (Join-Path $dest 'notices') $file.FullName.Substring($root.Length)
+        New-Item -ItemType Directory -Path (Split-Path $target) -Force | Out-Null
+        Copy-Item $file.FullName -Destination $target
+    }
     $files = Get-ChildItem $dir -Recurse -File
     $names = @($files | ForEach-Object { $_.FullName.Substring($root.Length) })
     # A self-contained publish also unpacks files from the runtime MSIX packages a package carries.

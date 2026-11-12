@@ -39,7 +39,7 @@ case "$cmd" in
   publish)
     "$W" kill OpenMusic >/dev/null
     push
-    "$W" ps "Start-Sleep 1; cd C:\\medley\\$SLOT; dotnet publish src\\OpenMusic.App\\OpenMusic.App.csproj -c Release -r win-x64 -p:Platform=x64 -o publish -nologo 2>&1 | Select-String -Pattern ' error |OpenMusic.App ->' | ForEach-Object { \$_.Line }; \$s = (Get-ChildItem publish -Recurse | Measure-Object Length -Sum).Sum; 'publish: {0:N1} MB, {1} files' -f (\$s/1MB), (Get-ChildItem publish -Recurse -File).Count" ;;
+    "$W" ps "Start-Sleep 1; cd C:\\medley\\$SLOT; if (Test-Path publish) { Remove-Item publish -Recurse -Force }; \$o = dotnet publish src\\OpenMusic.App\\OpenMusic.App.csproj -c Release -r win-x64 -p:Platform=x64 -o publish -nologo 2>&1; \$code = \$LASTEXITCODE; \$o | Select-String -Pattern ' error |OpenMusic.App ->' | ForEach-Object { \$_.Line }; if (\$code -ne 0) { 'publish failed (dotnet exit ' + \$code + ')'; exit 1 }; \$s = (Get-ChildItem publish -Recurse | Measure-Object Length -Sum).Sum; 'publish: {0:N1} MB, {1} files' -f (\$s/1MB), (Get-ChildItem publish -Recurse -File).Count" ;;
   run)
     exe="C:\\medley\\$SLOT\\$CONFIG_DIR\\${OPENMUSIC_CONFIG:-Debug}\\$EXE_REL"
     [[ "${OPENMUSIC_PUBLISHED:-}" == 1 ]] && exe="C:\\medley\\$SLOT\\publish\\OpenMusic.exe"

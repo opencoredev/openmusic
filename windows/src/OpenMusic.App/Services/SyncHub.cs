@@ -20,8 +20,8 @@ namespace OpenMusic.App.Services;
 /// </summary>
 public sealed class SyncHub : INotifyPropertyChanged
 {
-    /// <summary>Debug builds and probes use the dev deployment; Release builds the production one. <c>OPENMUSIC_SYNC_URL</c> overrides both.</summary>
-    public static Uri HostedUrl { get; } = Environment.GetEnvironmentVariable("OPENMUSIC_SYNC_URL") is { Length: > 0 } env && Uri.TryCreate(env, UriKind.Absolute, out var u)
+    /// <summary>Debug builds and probes use the dev deployment; Release builds the production one. <c>OPENMUSIC_SYNC_URL</c> (or the older <c>MEDLEY_SYNC_URL</c>) overrides both.</summary>
+    public static Uri HostedUrl { get; } = OpenMusic.Core.LaunchEnvironment.Get("OPENMUSIC_SYNC_URL") is { Length: > 0 } env && Uri.TryCreate(env, UriKind.Absolute, out var u)
         ? u
 #if DEBUG
         : SyncService.DefaultDeploymentUrl;

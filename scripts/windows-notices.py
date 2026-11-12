@@ -9,12 +9,16 @@ Each package that contributes a file is listed with its license, and every licen
 included once.
 """
 import os
+import posixpath
 import re
 import sys
 import xml.etree.ElementTree as ET
 
-# Files OpenMusic builds itself (the app, its libraries, compiled XAML, resources, its icons).
-OWN = re.compile(r"^(OpenMusic(\.[A-Za-z.]+)?\.(dll|exe|pri|json|xbf)|Assets\\.*|.*\.xbf)$", re.IGNORECASE)
+# Files OpenMusic builds itself (the app, its libraries, compiled XAML, resources). Its own assets are the files in
+# windows/src/OpenMusic.App/Assets, checked by name below; anything else under Assets\ must be traced to a package.
+OWN = re.compile(r"^(OpenMusic(\.[A-Za-z.]+)?\.(dll|exe|pri|json|xbf)|.*\.xbf)$", re.IGNORECASE)
+OWN_ASSETS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "windows", "src", "OpenMusic.App", "Assets")
+OWN_ASSETS = {"assets\\" + name.lower() for name in os.listdir(OWN_ASSETS_DIR)} if os.path.isdir(OWN_ASSETS_DIR) else set()
 
 # Restored or downloaded but never copied into the publish: build tools, and runtime packs for other architectures
 # or for frameworks the app doesn't use (ASP.NET Core, WPF/Windows Forms). A published file only these hold is
@@ -72,7 +76,7 @@ def read_lines(path):
 
 
 def nuspec_info(directory):
-    """(title, license expression or URL, copyright) from the package's .nuspec."""
+    """(title, license expression or URL, copyright, declared license file or None) from the package's .nuspec."""
     for name in os.listdir(directory):
         if not name.endswith(".nuspec"):
             continue
@@ -80,13 +84,20 @@ def nuspec_info(directory):
         meta = next(child for child in root if child.tag.endswith("metadata"))
         values = {child.tag.split("}")[-1]: (child.text or "").strip() for child in meta}
         lic = next((child for child in meta if child.tag.endswith("license")), None)
-        license_text = values.get("licenseUrl", "")
+        license_text, license_file = values.get("licenseUrl", ""), None
         if lic is not None and lic.get("type") == "expression":
             license_text = (lic.text or "").strip()
         elif lic is not None and lic.get("type") == "file":
             license_text = "see the license text below"
-        return values.get("title") or values.get("id", ""), license_text, values.get("copyright", "")
-    return "", "", ""
+            # Relative to the package root; "./x" and "x" are the same file, "../x" is outside the package.
+            raw = (lic.text or "").strip()
+            declared = posixpath.normpath(raw.replace("\\", "/"))
+            outside = re.match(r"^[A-Za-z]:", raw) or declared.startswith(("../", "/")) or declared in ("..", ".")
+            license_file = None if outside else declared
+            if license_file is None:
+                license_text = f"declared license file {(lic.text or '').strip()!r} is outside the package"
+        return values.get("title") or values.get("id", ""), license_text, values.get("copyright", ""), license_file
+    return "", "", "", None
 
 
 def main(src, out_path):
@@ -100,7 +111,7 @@ def main(src, out_path):
     contributed, untraced = {}, []
     for rel in publish:
         name = rel.split("\\")[-1].lower()
-        if OWN.match(rel):
+        if OWN.match(rel) or rel.lower() in OWN_ASSETS:
             continue
         if name not in owner:
             untraced.append(rel)
@@ -127,14 +138,23 @@ def main(src, out_path):
     for package in sorted(contributed, key=str.lower):
         directory = os.path.join(src, package)
         package_id, version = package.split("@", 1)
-        title, license_text, copyright_text = nuspec_info(directory)
-        shipped = sorted({f for f in os.listdir(directory) if re.search(r"(?i)(licen[cs]e|notice)", f)})
+        title, license_text, copyright_text, license_file = nuspec_info(directory)
+        notices = os.path.join(directory, "notices")
+        shipped = sorted(
+            os.path.relpath(os.path.join(base, name), notices).replace(os.sep, "/")
+            for base, _, names in os.walk(notices) for name in names)
+        if license_text.startswith("declared license file"):
+            print(f"windows-notices: {package}: {license_text}", file=sys.stderr)
+            return 1
+        if license_file and license_file.lower() not in {f.lower() for f in shipped}:
+            print(f"windows-notices: {package} declares license file {license_file!r}, which wasn't collected", file=sys.stderr)
+            return 1
         lines.append(f"- {package_id} {version}" + (f" ({title})" if title and title != package_id else ""))
         if copyright_text:
             lines.append(f"  {copyright_text}")
         lines.append(f"  License: {license_text or 'see below'}. {len(contributed[package])} file(s) in this folder.")
         for name in shipped:
-            texts.setdefault(read_text(os.path.join(directory, name)), []).append(f"{package_id} {version}: {name}")
+            texts.setdefault(read_text(os.path.join(notices, name)), []).append(f"{package_id} {version}: {name}")
         if not shipped and package_id.lower() in NO_FILE_NOTICES:
             texts.setdefault(NO_FILE_NOTICES[package_id.lower()], []).append(f"{package_id} {version}")
         elif not shipped:
