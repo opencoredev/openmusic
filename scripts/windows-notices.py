@@ -18,7 +18,6 @@ import xml.etree.ElementTree as ET
 OWN = re.compile(r"^(OpenMusic(\.[A-Za-z.]+)?\.(dll|exe|pri|json|xbf)|.*\.xbf)$", re.IGNORECASE)
 OWN_ASSETS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "windows", "src", "OpenMusic.App", "Assets")
 OWN_ASSETS = {"assets\\" + name.lower() for name in os.listdir(OWN_ASSETS_DIR)} if os.path.isdir(OWN_ASSETS_DIR) else set()
-NOTICE_NAME = re.compile(r"(?i)(licen[cs]e|notice|copying)")
 
 # Restored or downloaded but never copied into the publish: build tools, and runtime packs for other architectures
 # or for frameworks the app doesn't use (ASP.NET Core, WPF/Windows Forms). A published file only these hold is
@@ -89,7 +88,7 @@ def nuspec_info(directory):
             license_text = (lic.text or "").strip()
         elif lic is not None and lic.get("type") == "file":
             license_text = "see the license text below"
-            license_file = re.sub(r"[\\/]", "__", (lic.text or "").strip())
+            license_file = (lic.text or "").strip().replace("\\", "/").lstrip("./")
         return values.get("title") or values.get("id", ""), license_text, values.get("copyright", ""), license_file
     return "", "", "", None
 
@@ -133,7 +132,10 @@ def main(src, out_path):
         directory = os.path.join(src, package)
         package_id, version = package.split("@", 1)
         title, license_text, copyright_text, license_file = nuspec_info(directory)
-        shipped = sorted({f for f in os.listdir(directory) if NOTICE_NAME.search(f) and not f.endswith(".nuspec")})
+        notices = os.path.join(directory, "notices")
+        shipped = sorted(
+            os.path.relpath(os.path.join(base, name), notices).replace(os.sep, "/")
+            for base, _, names in os.walk(notices) for name in names)
         if license_file and license_file.lower() not in {f.lower() for f in shipped}:
             print(f"windows-notices: {package} declares license file {license_file!r}, which wasn't collected", file=sys.stderr)
             return 1
@@ -142,7 +144,7 @@ def main(src, out_path):
             lines.append(f"  {copyright_text}")
         lines.append(f"  License: {license_text or 'see below'}. {len(contributed[package])} file(s) in this folder.")
         for name in shipped:
-            texts.setdefault(read_text(os.path.join(directory, name)), []).append(f"{package_id} {version}: {name}")
+            texts.setdefault(read_text(os.path.join(notices, name)), []).append(f"{package_id} {version}: {name}")
         if not shipped and package_id.lower() in NO_FILE_NOTICES:
             texts.setdefault(NO_FILE_NOTICES[package_id.lower()], []).append(f"{package_id} {version}")
         elif not shipped:
