@@ -1,0 +1,61 @@
+name: Bug report
+description: Something in OpenMusic doesn't work as it should.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. Check [Troubleshooting](https://github.com/opencoredev/openmusic/blob/main/docs/troubleshooting.md) and the open issues first.
+        Security problems go through [private reporting](https://github.com/opencoredev/openmusic/security/advisories/new), not here.
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      options: [Mac, iPhone, Windows]
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: OS version
+      placeholder: macOS 26.1, iOS 26.2, Windows 11 24H2
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: OpenMusic version
+      description: The release (for example 0.1.0-beta.1), or the commit you built from.
+    validations:
+      required: true
+  - type: dropdown
+    id: service
+    attributes:
+      label: Service
+      options: [YouTube Music, Spotify, Sync between devices, Not service-specific]
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what you expected
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open …
+        2. Click …
+        3. See …
+    validations:
+      required: true
+  - type: textarea
+    id: log
+    attributes:
+      label: Log excerpt
+      description: |
+        [Where the logs are](https://github.com/opencoredev/openmusic/blob/main/docs/troubleshooting.md#logs). Paste only the lines around the problem.
+        **Remove personal data first:** email addresses, account and device names, and anything that looks like a cookie, token or long random string. Never paste a Cookie header.
+      render: text

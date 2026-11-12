@@ -1,0 +1,22 @@
+name: Delete my sync account
+description: Ask for your account on the hosted sync server, including your email address at its sign-in provider, to be deleted.
+title: Delete my sync account
+labels: [account-deletion]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Don't write your email address or any other personal information in this issue.** It is public.
+        A maintainer will reply here and arrange a private way to confirm which account is yours before deleting it.
+
+        Before you submit: sign out of sync on every device (Settings › Account › Sign Out). That already removes your devices and their synced data from the server; this request also deletes your sign-in account (your email address). See [Privacy](https://github.com/opencoredev/openmusic/blob/main/docs/privacy.md#deleting-your-data).
+        This applies only to the hosted beta server. If you run your own server, you manage its accounts yourself.
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Confirm
+      options:
+        - label: I want my account on the hosted sync server deleted, and I understand it can't be undone.
+          required: true
+        - label: I haven't put my email address or other personal information in this issue.
+          required: true
