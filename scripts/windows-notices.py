@@ -9,6 +9,7 @@ Each package that contributes a file is listed with its license, and every licen
 included once.
 """
 import os
+import posixpath
 import re
 import sys
 import xml.etree.ElementTree as ET
@@ -88,7 +89,11 @@ def nuspec_info(directory):
             license_text = (lic.text or "").strip()
         elif lic is not None and lic.get("type") == "file":
             license_text = "see the license text below"
-            license_file = (lic.text or "").strip().replace("\\", "/").lstrip("./")
+            # Relative to the package root; "./x" and "x" are the same file, "../x" is outside the package.
+            declared = posixpath.normpath((lic.text or "").strip().replace("\\", "/"))
+            license_file = None if declared.startswith(("../", "/")) or declared in ("..", ".") else declared
+            if license_file is None:
+                license_text = f"declared license file {(lic.text or '').strip()!r} is outside the package"
         return values.get("title") or values.get("id", ""), license_text, values.get("copyright", ""), license_file
     return "", "", "", None
 
@@ -136,6 +141,9 @@ def main(src, out_path):
         shipped = sorted(
             os.path.relpath(os.path.join(base, name), notices).replace(os.sep, "/")
             for base, _, names in os.walk(notices) for name in names)
+        if license_text.startswith("declared license file"):
+            print(f"windows-notices: {package}: {license_text}", file=sys.stderr)
+            return 1
         if license_file and license_file.lower() not in {f.lower() for f in shipped}:
             print(f"windows-notices: {package} declares license file {license_file!r}, which wasn't collected", file=sys.stderr)
             return 1

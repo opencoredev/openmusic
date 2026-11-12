@@ -29,7 +29,10 @@ function Collect([string]$id, [string]$version, [string]$dir) {
         $license = ([xml](Get-Content $nuspec.FullName -Raw)).package.metadata.license
         if ($license -and $license.type -eq 'file') {
             $declared = Join-Path $dir ($license.'#text'.Trim())
-            if (Test-Path $declared -PathType Leaf) { $wanted += Get-Item $declared }
+            # Only a file inside the package; the writer rejects a declared path that leaves it.
+            if ((Test-Path $declared -PathType Leaf) -and (Get-Item $declared).FullName.StartsWith($root, [StringComparison]::OrdinalIgnoreCase)) {
+                $wanted += Get-Item $declared
+            }
         }
     }
     foreach ($file in $wanted | Sort-Object FullName -Unique) {
