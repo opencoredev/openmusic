@@ -761,19 +761,6 @@ public final class SyncService: SyncServicing, VaultEndpoint, SettingsEndpoint {
         stopNow()
     }
 
-    /// The user's token source changed (signed in again after the session ended). Registration is kept.
-    /// Runs as an account operation, so it never changes the identity under one that is running.
-    public func updateAuth(_ auth: (any AuthTokenProvider)?) async {
-        try? await operations.run { ticket in
-            let user = auth == nil ? nil : self.credentials?.userID
-            let scope = await self.client.setAuth(auth, identity: user)
-            try ticket.check(self.operations)
-            self.authScope = auth == nil ? nil : scope
-            self.authUserID = user
-            if self.authSignIn?.userID != user { self.authSignIn = nil }
-        }
-    }
-
     #if DEBUG
     /// Snapshot runs only: shows a made-up registration and devices without a server. Nothing is saved or sent.
     /// `requests` are shown as verified requests for the key (the "Allow …?" alert and the device rows).

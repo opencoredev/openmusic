@@ -59,13 +59,17 @@ import Testing
         #expect(await waitUntil { answers().count == 1 })
         let first = try #require(answers().first)
 
-        // Two days on, the record of that answer is gone; the same commitment and key come back under another id.
-        clock.value = clock.value.addingTimeInterval(2 * 24 * 3600)
-        mac.ledger.answers.removeAll()
+        // The same commitment and key come back under another id. Let the Mac apply that list and finish what it
+        // queued first: until the record of the first answer is gone, it holds the second request back (the record
+        // is kept by commitment), and a late copy of the old list can't recreate the first answer after the reset.
         server.remove("Made-up iPad")
         server.addAskingDevice("Made-up iPad 2", commitment: commitment, publicKey: publicKey)
-        // The first device's request was shown again (conflictAndShowAgain), so the Mac may answer it once more; wait
-        // for an answer to the other device rather than for "the second answer".
+        #expect(await waitUntil { mac.devices.contains { $0.name == "Made-up iPad 2" } && !mac.devices.contains { $0.name == "Made-up iPad" } })
+        await mac.operations.drain()
+        // Two days on, the record of that answer is gone, and the hourly resume answers what waited.
+        clock.value = clock.value.addingTimeInterval(2 * 24 * 3600)
+        mac.ledger.answers.removeAll()
+        mac.operations.enqueue("answers") { _ in mac.resumeKeyRequests() }
         let toOther = { answers().first { $0.args["deviceId"] != first.args["deviceId"] } }
         #expect(await waitUntil { toOther() != nil }, "answers so far: \(answers().count)")
         let second = try #require(toOther())
