@@ -10,14 +10,6 @@ title = "OpenMusic"
 useDefault = true
 
 [[allowlists]]
-description = "Recorded YouTube Music responses (test fixtures): InnerTube entity keys, continuation and feedback tokens"
-targetRules = ["generic-api-key"]
-condition = "AND"
-paths = ['''^(Tests/YouTubeMusicKitTests|windows/tests/(Medley|OpenMusic)\.Providers\.YouTube\.Tests)/Fixtures/[^/]+$''']
-regexTarget = "match"
-regexes = ['''^(formItemEntityKey|formEntityKey|feedbackToken|commandEntityKey|collectionKey|themeKey|colorSamplePaletteEntityKey|rolloutToken|likeStatusEntityKey|dislikeEntityKey|token|key)"''']
-
-[[allowlists]]
 description = "YouTube's public web API key, as YouTube serves it in its own page data (recorded in a fixture)"
 targetRules = ["gcp-api-key"]
 regexes = ['''^AIzaSyC9XL3ZjWddXya6X74dJoCTL-WEYFDNX30$''']
@@ -43,9 +35,121 @@ targetRules = ["jwt"]
 regexes = ['''^eyJhbGciOiJSUzI1NiJ9\.eyJzdWIiOiJ1c2VyXzEyMyJ9\.c2lnbmF0dXJlLXNpZ25hdHVyZQ$''']
 
 [[allowlists]]
-description = "Cross-language test vectors: keys and device tokens generated for the tests"
+description = """Recorded YouTube Music responses and cross-language test vectors: the exact values in them today
+(InnerTube entity keys and continuation tokens; keys and device tokens generated for the tests). Listed one by one,
+so a new value in these folders, or a real secret anywhere, still fails. After re-recording a fixture or regenerating
+vectors, review each new finding and add only values you have checked are not secrets."""
 targetRules = ["generic-api-key"]
 condition = "AND"
-paths = ['''^windows/tests/(Medley|OpenMusic)\.Sync\.Tests/Vectors/[^/]+\.json$''']
-regexTarget = "match"
-regexes = ['''^(contentKey|deviceToken)" : "''']
+paths = [
+  '''^(Tests/YouTubeMusicKitTests|windows/tests/(Medley|OpenMusic)\.Providers\.YouTube\.Tests)/Fixtures/[^/]+$''',
+  '''^windows/tests/(Medley|OpenMusic)\.Sync\.Tests/Vectors/[^/]+\.json$''',
+]
+regexes = [
+  '''^4qmFsgKFARIkVkxQTGdWTFFnbTRsa0FOa3dMbklZWml3ZjZvMmpLSWM1VGgzGjhlaDlRVkRwRFRXZENTV2hCTTA5VVVYaFNSR1JGVG10UmQwNUZXa2ROYTFGNWtnRURDTG9FOEFFQZoCIlBMZ1ZMUWdtNGxrQU5rd0xuSVlaaXdmNm8yaktJYzVUaDM=$''',
+  '''^4qmFsgKHARIkVkxQTGdWTFFnbTRsa0FOa3dMbklZWml3ZjZvMmpLSWM1VGgzGjplaDVRVkRwRFIxRnBSVVJqTkUxRVdYZE9WVXBFVG1wc1JFNXJUWGxPVkVHU0FRTUl1Z1R3QVFBJTNEmgIiUExnVkxRZ200bGtBTmt3TG5JWVppd2Y2bzJqS0ljNVRoMw==$''',
+  '''^4qmFsgKNARItVkxSRENMQUs1dXlfbWtYaWFNQVR1ZDhHSlEzYVg3ZjBuQ2VDcXZlaEE5d1RRGi5laFZRVkRwRlozUlZaR3hyTldGSVRqRlpWVGxJWW5lU0FRTUl1Z1R3QVFBJTNEmgIrUkRDTEFLNXV5X21rWGlhTUFUdWQ4R0pRM2FYN2YwbkNlQ3F2ZWhBOXdUUQ==$''',
+  '''^78xVNrfkA8A_Ame9ee7Q8olz3icwrbVVXOMZZmh4mUg$''',
+  '''^AB9zfpIAGk1lVq0a_qSq\-3la2\-kvUHROcIYZtiiAKDzpiUlKlxBJvVUOQMjRISe1UkFkIle3SJCGdE52dOgCrLJYzECnVkAcHw$''',
+  '''^AB9zfpIO7TPrVWQJyxj2zz_H80xsWA8eInDUnxgJ3xsZ8FiKAfQF2B2X7Gl7XAxlOQokGGkLGfCU52LLcgSoZt9qKRybGtFZ2A$''',
+  '''^AB9zfpIPQgVjRHaJZI49vg8kFOj0acZ30Xr5YuFvnAtqhKnhd0__z4umI\-yf9jPSQCMxwc0HWYpozXKLGbNApCU0s5xNtpXnkQ$''',
+  '''^AB9zfpIU5O2P_Dmcgc1wlY6tFG5ndMGzuHGgD1oViPc5snuZAq4gHgg0Nqe5vqctGzHwdf4DULibciuFLv3Ab8iL6aZE8zjUhA$''',
+  '''^AB9zfpIVfaRUI\-xFDCt_AmK2IVlsAXCLSrTST\-nQRxQ69jeuoDh_QLzEbsjvwrS4N2qKyHdjlhAqRHV6wVdOxYLbgheCmRRgmQ$''',
+  '''^AB9zfpIdMNbJBjjOFvll0uVm9HjGODf0cdpO95RVloiq9_DbdZu5Wkqu\-ZXlQVsoN2hpfj0TpG\-Oiq4kuOT5YAqH1F4ZH04tSA$''',
+  '''^AB9zfpJrb\-wLnjxaYwjiA6DsiI3y0IA4uMjYjkc4fhhuxwVVRIGpFc\-NkYRjnwNdUi4eOBac8uQ1nvbs9xmddjtKW9GJs6_LTw$''',
+  '''^AB9zfpJw7AIDPAmrRp\-Ds8EAoSx4W2AFWXSCI3nj_tXQuQl1i9b2wLruMLZUUVHtNL_Ay\-xomBO9ox9bAJls18x9mAJ9gQxB1w$''',
+  '''^AB9zfpKF9tF2VL6BA6b4FKCfoTP3wk222yVwiIbiPM_8zuLO1D7401PKZ8ESsqO1f7a7_7XViR1jQM9MBGRTuOmKs6XAtmxgJg$''',
+  '''^AB9zfpKKJbKboEMMbkZBlLrQNS1ab8aKLeH8FOW31wmxnBAhklSfF9K0V0C5jU8YGjTzMxWLUK94AkmCVko4uEfWmotHpJXVvw$''',
+  '''^AB9zfpKoe4658Yb28qdDM9k4M_ZR4EnHNrgV8pjS7HPDAf8dCXgtWr4d9y4WkcH4RZ\-j0A18jPTo0WzgQWZ\-BHer4VX6n3rfZA$''',
+  '''^AB9zfpKqDQjg5TPbvCvmAuevh1Ay3HK\-BTKrT5QTB0hXX2YgF0HM6tp8GfhP2R6EdLA7Op3ybTWvBXmFTrfEM4JRm0JLXvYRqA$''',
+  '''^AB9zfpKtM_ZkdPlw_wlZt6tt0RBxxLsVAmbIBoozDZTEsX6jgTVE6F\-KE9YGn0ylpw7br4RMnvuvVuDvr0DJrYWAdqHlDupbHQ$''',
+  '''^AB9zfpLLQ61v4QAzMhSh0JyW8LqSjSqJp9ldvCJf\-GmkYDyogQP\-TwDJXLrJaQPIOlfY5Jq\-dzUamh1I6g_r04nyohIPlL8R_A$''',
+  '''^CJOiofnompHwaxCQlJiB_fSXAxiQlJiB_fSXAw==$''',
+  '''^EgtrT24tSGRFZzZBUSA\-KAE=$''',
+  '''^EgtrT24tSGRFZzZBUSC9AygB$''',
+  '''^EiBkODZlY2MxY2FmZTE4NzM0Mjg1YWQ5OWY3YzEyYmM5ZSBOKAE=$''',
+  '''^EiVleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3IJABKAE=$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3Q08gkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3Q0EgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3Q0ggkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3Q0wgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3Q1IgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3Q1ogkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3QUUgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3QVIgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3QVQgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3QVUgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3Qk8gkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3QkUgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3QlIgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3R0IgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3R1QgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3RE8gkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3REUgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3REsgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3RUMgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3RUUgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3RUcgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3RVMgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3RkkgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3RlIgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3S0UgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3S1IgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3SE4gkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3SEsgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3SFUgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3SU4gkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3SUQgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3SUUgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3SUwgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3SVMgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3SVQgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3SlAgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3TFUgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3TVggkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3TVkgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3Tk8gkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3TkcgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3TkkgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3TkwgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3TlogkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3U0EgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3U0UgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3U0cgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3U1YgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3UEEgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3UEUgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3UEggkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3UEwgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3UFQgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3UFkgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3Uk8gkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3UlMgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3UlUgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3VEggkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3VFIgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3VFcgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3VFogkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3VUEgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3VUcgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3VVMgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3VVkgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3Vk4gkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3WkEgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3WlcgkQEoAQ==$''',
+  '''^EidleHBsb3JlX2NoYXJ0c19jb3VudHJ5X21lbnVfMzE2NzY2NTY3WlogkQEoAQ==$''',
+  '''^EipZVE1fUExBWUVSX0NPTE9SX1NBTVBMRV9QQUxFVFRFX0VOVElUWV9LRVkgiwMoAQ==$''',
+  '''^ElFtdXNpY19zb3J0X29wdGlvbl9jb21tYW5kX2VudGl0eV9rZXlfVkxQTGdWTFFnbTRsa0FOa3dMbklZWml3ZjZvMmpLSWM1VGgzX05PX1NPUlQg8QIoAQ==$''',
+  '''^ElNtdXNpY19zb3J0X29wdGlvbl9jb21tYW5kX2VudGl0eV9rZXlfVkxQTGdWTFFnbTRsa0FOa3dMbklZWml3ZjZvMmpLSWM1VGgzX0FfWl9USVRMRSDxAigB$''',
+  '''^ElNtdXNpY19zb3J0X29wdGlvbl9jb21tYW5kX2VudGl0eV9rZXlfVkxQTGdWTFFnbTRsa0FOa3dMbklZWml3ZjZvMmpLSWM1VGgzX1RPUF9WT1RFRCDxAigB$''',
+  '''^ElRtdXNpY19zb3J0X29wdGlvbl9jb21tYW5kX2VudGl0eV9rZXlfVkxQTGdWTFFnbTRsa0FOa3dMbklZWml3ZjZvMmpLSWM1VGgzX0FfWl9BUlRJU1Qg8QIoAQ==$''',
+  '''^ElVtdXNpY19zb3J0X29wdGlvbl9jb21tYW5kX2VudGl0eV9rZXlfVkxQTGdWTFFnbTRsa0FOa3dMbklZWml3ZjZvMmpLSWM1VGgzX0FfWl9SRUxFQVNFIPECKAE=$''',
+  '''^ElZtdXNpY19zb3J0X29wdGlvbl9jb21tYW5kX2VudGl0eV9rZXlfVkxQTGdWTFFnbTRsa0FOa3dMbklZWml3ZjZvMmpLSWM1VGgzX05FV0VTVF9BRERFRCDxAigB$''',
+  '''^ElZtdXNpY19zb3J0X29wdGlvbl9jb21tYW5kX2VudGl0eV9rZXlfVkxQTGdWTFFnbTRsa0FOa3dMbklZWml3ZjZvMmpLSWM1VGgzX09MREVTVF9BRERFRCDxAigB$''',
+  '''^JY00Z8KcMPEIJ52xHBZG4VvOO413wFkt2Z0eNgfn6P4=$''',
+  '''^JuoCCH0Ck4bfqaRFu7ziQASvsxzzxr1oQuD0OAnavF4=$''',
+  '''^lyrics_collection1435111039$''',
+  '''^lyrics_collection1657513886$''',
+  '''^mpZlNJCw9FvwRvzE\+Z1RrpdQuv2nY6M7TN6Fha6QVUw=$''',
+  '''^rQJJxbqw5pjjbmb8zEvb9CBIiCCxfO3A\+7VWz2bWKAM=$'''
+]

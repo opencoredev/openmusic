@@ -1,6 +1,6 @@
 # Privacy: the hosted sync beta
 
-This page covers OpenMusic's hosted sync server, the default when you sign in to sync. OpenMusic works without it: if you never sign in to sync, nothing on this page applies, and the apps talk only to YouTube Music, Spotify and LRCLIB. If you run [your own server](self-hosting.md), you are its operator and this page describes what your server stores instead.
+This page covers OpenMusic's hosted sync server, the default when you sign in to sync. OpenMusic works without it. If you never sign in to sync, the server stores nothing about you: the apps still make one anonymous request to it at launch to read its sign-in settings, which shows the server your IP address and the app's version like any web request, and otherwise talk only to YouTube Music, Spotify and LRCLIB. If you run [your own server](self-hosting.md), you are its operator and this page describes what your server stores instead.
 
 ## The hosted server is a beta
 
@@ -43,17 +43,17 @@ From the readable parts, whoever runs the server can tell when you listen, on wh
 
 ## How long it keeps data
 
-- Remote commands are deleted 2 minutes after they are sent.
+- Remote commands expire 2 minutes after they are sent; a cleanup that runs every minute then deletes them, so an expired command can stay a little longer before it is gone.
 - Each device's playback row holds only its latest state, replaced on every change, and is deleted with the device.
 - A device's rows (playback, queue, commands, key data) are deleted when it signs out or is removed.
-- An account no device has used for 60 days is deleted with everything in it. So is an account when its last device signs out.
-- Records that refuse the tokens of removed devices are kept for 30 days. Rate-limit counters and remembered setting writes expire within minutes.
+- An account no device has used for 60 days is deleted with everything in it, by a cleanup that runs every hour. An account is also deleted when its last device signs out.
+- Records that refuse the tokens of removed devices are kept for 30 days, also removed by the hourly cleanup. Rate-limit counters and remembered setting writes expire within minutes.
 
 Clerk keeps your Clerk account (email address, sign-in history) until it is deleted; see below.
 
 ## Deleting your data
 
-1. **Sign out of sync on every device** (Settings › Account › Sign Out on the Mac and iPhone; Settings, OpenMusic account, Sign Out on Windows). Each sign-out removes that device and its data from the server, and the last one deletes the account's sync data. A device you no longer have can be removed from another device's device list.
+1. **Sign out of sync on every device** (Settings › Account › Sign Out on the Mac and iPhone; Settings, OpenMusic account, Sign Out on Windows). Each sign-out removes that device and its data from the server, and the last one deletes the account's sync data. If the server can't be reached when you sign out, the device signs out locally and the removal waits: it is retried the next time that device signs in to the same account. A device that never signs in again leaves its data until the 60-day cleanup above, so sign out while online, or remove the device from another device's list. A device you no longer have can be removed from another device's device list.
 2. **To delete your Clerk account too** (your email address), open a ["Delete my sync account" issue](https://github.com/opencoredev/openmusic/issues/new?template=delete-sync-account.yml). The form asks for nothing personal; a maintainer follows up to confirm which account is yours before deleting it.
 
 Security problems go through [private vulnerability reporting](../SECURITY.md), not issues.
