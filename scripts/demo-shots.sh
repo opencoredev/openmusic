@@ -125,7 +125,7 @@ docs() {
   mkdir -p "$d"
   for mode in light dark; do
     "$cwebp" -quiet -q 88 -resize 2000 0 "$out/final/hero-x-$mode.png" -o "$d/hero-$mode.webp"
-    for name in mac-album mac-lyrics mac-handoff; do
+    for name in mac-lyrics; do
       "$cwebp" -quiet -q 85 -resize 1600 0 "$out/final/$name-$mode.png" -o "$d/$name-$mode.webp"
     done
     for name in ios-nowplaying ios-home; do

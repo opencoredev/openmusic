@@ -58,38 +58,27 @@ Spotify works as a remote control: OpenMusic browses Spotify, keeps the queue an
 
 ## Screenshots
 
-<table>
-  <tr>
-    <td width="66%">
-      <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="docs/images/mac-album-dark.webp">
-        <img src="docs/images/mac-album-light.webp" alt="An album page on the Mac">
-      </picture>
-    </td>
-    <td width="34%" rowspan="2">
-      <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="docs/images/ios-nowplaying-dark.webp">
-        <img src="docs/images/ios-nowplaying-light.webp" alt="Now Playing on the iPhone">
-      </picture>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="docs/images/mac-lyrics-dark.webp">
-        <img src="docs/images/mac-lyrics-light.webp" alt="Synced lyrics beside an album on the Mac">
-      </picture>
-    </td>
-  </tr>
-  <tr>
-    <td colspan="2">
-      <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="docs/images/windows-home-dark.webp">
-        <img src="docs/images/windows-home-light.webp" alt="Home in OpenMusic for Windows">
-      </picture>
-    </td>
-  </tr>
-</table>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/mac-lyrics-dark.webp">
+  <img src="docs/images/mac-lyrics-light.webp" alt="An album on the Mac with synced lyrics beside it">
+</picture>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/windows-home-dark.webp">
+  <img src="docs/images/windows-home-light.webp" alt="Home in OpenMusic for Windows">
+</picture>
+
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/images/ios-home-dark.webp">
+    <img src="docs/images/ios-home-light.webp" width="280" alt="Home on the iPhone">
+  </picture>
+  &nbsp;&nbsp;
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/images/ios-nowplaying-dark.webp">
+    <img src="docs/images/ios-nowplaying-light.webp" width="280" alt="Now Playing on the iPhone">
+  </picture>
+</p>
 
 The artists, albums and covers in these images are made up: they come from the apps' sample data.
 
