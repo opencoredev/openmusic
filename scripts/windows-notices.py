@@ -90,8 +90,10 @@ def nuspec_info(directory):
         elif lic is not None and lic.get("type") == "file":
             license_text = "see the license text below"
             # Relative to the package root; "./x" and "x" are the same file, "../x" is outside the package.
-            declared = posixpath.normpath((lic.text or "").strip().replace("\\", "/"))
-            license_file = None if declared.startswith(("../", "/")) or declared in ("..", ".") else declared
+            raw = (lic.text or "").strip()
+            declared = posixpath.normpath(raw.replace("\\", "/"))
+            outside = re.match(r"^[A-Za-z]:", raw) or declared.startswith(("../", "/")) or declared in ("..", ".")
+            license_file = None if outside else declared
             if license_file is None:
                 license_text = f"declared license file {(lic.text or '').strip()!r} is outside the package"
         return values.get("title") or values.get("id", ""), license_text, values.get("copyright", ""), license_file
