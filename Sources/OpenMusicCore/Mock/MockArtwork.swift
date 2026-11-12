@@ -156,12 +156,19 @@ public enum MockArtwork {
                 i += 1
             }
             ctx.restoreGState()
-        default: // Soft blobs.
-            for _ in 0..<4 {
-                let r = s * (0.18 + rng.unit() * 0.3)
-                let p = CGPoint(x: s * rng.unit(), y: s * rng.unit())
-                radial(ctx, [c.copy(alpha: 0.8) ?? c, c.copy(alpha: 0) ?? c], p, r, space)
-            }
+        default: // Overlapping discs, like a screen print: a large one, a smaller one in the opposite hue, a dot.
+            let big = s * (0.34 + rng.unit() * 0.1)
+            let p1 = CGPoint(x: s * (0.28 + rng.unit() * 0.2), y: s * (0.3 + rng.unit() * 0.2))
+            ctx.setFillColor(c.copy(alpha: 0.9) ?? c)
+            ctx.fillEllipse(in: CGRect(x: p1.x - big, y: p1.y - big, width: big * 2, height: big * 2))
+            let mid = big * (0.55 + rng.unit() * 0.15)
+            let p2 = CGPoint(x: p1.x + big * 0.95, y: p1.y + big * 0.9)
+            let d = hsb(hue + 0.5, 0.45, 0.95)
+            ctx.setFillColor(d.copy(alpha: 0.78) ?? d)
+            ctx.fillEllipse(in: CGRect(x: p2.x - mid, y: p2.y - mid, width: mid * 2, height: mid * 2))
+            let dot = s * 0.05
+            ctx.setFillColor(CGColor(gray: 1, alpha: 0.9))
+            ctx.fillEllipse(in: CGRect(x: s * 0.8 - dot, y: s * 0.2 - dot, width: dot * 2, height: dot * 2))
         }
         // Subtle vignette for depth.
         radial(ctx, [CGColor(gray: 0, alpha: 0), CGColor(gray: 0, alpha: 0.28)], CGPoint(x: s / 2, y: s / 2), s * 0.75, space)

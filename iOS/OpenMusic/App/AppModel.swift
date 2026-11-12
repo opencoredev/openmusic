@@ -109,7 +109,7 @@ final class AppModel {
         let settings = options.mock ? PlaybackSettings(defaults: UserDefaults(suiteName: "medley.mock") ?? .standard) : PlaybackSettings()
         playback = PlaybackSystem(player: player, settings: settings, store: store)
         recentSearches = options.demo ? ["Olivia Rodrigo", "Tate McRae", "the cure"] : options.mock
-            ? ["Daft Punk", "Glass Harbor", "Night drive"]
+            ? ["Mara Vale", "Glass Harbor", "Night drive"]
             : UserDefaults.standard.stringArray(forKey: Keys.recentSearches) ?? []
         memoryWarning = NotificationCenter.default.addObserver(forName: UIApplication.didReceiveMemoryWarningNotification, object: nil, queue: .main) { [weak self] _ in
             MainActor.assumeIsolated { self?.dropCaches() }

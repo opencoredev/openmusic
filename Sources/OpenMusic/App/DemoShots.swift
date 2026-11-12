@@ -2,9 +2,10 @@
 import AppKit
 import OpenMusicCore
 
-/// `OPENMUSIC_MOCK=demo OPENMUSIC_DEMO_ART=<dir> OPENMUSIC_SNAPSHOT_DIR=<dir> OPENMUSIC_SNAPSHOT_ONLY=demo`: the screenshots for
-/// posting (scripts/demo-shots.sh). Real chart albums, the made-up listener, "the cure" playing 1:12 in, captured
-/// with the window's shadow on a transparent background in light and dark.
+/// `OPENMUSIC_SNAPSHOT_DIR=<dir> OPENMUSIC_SNAPSHOT_ONLY=demo`: the screenshots for posting (scripts/demo-shots.sh),
+/// captured with the window's shadow on a transparent background in light and dark. With `OPENMUSIC_MOCK=1` (the
+/// sample data, what the repository's images use) they show only invented artists and procedural covers; with
+/// `OPENMUSIC_MOCK=demo OPENMUSIC_DEMO_ART=<dir>`, real chart albums and their covers with a made-up listener.
 ///
 /// Retina: captures come out at the screen's scale. The script starts a 2× virtual display first
 /// (scripts/virtual-display.m); the window moves to the first 2× screen it finds, or stays put at 1× with a note in
@@ -38,20 +39,23 @@ struct DemoShots {
             window.requestFrame(frame, display: true)
         }
 
-        guard let hero = yt.demoNowPlaying else {
-            log.append("no demo data: run with OPENMUSIC_MOCK=demo")
+        guard let hero = yt.demoNowPlaying ?? yt.sampleNowPlaying else {
+            log.append("no screenshot data: run with OPENMUSIC_MOCK=1 (sample) or OPENMUSIC_MOCK=demo")
             write(log)
             return
         }
+        let sample = yt.demoNowPlaying == nil
+        log.append(sample ? "data: sample (invented artists, procedural covers)" : "data: demo (chart albums)")
 
         // Some listening history first, so the sidebar's Recently Played reads like a real library.
-        for key in ["sabrina-carpenter-short-n-sweet", "olivia-dean-the-art-of-loving", "taylor-swift-the-life-of-a-showgirl"] {
-            if let album = yt.demoAlbum(key) { play(album, provider: yt) }
-        }
+        let history = sample
+            ? [3, 2, 1].compactMap { yt.sampleAlbum($0) }
+            : ["sabrina-carpenter-short-n-sweet", "olivia-dean-the-art-of-loving", "taylor-swift-the-life-of-a-showgirl"].compactMap { yt.demoAlbum($0) }
+        for album in history { play(album, provider: yt) }
         if let mix = sp.catalog.playlists.first(where: { $0.title == "Daily Mix 1" }), let tracks = sp.catalog.playlistTracks[mix.providerID] {
             model.play(tracks, from: AppModel.PlayingFrom(title: mix.title, route: .playlist(.spotify, id: mix.providerID, preview: mix)))
         }
-        if let album = sp.demoAlbum("noah-kahan-the-great-divide") { play(album, provider: sp) }
+        if let album = sample ? sp.sampleAlbum(0) : sp.demoAlbum("noah-kahan-the-great-divide") { play(album, provider: sp) }
         playHero(hero)
 
         struct Shot {
@@ -69,16 +73,26 @@ struct DemoShots {
             Shot(name: "handoff") { m in
                 m.inspector = nil
                 m.select(.home)
-                if let espresso = yt.demoTrack("sabrina-carpenter-short-n-sweet", "Espresso"), let album = yt.demoAlbum("sabrina-carpenter-short-n-sweet"),
-                   let tracks = yt.catalog.albumTracks[album.providerID], let i = tracks.firstIndex(of: espresso) {
-                    m.play(tracks, startAt: i, from: AppModel.PlayingFrom(title: album.title, route: .album(.youtubeMusic, id: album.providerID, preview: album)))
+                // Another song playing here, so the banner offers the phone's.
+                let other: (album: Album, tracks: [Track], index: Int)?
+                if sample {
+                    other = yt.sampleAlbum(2).flatMap { album in yt.catalog.albumTracks[album.providerID].map { (album, $0, 2) } }
+                } else if let album = yt.demoAlbum("sabrina-carpenter-short-n-sweet"), let tracks = yt.catalog.albumTracks[album.providerID],
+                          let espresso = yt.demoTrack("sabrina-carpenter-short-n-sweet", "Espresso"), let i = tracks.firstIndex(of: espresso) {
+                    other = (album, tracks, i)
+                } else {
+                    other = nil
+                }
+                if let other, other.tracks.indices.contains(other.index) {
+                    m.play(other.tracks, startAt: other.index,
+                           from: AppModel.PlayingFrom(title: other.album.title, route: .album(.youtubeMusic, id: other.album.providerID, preview: other.album)))
                     try? await Task.sleep(for: .milliseconds(200))
                     m.player.seek(to: 41)
                 }
-                let cure = hero.tracks[hero.index]
+                let phone = hero.tracks[hero.index]
                 m.playerBanner = PlayerBanner(id: "demo", symbol: "iphone", title: "Continue from iPhone",
-                                              subtitle: "\(cure.title) · \(cure.artistLine) · 1:12", actionTitle: "Play Here", action: {},
-                                              artwork: cure.artwork)
+                                              subtitle: "\(phone.title) · \(phone.artistLine) · 1:12", actionTitle: "Play Here", action: {},
+                                              artwork: phone.artwork)
             },
         ]
         let only = env["OPENMUSIC_DEMO_SHOTS"].map { Set($0.split(separator: ",").map(String.init)) }
@@ -88,7 +102,7 @@ struct DemoShots {
             for shot in shots where only?.contains(shot.name) ?? true {
                 if shot.name != "handoff", model.player.current?.id != hero.tracks[hero.index].id { playHero(hero) }
                 await shot.apply(model)
-                // Covers load from disk and the page settles; then put the song back at 1:12 for every capture.
+                // Covers load and the page settles; then put the song back at 1:12 for every capture.
                 await settle(1.6)
                 if shot.name != "handoff" { model.player.seek(to: hero.position) } else { model.player.seek(to: 41) }
                 await settle(0.25)

@@ -212,7 +212,7 @@ public sealed partial class MockCatalog
     private static readonly string[] SpArtists = ["Ivy Crane", "Coastal Static", "Rue Marlowe", "Night Swimmer", "Atlas Bloom", "The Velvet Arcade", "Tomo Hart", "Wren & Wilder", "Saffron Days", "Low Orbit"];
 
     private static readonly string[] YtAlbums = ["Glass Harbor", "Northern Lights", "Paper Moons", "Afterglow", "Static Bloom", "City of Echoes", "Golden Hour Radio", "Satellite Hearts", "Low Tide", "Wildflower Season", "Neon Rain", "Undertow", "Silver Lining", "Late Bloomer", "Overpass", "Field Notes", "Sunday Static", "Blue Hour", "Copper Sky", "Driftwood", "Parallel Lines", "Monochrome", "Soft Focus", "Heatwave", "The Long Way", "Kites", "Open Water", "Signals"];
-    private static readonly string[] SpAlbums = ["Velvet Hours", "Midnight Drive", "Polaroid Summer", "Quiet Machines", "Gravity Well", "Lemon Light", "Tidal", "Cassette Dreams", "Hollow Pines", "Ultraviolet", "Slow Burn", "Arcade Fire Escape", "Sea Glass", "Moth & Flame", "Postcards", "Sundial", "Echo Chamber", "Paper Planes", "Night Market", "Small Hours", "Bright Side", "Rivers", "Cinder", "Orbit", "Hourglass", "Wanderer", "Lowlands", "Daybreak"];
+    private static readonly string[] SpAlbums = ["Velvet Hours", "Midnight Drive", "Polaroid Summer", "Quiet Machines", "Gravity Well", "Lemon Light", "Tidal", "Cassette Dreams", "Hollow Pines", "Ultraviolet", "Slow Burn", "Fire Escape", "Sea Glass", "Moth & Flame", "Postcards", "Sundial", "Echo Chamber", "Paper Planes", "Night Market", "Small Hours", "Bright Side", "Rivers", "Cinder", "Orbit", "Hourglass", "Wanderer", "Lowlands", "Daybreak"];
 
     private static readonly string[] SongTitles =
     [

@@ -131,14 +131,15 @@ public static class MockArtwork
             }
             default:
             {
-                // Soft blobs.
-                for (var n = 0; n < 4; n++)
-                {
-                    var r = s * (0.18 + rng.Unit() * 0.3);
-                    var px = s * rng.Unit();
-                    var py = s * rng.Unit();
-                    ctx.Radial(c.WithAlpha(0.8), c.WithAlpha(0), px, py, r, extendEnd: true);
-                }
+                // Overlapping discs, like a screen print: a large one, a smaller one in the opposite hue, a dot.
+                var big = s * (0.34 + rng.Unit() * 0.1);
+                var x1 = s * (0.28 + rng.Unit() * 0.2);
+                var y1 = s * (0.3 + rng.Unit() * 0.2);
+                ctx.Ellipse(x1, y1, big, big, c.WithAlpha(0.9));
+                var mid = big * (0.55 + rng.Unit() * 0.15);
+                ctx.Ellipse(x1 + big * 0.95, y1 + big * 0.9, mid, mid, Hsb(hue + 0.5, 0.45, 0.95).WithAlpha(0.78));
+                var dot = s * 0.05;
+                ctx.Ellipse(s * 0.8, s * 0.2, dot, dot, new Rgba(1, 1, 1, 0.9));
                 break;
             }
         }

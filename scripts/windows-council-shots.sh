@@ -2,8 +2,11 @@
 # Council screenshots of OpenMusic for Windows: builds the Debug app in the medley-win VM, drives every main screen in the
 # real window through the app's --self-test file, screenshots the VM's screen and crops each PNG to the window's frame
 # (title bar, Mica fallback, flyouts and dialogs included).
-#   scripts/windows-council-shots.sh <out-dir> [--no-build] [--only demo|live|narrow|onboarding]
+#   scripts/windows-council-shots.sh <out-dir> [--no-build] [--only demo|sample|live|narrow|onboarding]
 # demo: the demo catalog (--demo --demo-sync) in light and dark at 1440x900, plus dialogs with sample data.
+# sample: Home and an album with the invented sample catalog (--dataset sample: made-up artists, procedural covers),
+#       light and dark at 1440x900. These are the README's Windows images (docs/images/windows-*.webp). Not in the
+#       default run.
 # live: YouTube Music and OpenMusic Sync as the VM's app data has them (Home, search, album, Devices, Settings › Account,
 #       the YouTube sign-in window), light and dark. Needs network; skips what isn't signed in.
 # narrow: Home and an album at 1024x700 (demo), light.
@@ -43,6 +46,19 @@ reset_view() { st "pane off"; st "nowplaying off"; st "close-devices"; st "close
 if ((BUILD)); then
   echo "build"
   "$ROOT/scripts/windows-vm.sh" build Debug
+fi
+
+if [[ "$ONLY" == sample ]]; then
+  for theme in light dark; do
+    echo "sample $theme"
+    launch "--demo --dataset sample --no-restore --play --position 72 --size 1440x900 --theme $theme"
+    st "place 20 20"
+    st "continue off"
+    shoot "$theme-sample-home" 2.5
+    st "screen album"; shoot "$theme-sample-album" 2
+    st "pane lyrics"; shoot "$theme-sample-lyrics" 2; st "pane off"
+    st quit
+  done
 fi
 
 if [[ -z "$ONLY" || "$ONLY" == demo ]]; then

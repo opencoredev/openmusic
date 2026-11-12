@@ -337,5 +337,20 @@ extension MockProvider {
 
     /// A demo song by album key and title.
     public func demoTrack(_ albumKey: String, _ title: String) -> Track? { catalog.dataset == .demo ? DemoShelves.track(catalog, albumKey, title) : nil }
+
+    /// The sample dataset's albums for screenshot runs (`scripts/demo-shots.sh`, the default `sample` data):
+    /// invented artists and procedural covers only, so the images show no real music or artwork. `sampleAlbum(0)`
+    /// is the one both apps show playing. nil unless this provider serves the sample dataset.
+    public func sampleAlbum(_ index: Int) -> Album? {
+        guard catalog.dataset == .sample else { return nil }
+        let albums = catalog.albums.filter { $0.kind == .album && (catalog.albumTracks[$0.providerID]?.count ?? 0) >= 3 }
+        return albums.indices.contains(index) ? albums[index] : nil
+    }
+
+    /// What the sample screenshots play: `sampleAlbum(0)`'s second song, 1:12 in.
+    public var sampleNowPlaying: DemoNowPlaying? {
+        guard let album = sampleAlbum(0), let tracks = catalog.albumTracks[album.providerID] else { return nil }
+        return DemoNowPlaying(album: album, tracks: tracks, index: 1, position: 72)
+    }
 }
 #endif
