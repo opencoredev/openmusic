@@ -544,7 +544,7 @@ public sealed class AccountService : INotifyPropertyChanged
 
     // MARK: Server
 
-    /// <summary>Checks that <paramref name="text"/> is a OpenMusic server with sign-in set up. Returns the URL to save. Changes nothing.</summary>
+    /// <summary>Checks that <paramref name="text"/> is an OpenMusic server with sign-in set up. Returns the URL to save. Changes nothing.</summary>
     public async Task<Uri> CheckServerAsync(string text)
     {
         await Actor.Switch();

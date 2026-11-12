@@ -87,7 +87,7 @@ struct SnapshotDriver {
         case "welcome", "welcome-signin", "account-signedout", "account-comparing", "account-allowed", "account-outdated", "account", "allow-device":
             await account(screen)
         case "settings":
-            // Signed in to a OpenMusic account too, as a listener who set it up would see Settings.
+            // Signed in to an OpenMusic account too, as a listener who set it up would see Settings.
             await account(screen)
             model.isSettingsPresented = true
         case "signin": model.signInProvider = .youtubeMusic

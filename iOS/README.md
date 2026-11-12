@@ -1,32 +1,36 @@
 # OpenMusic for iPhone
 
-SwiftUI app for iOS 26 and later. It links `OpenMusicCore`, `YouTubeMusicKit`, `SpotifyKit` and `OpenMusicSync` from the local package. `project.yml` is the XcodeGen spec. The generated `OpenMusic.xcodeproj` is gitignored.
+OpenMusic's iPhone app: SwiftUI, iOS 26 and later. It links `OpenMusicCore`, `YouTubeMusicKit`, `SpotifyKit` and `OpenMusicSync` from the local package. `project.yml` is the XcodeGen spec. The generated `OpenMusic.xcodeproj` is gitignored.
 
-## Build and run
+## Install on your iPhone
 
-Builds run on the build Mac (`OPENMUSIC_MAC_HOST` in `scripts/local.env`, see AGENTS.md) in a simulator owned by your slot (`agent-openmusic-<slot>`, created on first use, addressed by UDID):
+There is no App Store build, and releases include no `.ipa` yet. You build it on a Mac with Xcode 27 and run it on your iPhone with your own Apple ID; a free Apple ID works.
 
-```bash
-scripts/ios.sh <slot> build                                   # xcodegen + xcodebuild
-scripts/ios.sh <slot> run                                     # build, install, launch (live YouTube Music)
-scripts/ios.sh <slot> run -OpenMusicMock YES -OpenMusicScreen album # sample data, opens one screen
-scripts/ios.sh <slot> snapshots                               # every screen, light and dark, into build/shots/
-scripts/ios.sh <slot> selftest                                # live check: home, search, album, play, next, lyrics,
-                                                              # Now Playing info, audio session, backgrounding
-scripts/ios.sh <slot> delete                                  # delete the slot's simulator
-rsync -az "$OPENMUSIC_MAC_HOST:agents/openmusic-<slot>/build/shots/" <dir>/
-```
+1. Install [XcodeGen](https://github.com/yonaskolb/XcodeGen): `brew install xcodegen`.
+2. In the repository, generate the project and open it:
 
-Launch arguments: `-OpenMusicMock YES` (sample data), `-OpenMusicSignedOut YES` (with mock), `-OpenMusicScreen <name>` (see `App/SnapshotDriver.swift`), `-OpenMusicSelfTest live`, `-OpenMusicSyncDeviceName "<name>"`. Debug builds only, read from the command line and never from saved defaults: `-OpenMusicSyncSelfTest YES` (sync log, `openmusic://test/…` commands and the probe's fake test sign-ins, see `Sync/SyncSelfTest.swift`) and `-OpenMusicOpenURL <link>` (opens a `openmusic://` link at once, during launch). Release builds compile none of this. `OPENMUSIC_CONFIG=Release scripts/ios.sh <slot> build` builds Release.
+   ```bash
+   xcodegen generate --spec iOS/project.yml
+   open iOS/OpenMusic.xcodeproj
+   ```
 
-Live sync check against a `openmusic-probe sync` device, with screenshots of every sync screen in light and dark:
+3. Select the `OpenMusic` target, open **Signing & Capabilities**, turn on **Automatically manage signing** and choose your Apple ID's team (add your Apple ID in Xcode's Settings › Accounts if it isn't listed). If Xcode says the bundle identifier is taken, change it to something of your own, such as `com.yourname.openmusic`.
+4. Connect your iPhone, turn on Developer Mode if iOS asks (Settings › Privacy & Security › Developer Mode), choose it as the run destination and press Run.
 
-```bash
-scripts/ios.sh <slot> build
-scripts/mac.sh <slot> 'scripts/ios-sync-live.sh'   # logs in build/sync-live/, shots in build/shots/sync-*.png
-```
+Apps signed with a free Apple ID stop opening after 7 days; run the app from Xcode again to renew it. To keep it signed without a Mac nearby, [AltStore](https://altstore.io) and [SideStore](https://sidestore.io) can sign and refresh an `.ipa` you export from Xcode (Product › Archive) with your own Apple ID.
 
-Simulator builds are ad-hoc signed. To run on your own iPhone, run `xcodegen generate --spec iOS/project.yml`, open the generated `iOS/OpenMusic.xcodeproj` in Xcode, turn on Automatically manage signing for the `OpenMusic` target and pick your Apple ID's team (and change the bundle id if Xcode asks for a unique one), and run on the device. The project is set to manual ad-hoc signing so command-line simulator builds need no team. `scripts/install-iphone.sh` does the same from the command line with a profile you already have (see AGENTS.md, "iOS and sync").
+`project.yml` sets manual ad-hoc signing with no team, so command-line Simulator builds need none. Your signing choice lives only in the generated project, which is gitignored; running `xcodegen generate` again resets it, so repeat step 3 after that.
+
+## Run in the Simulator
+
+Open the project as above, pick an iPhone simulator and press Run. Launch arguments (Product › Scheme › Edit Scheme › Arguments):
+
+- `-OpenMusicMock YES`: made-up sample data, no network. `-OpenMusicSignedOut YES` with it shows the signed-out state.
+- `-OpenMusicScreen <name>`: opens one screen (see `App/SnapshotDriver.swift` for the names).
+- `-OpenMusicSelfTest live`, `-OpenMusicSyncDeviceName "<name>"`.
+- Debug builds only, read from the command line and never from saved defaults: `-OpenMusicSyncSelfTest YES` (sync log, `openmusic://test/…` commands and the probe's fake test sign-ins, see `Sync/SyncSelfTest.swift`) and `-OpenMusicOpenURL <link>` (opens an `openmusic://` link at once, during launch). Release builds compile none of this.
+
+The maintainers drive the same builds on a remote Mac with `scripts/ios.sh` ([docs/maintainers.md](../docs/maintainers.md#build-mac)).
 
 ## Layout
 

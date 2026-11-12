@@ -481,7 +481,7 @@ public final class AccountService {
 
     // MARK: Server
 
-    /// Checks that `url` is a OpenMusic server with sign-in set up. Returns the URL to save.
+    /// Checks that `url` is an OpenMusic server with sign-in set up. Returns the URL to save.
     public func checkServer(_ text: String) async throws -> URL {
         let url = try SyncServer.validate(text)
         let key = try await Self.fetchPublishableKey(server: url, http: http)

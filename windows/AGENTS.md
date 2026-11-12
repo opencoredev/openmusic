@@ -4,37 +4,37 @@ Read the root [AGENTS.md](../AGENTS.md) first (goals, rules, sync). This folder 
 
 Goals, in order: feels native (a first-party Windows 11 app, not a Mac port), fast (instant UI, no spinners for cached content), light (small, zero idle CPU while paused), full feature coverage of both services.
 
-## Layout and ownership
+## Layout
 
-| Path | What | Owner |
-| --- | --- | --- |
-| `OpenMusic.sln`, `Directory.Build.props`, `OpenMusic.Core.slnf` | Solution, shared build settings, the Linux-buildable subset. | coordinator |
-| `src/OpenMusic.Core/Contracts/` | Models, `IMusicProvider`, `IPlaybackEngine`, capabilities, errors. The shared contract, mirroring `Sources/OpenMusicCore/Contracts/`. | coordinator (additive changes OK, report them) |
-| `src/OpenMusic.Core/Playback/` | `PlayerController`, `KnownLengths`, `QueueStore`/`QueuePersistence`, scheduler. A port of the Swift player; keep the semantics identical (see "Porting rules"). | playback worker |
-| `src/OpenMusic.Core/Support/` | JSON (`OpenMusicJson`, Swift-compatible), `LrcLibClient`, `UndoStack`. | coordinator (additive OK) |
-| `src/OpenMusic.Core/Sync/Wire.cs` | The sync backend's shapes (anchor, queue window, commands, settings keys). | sync worker |
-| `src/OpenMusic.Core/Mock/` | `MockProvider`, the sample and demo catalogs, procedural artwork. | UI worker |
-| `src/OpenMusic.Core/Threading/` | `MainThreadContext`, the main actor for tests and console tools. | coordinator |
-| `src/OpenMusic.Providers.YouTube/` | `YouTubeMusicProvider`: InnerTube, sign-in, stream resolution (`IStreamResolver`). `net10.0`, no Windows dependency, so it tests on Linux. See its README. | YouTube worker |
-| `src/OpenMusic.Probe/` | `openmusic-probe ytm …`: the provider from a terminal (Linux too). | YouTube worker |
-| `src/OpenMusic.Providers.Spotify/` (later) | `SpotifyProvider`. | Spotify worker |
-| `src/OpenMusic.Sync/` | Convex WebSocket client, Clerk sign-in, `SyncService`, `SyncCoordinator`, sign-in vault, settings sync. `net10.0`. Port of `Sources/OpenMusicSync/` against `docs/sync-design.md`. See its README. | sync worker |
-| `src/OpenMusic.SyncProbe/`, `tests/OpenMusic.Sync.Tests/`, `scripts/live-*.sh` | A fake sync device for live tests; unit, race and Swift-vector tests. | sync worker |
-| `src/OpenMusic.App/Pages/` | One page per screen (Home/New, Radio, Album, Artist, Playlist, Search, Songs, Library grids, Devices, Settings). | UI worker |
-| `src/OpenMusic.App/Controls/` | Shell pieces: now-playing bar, side pane (Lyrics/Up Next), Now Playing, mini player, `ShelfView`, `TrackList`, `ArtworkView`, `LyricsView`. | UI worker |
-| `src/OpenMusic.App/ViewModels/` | `PlayerViewModel` (shared), one view model per page, row and card items. | UI worker |
-| `src/OpenMusic.App/Styles/` | `Theme.xaml` (sizes, brushes, text and button styles), `Converters`. | UI worker |
-| `src/OpenMusic.App/Services/` | `AppServices` (composition root), `MediaPlaybackEngine` with `HttpRangeStream` and `RemuxedStream`, `SyncHub`, `Dpapi`, `AppSettings`, `MediaMenus` (right-click menus), `Shortcuts` and `Dialogs`, `SystemMediaControls`, `ArtworkLoader`, `MockAudioResolver`, `Snapshotter`, `SelfTest` (Debug), `Log`. | coordinator; providers register here |
-| `src/OpenMusic.App/Interop/` | Win32: taskbar thumbnail buttons, window subclass. | coordinator |
-| `src/OpenMusic.App/ShellPage.xaml`, `MainWindow.cs`, `MiniPlayerWindow.cs`, `YouTubeSignInWindow.cs`, `Program.cs` | The shell, its InfoBars and account menu; the windows; the WebView2 sign-in; the single-instance entry point. | UI worker (coordinate shell changes) |
-| `tests/OpenMusic.Providers.YouTube.Tests/` | xunit on Swift-recorded and live fixtures. | YouTube worker |
-| `tests/OpenMusic.Core.Tests/` | xunit; `Fixtures/` are written by `scripts/windows-fixtures/generate.sh`. | per area owner |
-| `../scripts/windows-*.{sh,py}` | VM helper, fixture generator, icon generator. | coordinator |
+| Path | What |
+| --- | --- |
+| `OpenMusic.sln`, `Directory.Build.props`, `OpenMusic.Core.slnf` | Solution, shared build settings, the Linux-buildable subset. |
+| `src/OpenMusic.Core/Contracts/` | Models, `IMusicProvider`, `IPlaybackEngine`, capabilities, errors. The shared contract, mirroring `Sources/OpenMusicCore/Contracts/`; changes to it are additive. |
+| `src/OpenMusic.Core/Playback/` | `PlayerController`, `KnownLengths`, `QueueStore`/`QueuePersistence`, scheduler. A port of the Swift player; keep the semantics identical (see "Porting rules"). |
+| `src/OpenMusic.Core/Support/` | JSON (`OpenMusicJson`, Swift-compatible), `LrcLibClient`, `UndoStack`. |
+| `src/OpenMusic.Core/Sync/Wire.cs` | The sync backend's shapes (anchor, queue window, commands, settings keys). |
+| `src/OpenMusic.Core/Mock/` | `MockProvider`, the sample and demo catalogs, procedural artwork. |
+| `src/OpenMusic.Core/Threading/` | `MainThreadContext`, the main actor for tests and console tools. |
+| `src/OpenMusic.Providers.YouTube/` | `YouTubeMusicProvider`: InnerTube, sign-in, stream resolution (`IStreamResolver`). `net10.0`, no Windows dependency, so it tests on Linux. See its README. |
+| `src/OpenMusic.Probe/` | `openmusic-probe ytm …`: the provider from a terminal (Linux too). |
+| `src/OpenMusic.Providers.Spotify/` (not yet) | `SpotifyProvider`. |
+| `src/OpenMusic.Sync/` | Convex WebSocket client, Clerk sign-in, `SyncService`, `SyncCoordinator`, sign-in vault, settings sync. `net10.0`. Port of `Sources/OpenMusicSync/` against `docs/sync-design.md`. See its README. |
+| `src/OpenMusic.SyncProbe/`, `tests/OpenMusic.Sync.Tests/`, `scripts/live-*.sh` | A fake sync device for live tests; unit, race and Swift-vector tests. |
+| `src/OpenMusic.App/Pages/` | One page per screen (Home/New, Radio, Album, Artist, Playlist, Search, Songs, Library grids, Devices, Settings). |
+| `src/OpenMusic.App/Controls/` | Shell pieces: now-playing bar, side pane (Lyrics/Up Next), Now Playing, mini player, `ShelfView`, `TrackList`, `ArtworkView`, `LyricsView`. |
+| `src/OpenMusic.App/ViewModels/` | `PlayerViewModel` (shared), one view model per page, row and card items. |
+| `src/OpenMusic.App/Styles/` | `Theme.xaml` (sizes, brushes, text and button styles), `Converters`. |
+| `src/OpenMusic.App/Services/` | `AppServices` (composition root), `MediaPlaybackEngine` with `HttpRangeStream` and `RemuxedStream`, `SyncHub`, `Dpapi`, `AppSettings`, `MediaMenus` (right-click menus), `Shortcuts` and `Dialogs`, `SystemMediaControls`, `ArtworkLoader`, `MockAudioResolver`, `Snapshotter`, `SelfTest` (Debug), `Log`. |
+| `src/OpenMusic.App/Interop/` | Win32: taskbar thumbnail buttons, window subclass. |
+| `src/OpenMusic.App/ShellPage.xaml`, `MainWindow.cs`, `MiniPlayerWindow.cs`, `YouTubeSignInWindow.cs`, `Program.cs` | The shell, its InfoBars and account menu; the windows; the WebView2 sign-in; the single-instance entry point. |
+| `tests/OpenMusic.Providers.YouTube.Tests/` | xunit on Swift-recorded and live fixtures. |
+| `tests/OpenMusic.Core.Tests/` | xunit; `Fixtures/` are written by `scripts/windows-fixtures/generate.sh`. |
+| `../scripts/windows-*.{sh,py}` | VM helper, fixture generator, icon generator. |
 
-## What each worker builds against
+## What each part builds against
 
 - **Providers** implement `IMusicProvider` (Contracts/IMusicProvider.cs). Network and parsing off the UI thread (`ConfigureAwait(false)`), results returned to the awaiting caller on the UI thread, `PropertyChanged` for `AuthStatus` raised on the UI thread. Unsupported calls throw `ProviderException.NotSupported(...)` and `Capabilities` says what works. For playback, implement `IStreamResolver` and give the provider a `MediaPlaybackEngine(resolver, dispatcher)` (in the app, or inject `IPlaybackEngine` into the provider's constructor as `MockProvider` does). Streams needing headers (YouTube) will need `MediaSource.CreateFromStream` over an HTTP stream; extend `MediaPlaybackEngine` for that. Sign-in UI (WebView2 for Google is allowed) lives in the app: add a `Pages/SignIn` page or dialog per provider; the core has no UI types. Use `LrcLibClient` as the lyrics fallback.
-- **Sync** builds `OpenMusic.Sync` on `PlayerController` (`Load(entries, index, position, shuffle, repeat, autoplay)` for handoff, `Snapshot()`, `AddChangeHandler`) and the wire types in `OpenMusic.Core.Sync`. All JSON goes through `OpenMusicJson.Serialize(value, OpenMusicJsonContext.Default.X)`, which writes what Swift's JSONEncoder writes; settings values through `OpenMusicJson.EncodeSetting` (compared as text by the Swift `SettingsSync`). The backend's `platformV` only accepts `mac` and `ios`: add `windows` in `sync/convex/model.ts` before a PC can pair (`DevicePlatform.Windows` exists on the C# side). Secrets: DPAPI (`ProtectedData`, CurrentUser) or Windows Credential Locker, never files in plain text.
+- **Sync** builds `OpenMusic.Sync` on `PlayerController` (`Load(entries, index, position, shuffle, repeat, autoplay)` for handoff, `Snapshot()`, `AddChangeHandler`) and the wire types in `OpenMusic.Core.Sync`. All JSON goes through `OpenMusicJson.Serialize(value, OpenMusicJsonContext.Default.X)`, which writes what Swift's JSONEncoder writes; settings values through `OpenMusicJson.EncodeSetting` (compared as text by the Swift `SettingsSync`). The backend's `platformV` (`sync/convex/model.ts`) takes `windows` (`DevicePlatform.Windows`). Secrets: DPAPI (`ProtectedData`, CurrentUser) or Windows Credential Locker, never files in plain text.
 - **UI** deepens the pages. Every screen is a `Page` with its own view model; shared look goes in `Styles/Theme.xaml`; long lists stay virtualized (`TrackList` with a `Header` is the page's scroller). Navigation goes through `ShellPage.Current.Navigate(tag, parameter)` and `Open(MediaItem)`. Artwork goes through `ArtworkView` (cached, decoded at display size). Check every change with `--snapshot` in light and dark, at 1440 and at 800 px wide (`--size 800x700`).
 
 ## Porting rules
@@ -68,7 +68,7 @@ Tried and not used:
 - Memory, live Home in the VM (Debug, `--self-test` `memory` after `scroll all`): about 290 MB working set (140 MB private) at launch, 310 MB (155 MB private) after scrolling every shelf, 380 MB (220 MB private) after New as well. The floor is the shell: Settings alone is 213 MB working set (77 MB private), of which about 110 MB are DLL pages shared with other processes and much of the rest is WARP (the VM has no GPU, so every surface is in system memory). Art is decoded at the size shown and its caches are bounded (12 MB decoded, 8 MB of files); a 172 px card still costs several times its pixels in WARP. `OPENMUSIC_NO_ART=1` (Debug) leaves art out, for comparisons.
 - Mica Alt is set; in the VM (no GPU) Windows draws its fallback color.
 - Crossfade and Sound Check are accepted by `MediaPlaybackEngine` but not applied yet.
-- Playback, queues, takeovers and settings are sealed with the vault key (merged from `work/win-sync-sealed`). A PC that isn't approved yet sees that another device plays and where, not the song ("Playing on Riley's Mac · 2:13"), and Play Here tells it to get approved first.
+- Playback, queues, takeovers and settings are sealed with the vault key. A PC that isn't approved yet sees that another device plays and where, not the song ("Playing on Riley's Mac · 2:13"), and Play Here tells it to get approved first.
 - Flyout and menu items can't be found by the VM's UI Automation script; the Debug self-test's `click <AutomationId>` presses them through their automation peer.
 
 ## Rules

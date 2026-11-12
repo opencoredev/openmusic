@@ -7,7 +7,7 @@
 #                                ./deploy.sh convex logs
 #
 # Reads .env next to this script. Uses `docker compose`, `podman compose` or `podman-compose`, whichever works
-# first; set COMPOSE="podman-compose" (for example) to choose. Needs Node.js 20+ and curl.
+# first; set COMPOSE="podman-compose" (for example) to choose. Needs Node.js 22.12+ and curl.
 # Keeps the backend's admin key in ~/.config/openmusic-sync/<COMPOSE_PROJECT_NAME>.admin-key (folder 0700, file 0600),
 # outside the checkout so it is never committed or copied along with it. Never share it: it can read and change
 # everything on the server.
@@ -81,10 +81,11 @@ dc() { "${compose[@]}" -p "$project" -f "$here/compose.yaml" --env-file "$here/.
 # --- the Convex CLI, pointed at this server --------------------------------------------------------------------
 
 ensure_node() {
-  command -v node > /dev/null || die "Node.js 20 or newer is needed (node not found)."
-  local major
-  major="$(node -p 'process.versions.node.split(".")[0]')"
-  (( major >= 20 )) || die "Node.js 20 or newer is needed (found $(node --version))."
+  # The Convex CLI needs Node.js 22 and vitest (in the same lockfile) 22.12, so ask for that.
+  command -v node > /dev/null || die "Node.js 22.12 or newer is needed (node not found)."
+  local major minor
+  IFS=. read -r major minor _ <<< "$(node -p 'process.versions.node')"
+  (( major > 22 || (major == 22 && minor >= 12) )) || die "Node.js 22.12 or newer is needed (found $(node --version))."
   if [[ ! -d "$sync_dir/node_modules/convex" ]]; then
     say "Installing the Convex CLI (npm ci in sync/)…"
     (cd "$sync_dir" && npm ci --no-audit --no-fund --loglevel=error)

@@ -54,16 +54,8 @@ otherwise.
   Settings › Account, which has Codes Match.
 - Continue with Apple and Google go through Clerk's web OAuth (`oauth_apple`, `oauth_google`) in an
   `ASWebAuthenticationSession`, back through `openmusic://oauth-callback`. Native Sign in with Apple would need the
-  Sign in with Apple entitlement, which the current signing profile can't carry (docs/accounts-design.md).
+  Sign in with Apple entitlement, which the current signing profile can't carry ([accounts design](accounts-design.md#clerk-on-native-the-decision)).
 
 ## Checking it
 
-`scripts/onboarding-shots-apple.sh <dir> [mac|ios|both]` (from a Linux checkout with the Clerk helper; see the script) makes two Clerk test users, runs both apps from
-a fresh install through every step live against the dev deployment, with `openmusic-probe` as the account's other
-devices (the holder that approves, a device asking this one, the device playing for the Continue banner), and writes
-the captures (light and dark, the Mac at 1200 × 780 and its 900 × 560 minimum, iPhone 17 Pro, the largest
-accessibility text size, an SE-sized screen) and PASS/FAIL lines to `<dir>`. It deletes the users afterwards. The apps
-are driven through their sync self-test command files: `firstrun?do=…` presses the flow's buttons, `firstrun?step=`,
-`server=`, `email=`, `code=` fill it in, and `firstrun?preview=youtubeMusic:Name,spotify:Name` (Debug only) shows the
-signed-in rows without a sign-in that would have to work against the real services. `key?k=tab|return|escape|cmd-[`
-and `window?w=&h=` are Mac only.
+`scripts/onboarding-shots-apple.sh` runs both Apple apps through every step live and captures each one ([maintainers](maintainers.md#first-run-flow)); `scripts/windows-council-shots.sh --only onboarding` does the same for Windows.
