@@ -1,5 +1,5 @@
 import Foundation
-import MedleyCore
+import OpenMusicCore
 import Observation
 import SwiftUI
 
@@ -274,7 +274,7 @@ public final class YouTubeMusicProvider: MusicProvider {
         var seen: Set<String> = []
         for entry in resolved {
             // A channel whose selectors were ignored comes back as its account's default identity — so if it matches
-            // the base, Medley can't switch to it; drop it rather than list a channel it can't actually use.
+            // the base, OpenMusic can't switch to it; drop it rather than list a channel it can't actually use.
             if entry.candidate.delegatedSessionId != nil,
                let base = baseByAuthUser[entry.candidate.authUser], base == identityKey(entry.info) {
                 continue
@@ -307,7 +307,7 @@ public final class YouTubeMusicProvider: MusicProvider {
         }
     }
 
-    /// Diagnostics (`medley-probe ytm accounts`): runs the real prepare step on a `Cookie:` header, then signs in to
+    /// Diagnostics (`openmusic-probe ytm accounts`): runs the real prepare step on a `Cookie:` header, then signs in to
     /// the first account it offers without touching the Keychain. Returns what the picker would have shown.
     public func diagnosticSignIn(cookieHeader: String, preferSelected: Bool) async throws -> BrowserAccountList {
         guard let creds = YTMCredentials(cookieHeader: cookieHeader) else { throw ProviderError.notSignedIn }
@@ -545,7 +545,7 @@ public final class YouTubeMusicProvider: MusicProvider {
         try await client.editPlaylist(playlistID, edits: tracks.map { .add(videoId: $0.providerID) })
     }
 
-    /// Removes every copy of each song: a playlist lists a song it holds twice once (Medley's `PlaylistPager`), so
+    /// Removes every copy of each song: a playlist lists a song it holds twice once (OpenMusic's `PlaylistPager`), so
     /// Remove from Playlist means the song, not one entry. The playlist's entries are read from the service (all
     /// pages), since a row's own `setVideoId` names only its first entry and tracks from elsewhere (the queue) have
     /// none.
@@ -647,16 +647,16 @@ public final class YouTubeMusicProvider: MusicProvider {
     }
 }
 
-// MARK: - Diagnostics (medley-probe)
+// MARK: - Diagnostics (openmusic-probe)
 
 extension YouTubeMusicProvider {
-    /// Sends a raw WEB_REMIX request and returns the response as pretty-printed JSON. For `medley-probe ytm raw`.
+    /// Sends a raw WEB_REMIX request and returns the response as pretty-printed JSON. For `openmusic-probe ytm raw`.
     public func diagnosticRequest(endpoint: String, bodyJSON: String) async throws -> String {
         try await client.rawRequest(endpoint: endpoint, bodyJSON: bodyJSON)
     }
 
     /// Loads a browser login (without persisting), sends a raw request, and returns the response JSON object.
-    /// For `medley-probe ytm account-shape`, which redacts it before printing. Does not change saved state.
+    /// For `openmusic-probe ytm account-shape`, which redacts it before printing. Does not change saved state.
 
 }
 

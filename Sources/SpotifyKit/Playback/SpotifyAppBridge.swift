@@ -2,13 +2,13 @@
 import AppKit
 import CoreServices
 import Foundation
-import MedleyCore
+import OpenMusicCore
 
 /// Controls the Spotify desktop app with raw Apple Events.
 ///
 /// The codes come from Spotify's scripting dictionary (`Spotify.app/Contents/Resources/Spotify.sdef`), so nothing
 /// is compiled at runtime and events go out from this actor with a short timeout instead of blocking the main thread.
-/// `SpotifyAppBridge.scriptEquivalents` holds the same commands as AppleScript for `medley-probe spotify applescript-check`.
+/// `SpotifyAppBridge.scriptEquivalents` holds the same commands as AppleScript for `openmusic-probe spotify applescript-check`.
 public actor SpotifyAppBridge {
     public static let bundleID = "com.spotify.client"
 
@@ -209,7 +209,7 @@ public actor SpotifyAppBridge {
     }
 }
 
-/// An Apple Event failure, with the cases Medley explains to the listener.
+/// An Apple Event failure, with the cases OpenMusic explains to the listener.
 public struct SpotifyAppError: LocalizedError, Sendable, Hashable {
     public var code: Int
 
@@ -235,7 +235,7 @@ func fourCC(_ string: String) -> FourCharCode {
 
 #else
 import Foundation
-import MedleyCore
+import OpenMusicCore
 
 // iOS has no Apple Events and no Spotify desktop app to drive: the bridge reports the app as missing, so the
 // engine always picks Spotify Connect. Same API as the macOS bridge so the routes compile unchanged.

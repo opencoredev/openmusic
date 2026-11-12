@@ -1,18 +1,18 @@
 import Foundation
-import MedleyCore
+import OpenMusicCore
 
-/// Moves the Spotify sign-in between devices for Medley Sync (`MedleySync.SignInTransfer`).
+/// Moves the Spotify sign-in between devices for OpenMusic Sync (`OpenMusicSync.SignInTransfer`).
 ///
 /// It has the exact shape of `SignInTransfer`, so an app that links both kits declares the conformance in one line
 /// (`extension SpotifySignInTransfer: @retroactive SignInTransfer {}`) and registers it with
-/// `sync.signIns.register(_:)`. SpotifyKit itself doesn't depend on MedleySync.
+/// `sync.signIns.register(_:)`. SpotifyKit itself doesn't depend on OpenMusicSync.
 ///
 /// What travels: the whole token (access token, refresh token, expiry, scope and the client that issued it) and
 /// the Spotify user id. The access token goes too on purpose: a device that imports a fresh token uses it until it
 /// expires instead of refreshing at once. Spotify rotates the refresh token on every refresh, so if each import
 /// forced a refresh, two devices would keep rotating and re-uploading forever. This way the library refreshes
 /// about once an hour, on whichever device needs it first, and that device's rotation syncs to the rest.
-/// MedleySync seals the blob with the library key; this type never logs it.
+/// OpenMusicSync seals the blob with the library key; this type never logs it.
 @MainActor
 public final class SpotifySignInTransfer {
     public let provider: ProviderID = .spotify
@@ -215,7 +215,7 @@ public final class SpotifySignInTransfer {
 
 // MARK: - Payload
 
-/// The blob that travels, sealed by MedleySync. Version 1.
+/// The blob that travels, sealed by OpenMusicSync. Version 1.
 struct SpotifySignInPayload: Codable, Sendable, CustomStringConvertible {
     var version = 1
     var token: SpotifyToken
@@ -248,10 +248,10 @@ extension SpotifySignInTransfer {
     // The fake test sign-in and the verifier that accepts it exist in Debug builds only (self-tests, the probe and
     // unit tests). Release builds can neither make nor accept one.
     #if DEBUG
-    /// A sign-in payload with a fake token, for `medley-probe sync` to check the transfer end to end without real
+    /// A sign-in payload with a fake token, for `openmusic-probe sync` to check the transfer end to end without real
     /// credentials. Spotify rejects it, so a device only accepts it with a test `Verifier` (`acceptingTestSignIns`).
     public nonisolated static func testPayload() -> Data {
-        let token = SpotifyToken(accessToken: "medley-test", refreshToken: "medley-test", expiresAt: Date().addingTimeInterval(3600),
+        let token = SpotifyToken(accessToken: "openmusic-test", refreshToken: "openmusic-test", expiresAt: Date().addingTimeInterval(3600),
                                  scope: SpotifySignInPayload.testScope, clientID: SpotifyBuiltInClient.clientID)
         return (try? SpotifySignInPayload(token: token, userID: nil).encoded()) ?? Data()
     }

@@ -1,6 +1,6 @@
 import CryptoKit
 import Foundation
-import MedleyCore
+import OpenMusicCore
 
 /// Google session cookies for music.youtube.com, and the auth headers the web client derives from them.
 struct YTMCredentials: Sendable, Equatable, Codable {

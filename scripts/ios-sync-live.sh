@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# Live check of Medley Sync on the iPhone app against a `medley-probe sync` device, on the build Mac.
+# Live check of OpenMusic Sync on the iPhone app against a `openmusic-probe sync` device, on the build Mac.
 #   scripts/mac.sh <slot> 'scripts/ios-sync-live.sh'      (after: scripts/ios.sh <slot> build)
 # The probe ("Probe Mac") plays a real YouTube Music queue on its silent engine. The app runs with
-# -MedleySyncSelfTest YES and is driven with openmusic://test/... links (see iOS/Medley/Sync/SyncSelfTest.swift).
+# -OpenMusicSyncSelfTest YES and is driven with openmusic://test/... links (see iOS/OpenMusic/Sync/SyncSelfTest.swift).
 # Checks: no sync socket while unpaired; a pairing link asks first (nothing joins on Cancel, the backend shows no new
 # device before Join); pair by link, banner, pull handoff (position and the probe's pause), push, remote control,
 # settings and a test sign-in from the probe; then typed-code pairing (also confirmed) without the key, a sign-out
@@ -11,20 +11,21 @@
 # Screenshots (light and dark) go to build/shots/sync-*.png; logs to build/sync-live/.
 set -euo pipefail
 # Accounts replaced invite pairing (docs/accounts-design.md). This script still drives create/invite/join, which no
-# longer exist; it needs a rework around sign-in with a Clerk test user's JWT (medley-probe sync sign-in --jwt-file,
-# the apps' -MedleySyncJWTFile) before it can run again.
+# longer exist; it needs a rework around sign-in with a Clerk test user's JWT (openmusic-probe sync sign-in --jwt-file,
+# the apps' -OpenMusicSyncJWTFile) before it can run again.
 echo "$(basename "$0"): not updated for accounts yet; see docs/accounts-design.md (Testing)." >&2
 exit 2
 cd "$(dirname "$0")/.."
-export MEDLEY_SLOT="${MEDLEY_SLOT:-iossync}"
-export MEDLEY_CONFIG=Debug   # the self-test only exists in Debug builds
+source scripts/env.sh
+export OPENMUSIC_SLOT="${OPENMUSIC_SLOT:-iossync}"
+export OPENMUSIC_CONFIG=Debug   # the self-test only exists in Debug builds
 bundle="dev.openmusic.OpenMusicMobile"
 out="build/sync-live"
 mkdir -p "$out" build/shots
 rm -f build/sync-live/*.json build/sync-live/*.log build/shots/sync-*.png
 : > "$out/checks.log"
-P=.build/debug/medley-probe
-swift build --product medley-probe 2>&1 | tail -1
+P=.build/debug/openmusic-probe
+swift build --product openmusic-probe 2>&1 | tail -1
 
 u="$(scripts/ios-sim.sh udid)"
 # Reboot this slot's own simulator (by UDID) so no system alert from an earlier run is left on screen.
@@ -60,7 +61,7 @@ link="$($P sync invite --state "$out/a.json" | tee -a "$out/probe-setup.log" | s
 [[ -n "$link" ]] || { echo "no invite link"; exit 1; }
 
 say "app: launch unpaired"
-xcrun simctl launch "$u" "$bundle" -firstRunFinished YES -MedleySyncSelfTest YES -MedleySyncDeviceName "Test iPhone" >/dev/null
+xcrun simctl launch "$u" "$bundle" -firstRunFinished YES -OpenMusicSyncSelfTest YES -OpenMusicSyncDeviceName "Test iPhone" >/dev/null
 data="$(xcrun simctl get_app_container "$u" "$bundle" data)"
 log="$data/Documents/synctest.log"
 for _ in $(seq 1 30); do [[ -s "$log" ]] && break; sleep 1; done
@@ -159,7 +160,7 @@ keylink="$($P sync key-link --state "$out/a.json" | sed -n 's/.* key link \(open
 cp "$log" "$out/app-before-relaunch.log"
 say "app: cold launch with the key link arriving during launch"
 xcrun simctl terminate "$u" "$bundle" >/dev/null 2>&1 || true
-xcrun simctl launch "$u" "$bundle" -firstRunFinished YES -MedleySyncSelfTest YES -MedleySyncDeviceName "Test iPhone" -MedleyOpenURL "$keylink" >/dev/null
+xcrun simctl launch "$u" "$bundle" -firstRunFinished YES -OpenMusicSyncSelfTest YES -OpenMusicSyncDeviceName "Test iPhone" -OpenMusicOpenURL "$keylink" >/dev/null
 sleep 2
 for _ in $(seq 1 30); do [[ -s "$log" ]] && break; sleep 1; done
 wait_log "CONFIRM asked: take the sign-in key" 30 || true

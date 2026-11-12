@@ -1,6 +1,6 @@
 import Foundation
 
-// Codable mirrors of the Spotify Web API objects Medley reads, shaped after the
+// Codable mirrors of the Spotify Web API objects OpenMusic reads, shaped after the
 // reference at developer.spotify.com/documentation/web-api (as of the February/March 2026 changes).
 // Every field that Spotify has deprecated or removed for development-mode apps is optional,
 // so responses decode whether or not it is present.

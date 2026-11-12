@@ -1,27 +1,27 @@
 #!/usr/bin/env bash
-# Live check of Medley Sync in the Mac app against a `medley-probe sync` device, on the build Mac.
+# Live check of OpenMusic Sync in the Mac app against a `openmusic-probe sync` device, on the build Mac.
 #   scripts/mac.sh <slot> 'scripts/mac-sync-live.sh'
-# Builds a debug Medley.app (the sync self-test exists only in debug builds) and the probe, then drives the app with
-# openmusic://… lines in its command file (see Sources/Medley/Sync/SyncSelfTest.swift). The probe ("Probe iPhone")
+# Builds a debug OpenMusic.app (the sync self-test exists only in debug builds) and the probe, then drives the app with
+# openmusic://… lines in its command file (see Sources/OpenMusic/Sync/SyncSelfTest.swift). The probe ("Probe iPhone")
 # plays a real YouTube Music queue on its silent engine.
 # Checks: consent before pairing by link, banner, pull handoff, push, remote control, settings and recent searches,
 # a test sign-in from the probe, sign-out here vs everywhere, typed-code pairing without the key, then the key link.
-# The app keeps its sync token in a file here (-MedleySyncState), and, being a self-test run, every other Keychain
+# The app keeps its sync token in a file here (-OpenMusicSyncState), and, being a self-test run, every other Keychain
 # account (YouTube Music and Spotify sign-ins too) in files under build/mac-sync-live/keychain: it never restores,
-# overwrites, deletes or uploads the Mac's real sign-ins. The run checks the login Keychain's Medley items are
+# overwrites, deletes or uploads the Mac's real sign-ins. The run checks the login Keychain's OpenMusic items are
 # unchanged afterwards (scripts/keychain-snapshot.sh: attributes only, never the stored data).
 # Logs: build/mac-sync-live/; screenshots (light and dark): build/mac-sync-live/shots/.
 set -euo pipefail
 # Accounts replaced invite pairing (docs/accounts-design.md). This script still drives create/invite/join, which no
-# longer exist; it needs a rework around sign-in with a Clerk test user's JWT (medley-probe sync sign-in --jwt-file,
-# the apps' -MedleySyncJWTFile) before it can run again.
+# longer exist; it needs a rework around sign-in with a Clerk test user's JWT (openmusic-probe sync sign-in --jwt-file,
+# the apps' -OpenMusicSyncJWTFile) before it can run again.
 echo "$(basename "$0"): not updated for accounts yet; see docs/accounts-design.md (Testing)." >&2
 exit 2
 cd "$(dirname "$0")/.."
 out="$PWD/build/mac-sync-live"
 rm -rf "$out"; mkdir -p "$out/shots"
-P=.build/debug/medley-probe
-swift build --product medley-probe 2>&1 | tail -1
+P=.build/debug/openmusic-probe
+swift build --product openmusic-probe 2>&1 | tail -1
 CONFIG=debug scripts/bundle.sh | tail -1
 app="$PWD/build/OpenMusic.app"
 exe="$app/Contents/MacOS/OpenMusic"
@@ -42,7 +42,7 @@ shot() { # shot NAME WINDOW: light and dark
 }
 screen() { cmd "screen?name=$1"; sleep "${2:-2.5}"; }
 quit_app() { pkill -TERM -f "$exe" 2>/dev/null || true; sleep 2; }
-# The app shares its preferences domain with every Medley build on this Mac; the run changes crossfade, autoplay and
+# The app shares its preferences domain with every OpenMusic build on this Mac; the run changes crossfade, autoplay and
 # recent searches through sync, so put them back afterwards.
 defaults export dev.openmusic.OpenMusic "$out/defaults-backup.plist" 2>/dev/null || true
 restore() { quit_app; [[ -s "$out/defaults-backup.plist" ]] && defaults import dev.openmusic.OpenMusic "$out/defaults-backup.plist"; }
@@ -56,8 +56,8 @@ link="$($P sync invite --state "$out/probe.json" | tee -a "$out/probe-setup.log"
 [[ -n "$link" ]] || { echo "no invite link"; exit 1; }
 
 say "app: launch unpaired"
-open -n -F "$app" --args -didOnboard YES -MedleySyncSelfTest YES -MedleySyncDir "$out" -MedleySyncState "$out/mac-state.json" \
-  -MedleySyncDeviceName "Test Mac"
+open -n -F "$app" --args -didOnboard YES -OpenMusicSyncSelfTest YES -OpenMusicSyncDir "$out" -OpenMusicSyncState "$out/mac-state.json" \
+  -OpenMusicSyncDeviceName "Test Mac"
 wait_log "STARTED" 40
 sleep 4
 cmd status; sleep 1
@@ -85,7 +85,7 @@ sleep 2
 
 # The probe's second sign-in: another (fake) account in the transfer's format, so it is a new vault write the Mac
 # must ignore after signing out here. Same test marker cookie as YouTubeMusicSignInTransfer.testPayload.
-second='{"account":{"detail":"Test sign-in","name":"Probe-Second-Account"},"credentials":{"authUser":0,"cookies":{"MEDLEY_TEST_SIGNIN":"1","SAPISID":"medley-test-2","SID":"medley-test-2"}},"version":1}'
+second='{"account":{"detail":"Test sign-in","name":"Probe-Second-Account"},"credentials":{"authUser":0,"cookies":{"MEDLEY_TEST_SIGNIN":"1","SAPISID":"openmusic-test-2","SID":"openmusic-test-2"}},"version":1}'
 say "probe: play Discovery from 40 s; settings, searches and test sign-ins later"
 $P sync fake-play --name "Probe iPhone" --state "$out/probe.json" --ytm "daft punk discovery" --start-at 40 --seconds 340 \
   --script "sleep 70; crossfade 6; autoplay off; searches Daft Punk,Justice; sleep 6; signin-test youtubeMusic; sleep 205; signin youtubeMusic $second; sleep 15; signout youtubeMusic everywhere; sleep 15" \
@@ -214,7 +214,7 @@ for _ in $(seq 1 120); do grep -q "step: signin youtubeMusic" "$out/probe.log" &
 sleep 4
 cmd status; sleep 1.5
 if grep -q "Probe-Second-Account" "$out/synctest.log"; then echo "!! signed back in after signing out here"
-elif tail -12 "$out/synctest.log" | grep -q "sign-in youtubeMusic: signed out; sync Optional(MedleySync.SignInSync.Status.signedOutHere)"; then echo "ok: signed out here stays signed out when another device signs in"
+elif tail -12 "$out/synctest.log" | grep -q "sign-in youtubeMusic: signed out; sync Optional(OpenMusicSync.SignInSync.Status.signedOutHere)"; then echo "ok: signed out here stays signed out when another device signs in"
 else echo "!! unexpected status after the probe's second sign-in"; fi
 say "waiting for the probe's sign-out everywhere"
 wait "$probe" || true

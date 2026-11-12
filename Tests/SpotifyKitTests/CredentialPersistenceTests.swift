@@ -1,5 +1,5 @@
 import Foundation
-import MedleyCore
+import OpenMusicCore
 import Security
 import Testing
 @testable import SpotifyKit
@@ -20,7 +20,7 @@ import Testing
     }
 
     func provider(_ store: FlakyTokenStore, transport: any SpotifyTransport = FakeTransport(SignInCancellationTests.routes)) -> SpotifyProvider {
-        let defaults = UserDefaults(suiteName: "medley.tests.\(UUID().uuidString)")!
+        let defaults = UserDefaults(suiteName: "openmusic.tests.\(UUID().uuidString)")!
         let provider = SpotifyProvider(defaults: defaults, transport: transport, tokenStore: store)
         provider.saveAccount = { _ in }
         provider.authorize = { _, makeURL in

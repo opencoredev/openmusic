@@ -1,6 +1,6 @@
 import Foundation
 
-// Writes the wire fixtures for windows/tests/Medley.Core.Tests with the real Swift JSONEncoder and the real model
+// Writes the wire fixtures for windows/tests/OpenMusic.Core.Tests with the real Swift JSONEncoder and the real model
 // sources, plus dumps of the mock catalogs the C# port must reproduce. Run through generate.sh.
 let out = URL(fileURLWithPath: CommandLine.arguments[1], isDirectory: true)
 try FileManager.default.createDirectory(at: out, withIntermediateDirectories: true)
@@ -91,7 +91,7 @@ for dataset in [MockDataset.sample, .demo] {
 }
 print("wrote fixtures to \(out.path)")
 
-// The demo dataset's source data for the C# MockCatalog (windows/src/Medley.Core/Mock/DemoCatalogData.json).
+// The demo dataset's source data for the C# MockCatalog (windows/src/OpenMusic.Core/Mock/DemoCatalogData.json).
 struct DemoSongOut: Encodable { var title: String; var seconds: Int; var explicit: Bool; var artists: [String]? }
 struct DemoAlbumOut: Encodable {
     var key: String; var service: ProviderID; var title: String; var artists: [String]; var released: String

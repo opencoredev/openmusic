@@ -1,5 +1,5 @@
 import Foundation
-import MedleyCore
+import OpenMusicCore
 
 /// Token-authorized Spotify Web API client.
 ///

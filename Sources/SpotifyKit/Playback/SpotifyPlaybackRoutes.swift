@@ -1,5 +1,5 @@
 import Foundation
-import MedleyCore
+import OpenMusicCore
 
 /// One way of making Spotify play: the desktop app on this Mac, or a Spotify Connect device.
 protocol SpotifyPlaybackRoute: Sendable {

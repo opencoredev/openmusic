@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
-# Drive Medley for Windows in the medley-win VM through its Debug --self-test file. Source it, or run it:
+# Drive OpenMusic for Windows in the medley-win VM through its Debug --self-test file. Source it, or run it:
 #   scripts/windows-selftest.sh launch '<app args>' -- '<command>' '<command>' ...   start the app, run commands in order
 #   commands: any self-test line (see Services/SelfTest.cs), "sleep <s>", "snap <out.png> [main|mini|youtube]",
 #   "log <pattern>" (prints this run's matching log lines).
-# MEDLEY_VM_SLOT picks the slot (default council-win).
+# OPENMUSIC_VM_SLOT picks the slot (default council-win).
 . "$(dirname "${BASH_SOURCE[0]}")/env.sh"
-W="${MEDLEY_VM:-${OPENMUSIC_WIN_VM:-$HOME/vms/medley-win/win.sh}}"
-SLOT="${MEDLEY_VM_SLOT:-council-win}"
-EXE="${MEDLEY_EXE:-C:\\medley\\$SLOT\\src\\Medley.App\\bin\\x64\\Debug\\net10.0-windows10.0.22621.0\\win-x64\\OpenMusic.exe}"
+W="${OPENMUSIC_VM:-${OPENMUSIC_WIN_VM:-$HOME/vms/medley-win/win.sh}}"
+SLOT="${OPENMUSIC_VM_SLOT:-council-win}"
+EXE="${OPENMUSIC_EXE:-C:\\medley\\$SLOT\\src\\OpenMusic.App\\bin\\x64\\Debug\\net10.0-windows10.0.22621.0\\win-x64\\OpenMusic.exe}"
 ST="C:\\medley\\$SLOT\\council-st.txt"
 LOG='$env:LOCALAPPDATA\OpenMusic\logs\openmusic.log'
 SELFTEST_TMP="${SELFTEST_TMP:-$(mktemp -d)}"

@@ -4,12 +4,13 @@
 #   windows/scripts/live-two-csharp.sh [log]
 set -euo pipefail
 here="$(cd "$(dirname "$0")/.." && pwd)"
-log="${1:-$HOME/code/medley-worktrees/win-sync-live.log}"
+source "$here/../scripts/env.sh"
+log="${1:-${TMPDIR:-/tmp}/openmusic-win-sync-live.log}"
 state="$(mktemp -d /tmp/winsync-live.XXXXXX)"
 chmod 700 "$state"
-probe=("$HOME/.dotnet/dotnet" "$here/src/Medley.SyncProbe/bin/Debug/net10.0/Medley.SyncProbe.dll")
-# MEDLEY_PROBE_USER_FILE picks another test user (its own account), so runs never share an account with other work.
-user_args=(); if [[ -n "${MEDLEY_PROBE_USER_FILE:-}" ]]; then user_args=(--user-file "$MEDLEY_PROBE_USER_FILE"); fi
+probe=("$HOME/.dotnet/dotnet" "$here/src/OpenMusic.SyncProbe/bin/Debug/net10.0/OpenMusic.SyncProbe.dll")
+# OPENMUSIC_PROBE_USER_FILE picks another test user (its own account), so runs never share an account with other work.
+user_args=(); if [[ -n "${OPENMUSIC_PROBE_USER_FILE:-}" ]]; then user_args=(--user-file "$OPENMUSIC_PROBE_USER_FILE"); fi
 {
   echo
   echo "=== $(date -u +%FT%TZ) two C# devices (live-two-csharp.sh), deployment sensible-barracuda-214 ==="

@@ -2,7 +2,7 @@
 # Download the demo catalog's artwork (scripts/demo-art.tsv) into a cache directory, once.
 #   scripts/demo-art.sh [dir]        default: build/demo-art
 # Images come from public sources (Apple's iTunes artwork CDN, Deezer artist photos) and are never committed.
-# Point the app at the directory with MEDLEY_DEMO_ART=<dir> (Mac) or -MedleyDemoArt <dir> (iOS Simulator).
+# Point the app at the directory with OPENMUSIC_DEMO_ART=<dir> (Mac) or -OpenMusicDemoArt <dir> (iOS Simulator).
 set -euo pipefail
 cd "$(dirname "$0")/.."
 dir="${1:-build/demo-art}"

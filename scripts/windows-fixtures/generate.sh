@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Regenerates windows/tests/Medley.Core.Tests/Fixtures and windows/src/Medley.Core/Mock/DemoCatalogData.json with the real
+# Regenerates windows/tests/OpenMusic.Core.Tests/Fixtures and windows/src/OpenMusic.Core/Mock/DemoCatalogData.json with the real
 # Swift model sources and JSONEncoder (Linux swiftc). Rerun after changing the Swift models or the demo catalog.
 #   scripts/windows-fixtures/generate.sh
 set -euo pipefail
@@ -8,13 +8,13 @@ root="$(cd "$here/../.." && pwd)"
 build="$(mktemp -d)"
 trap 'rm -rf "${build:?}"' EXIT
 src="$root/Sources"
-grep -v '^import MedleyCore' "$src/MedleySync/Model/SyncModels.swift" > "$build/SyncModels.swift"
+grep -v '^import OpenMusicCore' "$src/OpenMusicSync/Model/SyncModels.swift" > "$build/SyncModels.swift"
 # DemoCatalog.swift ends with a MockProvider extension (SwiftUI); leave it out.
-sed '/^extension MockProvider/,$d' "$src/MedleyCore/Mock/DemoCatalog.swift" > "$build/DemoCatalog.swift"; echo '#endif' >> "$build/DemoCatalog.swift"
-{ cat "$here/MockArtworkStub.swift"; sed -n '/^func fnv1a/,$p' "$src/MedleyCore/Mock/MockArtwork.swift"; } > "$build/MockArtwork.swift"
-swiftc -D DEBUG -O -module-name MedleyFixtures -o "$build/fixtures" \
-  "$src/MedleyCore/Contracts/Models.swift" "$src/MedleyCore/Contracts/PlaybackEngine.swift" "$src/MedleyCore/Playback/PlaybackModels.swift" \
+sed '/^extension MockProvider/,$d' "$src/OpenMusicCore/Mock/DemoCatalog.swift" > "$build/DemoCatalog.swift"; echo '#endif' >> "$build/DemoCatalog.swift"
+{ cat "$here/MockArtworkStub.swift"; sed -n '/^func fnv1a/,$p' "$src/OpenMusicCore/Mock/MockArtwork.swift"; } > "$build/MockArtwork.swift"
+swiftc -D DEBUG -O -module-name OpenMusicFixtures -o "$build/fixtures" \
+  "$src/OpenMusicCore/Contracts/Models.swift" "$src/OpenMusicCore/Contracts/PlaybackEngine.swift" "$src/OpenMusicCore/Playback/PlaybackModels.swift" \
   "$build/SyncModels.swift" "$build/MockArtwork.swift" \
-  "$src/MedleyCore/Mock/MockCatalog.swift" "$build/DemoCatalog.swift" "$src/MedleyCore/Mock/DemoCatalogData.swift" \
+  "$src/OpenMusicCore/Mock/MockCatalog.swift" "$build/DemoCatalog.swift" "$src/OpenMusicCore/Mock/DemoCatalogData.swift" \
   "$here/main.swift"
-"$build/fixtures" "$root/windows/tests/Medley.Core.Tests/Fixtures" "$root/windows/src/Medley.Core/Mock/DemoCatalogData.json"
+"$build/fixtures" "$root/windows/tests/OpenMusic.Core.Tests/Fixtures" "$root/windows/src/OpenMusic.Core/Mock/DemoCatalogData.json"

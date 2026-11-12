@@ -1,5 +1,5 @@
 import Foundation
-import MedleyCore
+import OpenMusicCore
 
 /// Sends one HTTP request. `URLSessionTransport` in the app, a fake in tests.
 public protocol SpotifyTransport: Sendable {
@@ -42,23 +42,23 @@ public struct URLSessionTransport: SpotifyTransport {
     }
 }
 
-/// The OAuth client Medley signs in with when the listener hasn't set up their own Spotify app.
+/// The OAuth client OpenMusic signs in with when the listener hasn't set up their own Spotify app.
 ///
 /// This is Spotify's own desktop client ID, the one librespot, ncspot and spotify_player use to log in. Spotify has
-/// registered `http://127.0.0.1:<any port>/login` for it, so Medley needs no developer app, no pasted Client ID,
-/// and no fixed port. It is not Medley's client: Spotify's developer terms don't allow borrowing it, and Spotify
+/// registered `http://127.0.0.1:<any port>/login` for it, so OpenMusic needs no developer app, no pasted Client ID,
+/// and no fixed port. It is not OpenMusic's client: Spotify's developer terms don't allow borrowing it, and Spotify
 /// could block it or rate-limit it at any time. "Use my own Client ID" in Settings is the way out when that happens.
 public enum SpotifyBuiltInClient {
     public static let clientID = "65b708073fc0480ea92a077233ca87bd"
     /// The path Spotify registered for this client's loopback redirect. The port is free.
     public static let redirectPath = "/login"
-    /// Tried first (librespot's example port). When it's busy, Medley lets the system pick a free one.
+    /// Tried first (librespot's example port). When it's busy, OpenMusic lets the system pick a free one.
     public static let preferredPort: UInt16 = 8898
 
     public static func redirectURI(port: UInt16) -> String { "http://127.0.0.1:\(port)\(redirectPath)" }
 }
 
-/// How the authorization response gets back to Medley when the listener signs in with their own Client ID.
+/// How the authorization response gets back to OpenMusic when the listener signs in with their own Client ID.
 public enum SpotifyRedirect: String, CaseIterable, Sendable, Hashable, Identifiable {
     /// `http://127.0.0.1:43827/callback`, caught by a one-shot local listener. Spotify's documented choice for native apps.
     case loopback
@@ -122,7 +122,7 @@ public struct SpotifyAuthConfig: Sendable, Hashable {
     public static let authorizeEndpoint = URL(string: "https://accounts.spotify.com/authorize")!
     public static let tokenEndpoint = URL(string: "https://accounts.spotify.com/api/token")!
 
-    /// Everything Medley reads or changes. Spotify shows these on the consent screen.
+    /// Everything OpenMusic reads or changes. Spotify shows these on the consent screen.
     public static let defaultScopes = [
         "user-read-private",
         "user-library-read",
@@ -210,7 +210,7 @@ public struct SpotifyToken: Codable, Sendable, Hashable {
     public var refreshToken: String?
     public var expiresAt: Date
     public var scope: String?
-    /// The client that issued the token; refreshes must use the same one. Nil for tokens saved before Medley had a
+    /// The client that issued the token; refreshes must use the same one. Nil for tokens saved before OpenMusic had a
     /// built-in client (those came from the listener's own Client ID).
     public var clientID: String?
 

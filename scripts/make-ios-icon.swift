@@ -1,7 +1,7 @@
 // Renders the iOS app icon from the same art as the Mac icon (scripts/make-icon.swift): graphite with faint record
 // grooves and a white note, but full bleed and square, since iOS applies its own mask and no shadow or rim.
 // Runs on macOS:  swift scripts/make-ios-icon.swift
-// Writes iOS/Medley/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png (plus dark and tinted variants).
+// Writes iOS/OpenMusic/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png (plus dark and tinted variants).
 import AppKit
 
 enum Variant { case light, dark, tinted }
@@ -69,7 +69,7 @@ func render(_ variant: Variant) -> NSBitmapImageRep {
     return rep
 }
 
-let dir = URL(fileURLWithPath: "iOS/Medley/Assets.xcassets/AppIcon.appiconset", isDirectory: true)
+let dir = URL(fileURLWithPath: "iOS/OpenMusic/Assets.xcassets/AppIcon.appiconset", isDirectory: true)
 try! FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
 for (variant, name) in [(Variant.light, "AppIcon-1024.png"), (.dark, "AppIcon-1024-dark.png"), (.tinted, "AppIcon-1024-tinted.png")] {
     try! render(variant).representation(using: .png, properties: [:])!.write(to: dir.appendingPathComponent(name))

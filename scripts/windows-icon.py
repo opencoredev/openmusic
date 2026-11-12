@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Draws the Windows app icon (windows/src/Medley.App/Assets/Medley.ico and Medley.png) with no image libraries:
+"""Draws the Windows app icon (windows/src/OpenMusic.App/Assets/OpenMusic.ico and OpenMusic.png) with no image libraries:
 a rounded square with a warm-to-violet gradient and a white pair of beamed notes. Rerun after changing the design."""
 import math
 import os
@@ -7,7 +7,7 @@ import struct
 import zlib
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-ASSETS = os.path.join(HERE, "..", "windows", "src", "Medley.App", "Assets")
+ASSETS = os.path.join(HERE, "..", "windows", "src", "OpenMusic.App", "Assets")
 
 
 def clamp(v, lo=0.0, hi=1.0):
@@ -94,9 +94,9 @@ def main():
     for n, data in zip(sizes, images):
         entries += struct.pack("<BBBBHHII", n % 256, n % 256, 0, 0, 1, 32, len(data), offset)
         offset += len(data)
-    with open(os.path.join(ASSETS, "Medley.ico"), "wb") as f:
+    with open(os.path.join(ASSETS, "OpenMusic.ico"), "wb") as f:
         f.write(header + entries + b"".join(images))
-    with open(os.path.join(ASSETS, "Medley.png"), "wb") as f:
+    with open(os.path.join(ASSETS, "OpenMusic.png"), "wb") as f:
         f.write(images[-1])
     print("wrote", ASSETS)
 

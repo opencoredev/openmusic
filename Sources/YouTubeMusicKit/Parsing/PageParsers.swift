@@ -1,5 +1,5 @@
 import Foundation
-import MedleyCore
+import OpenMusicCore
 
 /// Continuation tokens come in two flavors: the newer `continuationCommand.token` (sent in the body)
 /// and the older `nextContinuationData.continuation` (sent as `ctoken`/`continuation` query params).

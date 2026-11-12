@@ -1,6 +1,6 @@
 # OpenMusic
 
-OpenMusic is a music player for YouTube Music and Spotify on Mac, iPhone and Windows. YouTube Music works on all three. Spotify works on Mac and iPhone; Spotify on Windows is coming.
+OpenMusic (formerly Medley) is a music player for YouTube Music and Spotify on Mac, iPhone and Windows. YouTube Music works on all three. Spotify works on Mac and iPhone; Spotify on Windows is coming.
 
 Each app is written for its platform: SwiftUI on the Mac and iPhone, WinUI 3 on Windows. The Apple apps have no third-party dependencies.
 
@@ -32,7 +32,7 @@ The Windows build isn't code-signed, so SmartScreen warns the first time you run
 
 There is no App Store build. Two ways to get it on your iPhone (iOS 26 or later):
 
-- **Build it with Xcode.** On a Mac with Xcode 27 and [XcodeGen](https://github.com/yonaskolb/XcodeGen) (`brew install xcodegen`), run `xcodegen generate --spec iOS/project.yml` in this repository, open `iOS/MedleyMobile.xcodeproj`, under **Signing & Capabilities** for the `MedleyMobile` target turn on **Automatically manage signing** and choose your Apple ID's team (change the bundle identifier if Xcode says it is taken), connect your iPhone and press Run. A free Apple ID works; apps signed with one stop opening after 7 days until you run them from Xcode again.
+- **Build it with Xcode.** On a Mac with Xcode 27 and [XcodeGen](https://github.com/yonaskolb/XcodeGen) (`brew install xcodegen`), run `xcodegen generate --spec iOS/project.yml` in this repository, open `iOS/OpenMusic.xcodeproj`, under **Signing & Capabilities** for the `OpenMusic` target turn on **Automatically manage signing** and choose your Apple ID's team (change the bundle identifier if Xcode says it is taken), connect your iPhone and press Run. A free Apple ID works; apps signed with one stop opening after 7 days until you run them from Xcode again.
 - **Sideload it with [AltStore](https://altstore.io) or [SideStore](https://sidestore.io).** They sign an `.ipa` with your own Apple ID and refresh it before it expires. Releases don't include an `.ipa` yet, so build one yourself from the Xcode project.
 
 ## Signing in
@@ -57,9 +57,9 @@ The sync server is the open-source Convex backend in `sync/convex/`, with sign-i
 
 ## Build from source
 
-- Mac: on a Mac with Xcode 27, `swift build`, `swift test`, and `scripts/bundle.sh` for `build/OpenMusic.app`. `MEDLEY_MOCK=1` runs the app on sample data with no network.
+- Mac: on a Mac with Xcode 27, `swift build`, `swift test`, and `scripts/bundle.sh` for `build/OpenMusic.app`. `OPENMUSIC_MOCK=1` runs the app on sample data with no network.
 - iPhone: [iOS/README.md](iOS/README.md).
-- Windows: [windows/README.md](windows/README.md). The shared C# core builds and tests on Linux too: `dotnet test windows/Medley.Core.slnf`.
+- Windows: [windows/README.md](windows/README.md). The shared C# core builds and tests on Linux too: `dotnet test windows/OpenMusic.Core.slnf`.
 - Sync backend: `sync/` (`npm ci`, then `npx vitest run`).
 
 [AGENTS.md](AGENTS.md) covers the architecture, the rules every change follows, signing and the Keychain, and the test and screenshot scripts. If your checkout lives on Linux, the scripts run Apple builds on a Mac over SSH: copy `scripts/local.env.example` to `scripts/local.env` and fill it in.

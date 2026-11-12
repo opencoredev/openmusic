@@ -3,7 +3,7 @@
 build/
 .swiftpm/
 *.xcodeproj
-iOS/MedleyMobile.xcodeproj/
+iOS/OpenMusic.xcodeproj/
 DerivedData/
 xcuserdata/
 *.xcuserstate

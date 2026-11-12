@@ -1,13 +1,13 @@
 import CommonCrypto
 import CryptoKit
 import Foundation
-import MedleyCore
+import OpenMusicCore
 import SQLite3
 import Testing
 @testable import YouTubeMusicKit
 
 /// Builds Chromium-format cookie databases (meta version 24, v10 AES-128-CBC values with the host-hash prefix)
-/// and checks that Medley reads back exactly the youtube.com session.
+/// and checks that OpenMusic reads back exactly the youtube.com session.
 @Suite struct BrowserLoginReading {
     static let password = "test-storage-password"
 
@@ -68,7 +68,7 @@ import Testing
     }
 
     static func tempDir() throws -> URL {
-        let dir = FileManager.default.temporaryDirectory.appendingPathComponent("medley-browser-test-" + UUID().uuidString)
+        let dir = FileManager.default.temporaryDirectory.appendingPathComponent("openmusic-browser-test-" + UUID().uuidString)
         try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
         return dir
     }
@@ -151,7 +151,7 @@ import Testing
         #expect(!BrowserLogins.appliesToMusic(host: ".notyoutube.com"))
     }
 
-    /// The browser may keep its database in WAL mode with recent writes still in the `-wal` file. Medley must
+    /// The browser may keep its database in WAL mode with recent writes still in the `-wal` file. OpenMusic must
     /// copy that log alongside the main file and read those rows too (a regression guard for the copy step).
     @Test func readsCookiesThatOnlyExistInTheWriteAheadLog() throws {
         let dir = try Self.tempDir()

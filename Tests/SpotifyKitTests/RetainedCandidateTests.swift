@@ -1,5 +1,5 @@
 import Foundation
-import MedleyCore
+import OpenMusicCore
 import Testing
 @testable import SpotifyKit
 
@@ -46,7 +46,7 @@ final class HeldIdentity: SpotifyTransport, @unchecked Sendable {
 
     private func device(_ transport: any SpotifyTransport, vault: Vault) async throws -> (SpotifyProvider, SpotifySignInTransfer, MemoryTokenStore) {
         let store = MemoryTokenStore()
-        let defaults = try #require(UserDefaults(suiteName: "medley.tests.\(UUID().uuidString)"))
+        let defaults = try #require(UserDefaults(suiteName: "openmusic.tests.\(UUID().uuidString)"))
         let provider = SpotifyProvider(defaults: defaults, transport: transport, tokenStore: store)
         provider.saveAccount = { _ in }
         let transfer = SpotifySignInTransfer(provider: provider)

@@ -2,12 +2,12 @@
 # Run a mock-data UI self-test of build/OpenMusic.app on the Mac, several times. Runs on macOS.
 #   scripts/mac-selftest.sh <name> [runs] [VAR=value ...]
 # Build first (`CONFIG=debug scripts/bundle.sh` for debug-only self-tests such as `resize`). Each run goes through
-# `open` so the app is in the GUI session, and is killed after MEDLEY_SELFTEST_TIMEOUT seconds (default 1200: the
+# `open` so the app is in the GUI session, and is killed after OPENMUSIC_SELFTEST_TIMEOUT seconds (default 1200: the
 # full `resize` suite takes about 10 minutes). The build Mac is shared: each run holds
 # /tmp/medley-ui.lock from before the launch until no process carrying a marker argument unique to the run is left,
 # and kills only those. That holds when the run is interrupted (^C, or TERM to this script or to its `--locked-run`)
 # at any point, and when the process can't be found after `open`. A run that can't get the lock in 1800 s
-# (MEDLEY_UI_LOCK_WAIT seconds) launches nothing, kills nothing and fails. scripts/mac-selftest-check.sh checks
+# (OPENMUSIC_UI_LOCK_WAIT seconds) launches nothing, kills nothing and fails. scripts/mac-selftest-check.sh checks
 # this. A run passes when the self-test's last line ends in PASS. Each run's log and stderr (where
 # AppKit prints an exception's reason) go to a fresh build/selftest/<name>.XXXX directory, with the path of the
 # crash report a failed run left. Prints one line per run, then "<passed>/<runs> passed"; exits non-zero unless
@@ -15,25 +15,26 @@
 set -uo pipefail
 self="$(cd "$(dirname "$0")" && pwd)/$(basename "$0")"
 cd "$(dirname "$0")/.."
+source scripts/env.sh
 app="$PWD/build/OpenMusic.app"
 app_bin="$app/Contents/MacOS/OpenMusic"
 
 # One run, executed by `lockf` while it holds the lock:
 #   mac-selftest.sh --locked-run <marker> <stderr file> <log file> <open args...>
-# Launches the app with `-MedleySelfTestRun <marker>`, waits up to MEDLEY_SELFTEST_TIMEOUT s for it to exit, and returns only once no
+# Launches the app with `-OpenMusicSelfTestRun <marker>`, waits up to OPENMUSIC_SELFTEST_TIMEOUT s for it to exit, and returns only once no
 # process carrying the marker is left: the interrupt trap is set before `open`, so an interrupt during the launch or
 # while the process is being found also stops it, and so does failing to find it. When the self-test's last line
 # asks for it (`RELAUNCH`, the resize test's relaunch case), launches the app once more with
-# MEDLEY_SELFTEST_RELAUNCHED=1. Exit status: 0 the app exited on its own, 124 killed after the timeout, 70 `open`
+# OPENMUSIC_SELFTEST_RELAUNCHED=1. Exit status: 0 the app exited on its own, 124 killed after the timeout, 70 `open`
 # failed, 71 the process never showed up, 130 interrupted.
-# For scripts/mac-selftest-check.sh: MEDLEY_SELFTEST_FIND_DELAY waits that many seconds after `open` before looking
-# for the process, and MEDLEY_SELFTEST_FIND_TRIES (default 100, 0.1 s apart) bounds the search.
+# For scripts/mac-selftest-check.sh: OPENMUSIC_SELFTEST_FIND_DELAY waits that many seconds after `open` before looking
+# for the process, and OPENMUSIC_SELFTEST_FIND_TRIES (default 100, 0.1 s apart) bounds the search.
 if [[ "${1:-}" == --locked-run ]]; then
   marker="$2" err="$3" log="$4"; shift 4
   # For the runner above: whom to signal (never `lockf`, which lets the lock go when signalled), and which app
   # processes are this run's.
   echo $$ > "$err.runner"
-  pattern="^$app_bin -MedleySelfTestRun $marker\$"
+  pattern="^$app_bin -OpenMusicSelfTestRun $marker\$"
   find_pid() { pgrep -f -- "$pattern" | head -1; }
   # Stops every process carrying this run's marker and returns once none is left.
   stop_marked() {
@@ -44,16 +45,16 @@ if [[ "${1:-}" == --locked-run ]]; then
   }
   trap 'stop_marked; exit 130' INT TERM HUP
   launch() {
-    open -n --stderr "$err" "$@" "$app" --args -MedleySelfTestRun "$marker" || { stop_marked; return 70; }
-    [[ -n "${MEDLEY_SELFTEST_FIND_DELAY:-}" ]] && sleep "$MEDLEY_SELFTEST_FIND_DELAY"
+    open -n --stderr "$err" "$@" "$app" --args -OpenMusicSelfTestRun "$marker" || { stop_marked; return 70; }
+    [[ -n "${OPENMUSIC_SELFTEST_FIND_DELAY:-}" ]] && sleep "$OPENMUSIC_SELFTEST_FIND_DELAY"
     local pid="" i
-    for ((i = 0; i < ${MEDLEY_SELFTEST_FIND_TRIES:-100}; i++)); do pid="$(find_pid)"; [[ -n $pid ]] && break; sleep 0.1; done
+    for ((i = 0; i < ${OPENMUSIC_SELFTEST_FIND_TRIES:-100}; i++)); do pid="$(find_pid)"; [[ -n $pid ]] && break; sleep 0.1; done
     if [[ -z $pid ]]; then
       # It may still be starting: give it a moment, then stop whatever carries the marker.
       sleep 2; stop_marked; return 71
     fi
     echo "$pid" >> "$err.pids"
-    local deadline=$((SECONDS + ${MEDLEY_SELFTEST_TIMEOUT:-1200}))
+    local deadline=$((SECONDS + ${OPENMUSIC_SELFTEST_TIMEOUT:-1200}))
     while kill -0 "$pid" 2>/dev/null; do
       if ((SECONDS >= deadline)); then stop_marked; return 124; fi
       sleep 0.2
@@ -63,7 +64,7 @@ if [[ "${1:-}" == --locked-run ]]; then
   }
   launch "$@"; status=$?
   if [[ $status -eq 0 && "$(tail -1 "$log" 2>/dev/null)" == RELAUNCH* ]]; then
-    launch "$@" --env MEDLEY_SELFTEST_RELAUNCHED=1; status=$?
+    launch "$@" --env OPENMUSIC_SELFTEST_RELAUNCHED=1; status=$?
   fi
   exit $status
 fi
@@ -104,8 +105,8 @@ for ((n = 1; n <= runs; n++)); do
   # In a process group of its own (job control), so a terminal's ^C reaches only this script, which stops the run
   # and waits for it: `lockf` releases the lock as soon as it is signalled, even with its command still running.
   set -m
-  lockf -t "${MEDLEY_UI_LOCK_WAIT:-1800}" /tmp/medley-ui.lock "$self" --locked-run "$marker" "$err" "$log" \
-    --env MEDLEY_MOCK=1 --env MEDLEY_SELFTEST="$name" --env MEDLEY_SELFTEST_OUT="$log" ${extra[@]+"${extra[@]}"} &
+  lockf -t "${OPENMUSIC_UI_LOCK_WAIT:-1800}" /tmp/medley-ui.lock "$self" --locked-run "$marker" "$err" "$log" \
+    --env OPENMUSIC_MOCK=1 --env OPENMUSIC_SELFTEST="$name" --env OPENMUSIC_SELFTEST_OUT="$log" ${extra[@]+"${extra[@]}"} &
   locker=$!
   set +m
   trap 'interrupted' INT TERM HUP
@@ -115,11 +116,11 @@ for ((n = 1; n <= runs; n++)); do
   trap - INT TERM HUP
   case $status in
     0) how="exited" ;;
-    124) how="killed after ${MEDLEY_SELFTEST_TIMEOUT:-1200} s" ;;
+    124) how="killed after ${OPENMUSIC_SELFTEST_TIMEOUT:-1200} s" ;;
     70) how="open failed" ;;
     71) how="never started" ;;
     130) how="interrupted" ;;
-    75) how="UI lock busy for ${MEDLEY_UI_LOCK_WAIT:-1800} s, not launched" ;;
+    75) how="UI lock busy for ${OPENMUSIC_UI_LOCK_WAIT:-1800} s, not launched" ;;
     *) how="runner exit $status" ;;
   esac
   last="$(tail -1 "$log" 2>/dev/null)"

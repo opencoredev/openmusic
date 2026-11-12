@@ -5,7 +5,7 @@ import UIKit
 #endif
 import AuthenticationServices
 import Foundation
-import MedleyCore
+import OpenMusicCore
 
 /// Runs the browser part of sign-in and returns the redirect carrying the authorization code.
 @MainActor
@@ -15,7 +15,7 @@ final class SpotifySignInFlow: NSObject, ASWebAuthenticationPresentationContextP
     #if os(macOS)
     /// Opens the authorize URL. The default browser in the app; the probe can print it instead.
     var openURL: @MainActor (URL) -> Bool = { NSWorkspace.shared.open($0) }
-    /// Brings Medley back in front of the browser once Spotify redirects.
+    /// Brings OpenMusic back in front of the browser once Spotify redirects.
     var activateApp: @MainActor () -> Void = { NSApp?.activate() }
     #else
     /// On iOS the authorize page opens in an in-app `ASWebAuthenticationSession` sheet; its redirect to
@@ -143,7 +143,7 @@ final class SpotifySignInFlow: NSObject, ASWebAuthenticationPresentationContextP
     }
 }
 
-/// Sign-in with the built-in client outside the app, for `medley-probe spotify login`: binds the listener, hands the
+/// Sign-in with the built-in client outside the app, for `openmusic-probe spotify login`: binds the listener, hands the
 /// authorize URL to `open` (print it, or open a browser), waits for the redirect, and exchanges the code.
 public enum SpotifyLoginCheck {
     @MainActor

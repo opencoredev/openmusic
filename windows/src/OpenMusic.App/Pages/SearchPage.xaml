@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Search results: scopes, the top result next to the best songs, then artists, albums and playlists. Also shows a
+     shelf's See All and a mood's playlists ("shelf:<token>"). -->
+<Page
+    x:Class="OpenMusic.App.Pages.SearchPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:OpenMusic.App.Controls">
+    <ScrollViewer>
+        <StackPanel Padding="{StaticResource PagePadding}">
+            <TextBlock x:Name="Heading" Style="{StaticResource PageTitleTextStyle}" />
+            <SelectorBar x:Name="Scopes" SelectionChanged="Scopes_SelectionChanged" Margin="-12,0,0,4">
+                <SelectorBarItem Text="All" Tag="All" IsSelected="True" />
+                <SelectorBarItem Text="Songs" Tag="Songs" />
+                <SelectorBarItem Text="Albums" Tag="Albums" />
+                <SelectorBarItem Text="Artists" Tag="Artists" />
+                <SelectorBarItem Text="Playlists" Tag="Playlists" />
+            </SelectorBar>
+
+            <Grid x:Name="TopRow" ColumnSpacing="24" Margin="0,16,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition x:Name="TopColumn" Width="320" />
+                    <ColumnDefinition x:Name="SongsColumn" Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <StackPanel x:Name="TopPanel" Spacing="10">
+                    <TextBlock Text="Top Result" Style="{StaticResource ShelfTitleTextStyle}" />
+                    <Button x:Name="TopCard" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="16" Click="TopCard_Click"
+                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
+                        <StackPanel Spacing="12">
+                            <controls:ArtworkView x:Name="TopArt" Width="120" Height="120" HorizontalAlignment="Left" Pixels="200" CornerRadius="{StaticResource ArtworkCornerRadius}" />
+                            <TextBlock x:Name="TopTitle" Style="{StaticResource TitleTextBlockStyle}" TextTrimming="CharacterEllipsis" />
+                            <TextBlock x:Name="TopSubtitle" Style="{StaticResource SecondaryBodyTextStyle}" />
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+                <StackPanel x:Name="SongsPanel" Grid.Column="1" Spacing="10">
+                    <TextBlock Text="Songs" Style="{StaticResource ShelfTitleTextStyle}" />
+                    <controls:TrackList x:Name="Songs" />
+                </StackPanel>
+            </Grid>
+
+            <StackPanel x:Name="ShelfHost" />
+            <TextBlock x:Name="Empty" Text="No results" Style="{StaticResource SubtitleTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Margin="0,40" Visibility="Collapsed" />
+        </StackPanel>
+    </ScrollViewer>
+</Page>

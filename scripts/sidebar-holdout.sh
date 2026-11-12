@@ -30,7 +30,7 @@ trap restore EXIT
 
 result="$out/result.txt"
 rm -f "${result:?}"
-lockf -t 1800 /tmp/medley-ui.lock timeout 240 open -W -n --env MEDLEY_MOCK=1 --env MEDLEY_SELFTEST=sidebar --env MEDLEY_SELFTEST_OUT="$result" build/OpenMusic.app || true
+lockf -t 1800 /tmp/medley-ui.lock timeout 240 open -W -n --env OPENMUSIC_MOCK=1 --env OPENMUSIC_SELFTEST=sidebar --env OPENMUSIC_SELFTEST_OUT="$result" build/OpenMusic.app || true
 [[ -f "$result" ]] || { echo "self-test wrote nothing"; exit 1; }
 grep -E '^(page|summary)' "$result" || true
 total="$(sed -n 's/^summary: 30 toggles.*dropped frames total \([0-9][0-9]*\).*/\1/p' "$result" | tail -1)"

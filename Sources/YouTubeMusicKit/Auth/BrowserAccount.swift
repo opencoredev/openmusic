@@ -1,5 +1,5 @@
 import Foundation
-import MedleyCore
+import OpenMusicCore
 
 // Account types shared by every sign-in path (browser login on macOS, Google sign-in in a web view on both platforms).
 
@@ -15,7 +15,7 @@ public struct BrowserAccountList: Sendable {
     }
 }
 
-/// One account signed in to a browser profile that Medley can use: a Google account or a channel / brand account
+/// One account signed in to a browser profile that OpenMusic can use: a Google account or a channel / brand account
 /// under it. `info` is the name/photo confirmed by a real request; `identity` is how requests select it.
 public struct BrowserAccount: Sendable, Hashable, Identifiable {
     public let identity: AccountIdentity

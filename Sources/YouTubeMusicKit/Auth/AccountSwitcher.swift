@@ -1,5 +1,5 @@
 import Foundation
-import MedleyCore
+import OpenMusicCore
 
 /// One identity in YouTube's account switcher: a Google account (`authUser`) or a channel / brand account under
 /// it (selected by `datasyncId`). This is what the browser shows under your avatar.

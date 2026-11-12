@@ -1,5 +1,5 @@
 import Foundation
-import MedleyCore
+import OpenMusicCore
 
 /// One InnerTube client identity (what the request claims to be).
 struct InnerTubeProfile: Sendable, Hashable {
@@ -269,7 +269,7 @@ actor InnerTubeClient {
             return try Self.object(hit.data)
         }
 
-        if ProcessInfo.processInfo.environment["MEDLEY_YTM_DEBUG"] != nil, let body = request.httpBody {
+        if LaunchEnvironment.current["OPENMUSIC_YTM_DEBUG"] != nil, let body = request.httpBody {
             FileHandle.standardError.write(Data("→ \(components.url!.absoluteString)\n\(String(decoding: body, as: UTF8.self).prefix(600))\n".utf8))
         }
         let data = try await send(request, authenticated: useAuth, generation: credentialGeneration)

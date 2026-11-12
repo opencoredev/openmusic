@@ -1,5 +1,5 @@
 import Foundation
-import MedleyCore
+import OpenMusicCore
 import Testing
 @testable import YouTubeMusicKit
 

@@ -4,7 +4,7 @@
 #   scripts/ios.sh <slot> build                    (once; builds the iPhone app for the slot's own simulator)
 #   scripts/mac.sh <slot> 'scripts/e2e-sync.sh'
 # Needs the Clerk test user's email in ~/.config/openmusic/clerk-test-email on the build Mac (mode 0600; a `+clerk_test`
-# address, so the development instance's email code is always 424242). MEDLEY_TEST_EMAIL_FILE overrides the path.
+# address, so the development instance's email code is always 424242). OPENMUSIC_TEST_EMAIL_FILE overrides the path.
 # Both apps run their sync self-test (Debug builds only) and are driven through their command files, the same code
 # paths the buttons take; the email and the code are typed into the real sign-in sheets (`type`). Steps:
 #   1  the Mac shows the welcome, signs in through Settings › Account › Sign In… (email, then the code), registers
@@ -19,15 +19,16 @@
 #   7  both sign out of the account (their devices leave it)
 # What the server sees (docs/sync-design.md, "What the server can see"): before the iPhone has the key it sees the Mac
 # play without a title and can still pause it, and Play Here says why it can't (3b); recent searches sync sealed (4c);
-# a third device (medley-probe, MEDLEY_PROBE_JWT names a Clerk JWT file for the test user) gets the key and is
-# removed, and after the rotation both apps still read each other's playback (5b). MEDLEY_E2E_HOLD=1 waits before
+# a third device (openmusic-probe, OPENMUSIC_PROBE_JWT names a Clerk JWT file for the test user) gets the key and is
+# removed, and after the rotation both apps still read each other's playback (5b). OPENMUSIC_E2E_HOLD=1 waits before
 # step 7 (until build/e2e/release exists, at most 10 minutes) so the deployment's tables can be dumped while the
 # account still has its rows.
 # Screenshots (light and dark) of the welcome, the sign-in sheet, Settings › Account and the Allow alert on both,
 # logs and timings (build/e2e/timings.txt, build/e2e/e2e-report.txt) go to build/e2e/.
 set -euo pipefail
 cd "$(dirname "$0")/.."
-export MEDLEY_SLOT="${MEDLEY_SLOT:-macsync}"
+source scripts/env.sh
+export OPENMUSIC_SLOT="${OPENMUSIC_SLOT:-macsync}"
 lock=/tmp/medley-ui.lock
 out="$PWD/build/e2e"
 app="$PWD/build/OpenMusic.app"
@@ -35,16 +36,16 @@ exe="$app/Contents/MacOS/OpenMusic"
 
 # Build first, then run the UI part under the shared UI lock, so no frame-timing run or capture overlaps it.
 if [[ "${1:-}" != "--locked" ]]; then
-  email_file="${MEDLEY_TEST_EMAIL_FILE:-$HOME/.config/openmusic/clerk-test-email}"
+  email_file="${OPENMUSIC_TEST_EMAIL_FILE:-$HOME/.config/openmusic/clerk-test-email}"
   [[ -s "$email_file" ]] || { echo "no test user email in $email_file" >&2; exit 2; }
   rm -rf "$out"; mkdir -p "$out/shots"
   CONFIG=debug scripts/bundle.sh | tail -1
   echo "-- waiting for $lock"
-  MEDLEY_TEST_EMAIL_FILE="$email_file" exec lockf -t 1800 "$lock" "$0" --locked
+  OPENMUSIC_TEST_EMAIL_FILE="$email_file" exec lockf -t 1800 "$lock" "$0" --locked
 fi
 
-email="$(cat "$MEDLEY_TEST_EMAIL_FILE")"
-code="${MEDLEY_TEST_CODE:-424242}"
+email="$(cat "$OPENMUSIC_TEST_EMAIL_FILE")"
+code="${OPENMUSIC_TEST_CODE:-424242}"
 bundle="dev.openmusic.OpenMusicMobile"
 maclog="$out/synctest.log"
 ioslog=/dev/null
@@ -90,7 +91,7 @@ ios_both() { xcrun simctl ui "$u" appearance light; sleep 1.2; ios_shot "$1-ligh
 quit_mac() { pkill -TERM -f "$exe" 2>/dev/null || true; sleep 2; }
 code_of() { sed -nE "s/.*$1 ([0-9]{3} ?[0-9]{3}).*/\1/p" <<< "$2" | tail -1; }
 
-# The Mac app shares its preferences with every Medley build on this Mac; put them back afterwards.
+# The Mac app shares its preferences with every OpenMusic build on this Mac; put them back afterwards.
 defaults export dev.openmusic.OpenMusic "$out/defaults-backup.plist" 2>/dev/null || true
 u="$(scripts/ios-sim.sh udid)"
 cleanup() {
@@ -131,8 +132,8 @@ say "1. Mac: launch signed out; the welcome"
 quit_mac
 # The welcome shows once per Mac; this run's preferences are put back afterwards.
 defaults delete dev.openmusic.OpenMusic didShowAccountWelcome >/dev/null 2>&1 || true
-open -n -F "$app" --args -didOnboard YES -MedleySyncSelfTest YES -MedleySyncDir "$out" -MedleySyncState "$out/mac-state.json" \
-  -MedleySyncDeviceName "Mac"
+open -n -F "$app" --args -didOnboard YES -OpenMusicSyncSelfTest YES -OpenMusicSyncDir "$out" -OpenMusicSyncState "$out/mac-state.json" \
+  -OpenMusicSyncDeviceName "Mac"
 for _ in $(seq 1 60); do grep -q STARTED "$maclog" 2>/dev/null && break; sleep 0.5; done
 snap
 sleep 4
@@ -162,7 +163,7 @@ mac_cmd "screen?name=account"; sleep 3.5
 mac_both mac-4-settings-account settings
 
 say "2. iPhone: launch signed out; the welcome"
-xcrun simctl launch "$u" "$bundle" -firstRunFinished YES -MedleySyncSelfTest YES -MedleySyncDeviceName "iPhone" >/dev/null
+xcrun simctl launch "$u" "$bundle" -firstRunFinished YES -OpenMusicSyncSelfTest YES -OpenMusicSyncDeviceName "iPhone" >/dev/null
 data="$(xcrun simctl get_app_container "$u" "$bundle" data)"
 ioslog="$data/Documents/synctest.log"
 for _ in $(seq 1 60); do [[ -s "$ioslog" ]] && break; sleep 0.5; done
@@ -304,7 +305,7 @@ ios_cmd status; mac_cmd status; sleep 1.5
 ios_cmd "screen?name=close"; sleep 1
 
 say "5b. a third device gets the key and is removed: the key rotates, both apps still read each other"
-probe="$PWD/.build/debug/medley-probe"; pstate="$out/probe-state.json"; pjwt="${MEDLEY_PROBE_JWT:-}"
+probe="$PWD/.build/debug/openmusic-probe"; pstate="$out/probe-state.json"; pjwt="${OPENMUSIC_PROBE_JWT:-}"
 if [[ -x "$probe" && -s "$pjwt" ]]; then
   p() { "$probe" sync "$@" --state "$pstate" --jwt-file "$pjwt" --name Probe >> "$out/probe.log" 2>&1; }
   snap
@@ -343,7 +344,7 @@ if [[ -x "$probe" && -s "$pjwt" ]]; then
   ios_cmd "screen?name=devices"; sleep 3.5; ios_shot iphone-after-rotation-devices; ios_cmd "screen?name=close"; sleep 1
   # The iPhone keeps playing: the Mac's sign-out next starts from a playing account.
 else
-  fail "5b skipped: no medley-probe at $probe or no MEDLEY_PROBE_JWT"
+  fail "5b skipped: no openmusic-probe at $probe or no OPENMUSIC_PROBE_JWT"
 fi
 
 say "6. the Mac signs out of the account and in again: the iPhone approves it this time"
@@ -381,7 +382,7 @@ sleep 2
 mac_both mac-8-settings-account-signed-in settings
 mac_cmd status; ios_cmd status; sleep 1.5
 
-if [[ -n "${MEDLEY_E2E_HOLD:-}" ]]; then
+if [[ -n "${OPENMUSIC_E2E_HOLD:-}" ]]; then
   say "holding for the table dump (touch $out/release)"
   touch "$out/hold"
   for _ in $(seq 1 600); do [[ -f "$out/release" ]] && break; sleep 1; done

@@ -1,5 +1,5 @@
 // Shared validators and limits for the OpenMusic sync backend. The wire shapes mirror the Swift `Codable`
-// types in Sources/MedleySync/Wire.swift; docs/sync-design.md is the contract between them.
+// types in Sources/OpenMusicSync/Wire.swift; docs/sync-design.md is the contract between them.
 import { v, type Infer } from "convex/values";
 
 export const LIMITS = {

@@ -1,5 +1,5 @@
 import Foundation
-import MedleyCore
+import OpenMusicCore
 import Network
 
 /// One-shot HTTP listener on 127.0.0.1 that catches the OAuth redirect (RFC 8252 loopback redirect).

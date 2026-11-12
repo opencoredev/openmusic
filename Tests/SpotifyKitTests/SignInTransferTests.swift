@@ -1,5 +1,5 @@
 import Foundation
-import MedleyCore
+import OpenMusicCore
 import Testing
 @testable import SpotifyKit
 
@@ -20,7 +20,7 @@ import Testing
 
     func device(_ transport: FakeTransport = transport(), token: SpotifyToken? = nil) async -> (SpotifyProvider, SpotifySignInTransfer, MemoryTokenStore, Counter) {
         let store = MemoryTokenStore(token)
-        let defaults = UserDefaults(suiteName: "medley.tests.\(UUID().uuidString)")!
+        let defaults = UserDefaults(suiteName: "openmusic.tests.\(UUID().uuidString)")!
         let provider = SpotifyProvider(defaults: defaults, transport: transport, tokenStore: store)
         provider.saveAccount = { _ in }
         provider.authorize = { target, makeURL in

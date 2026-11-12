@@ -1,10 +1,10 @@
 import Foundation
-import MedleyCore
+import OpenMusicCore
 import Observation
 
-/// Plays Spotify tracks through the Spotify app on this Mac or a Spotify Connect device, with Medley's queue in charge.
+/// Plays Spotify tracks through the Spotify app on this Mac or a Spotify Connect device, with OpenMusic's queue in charge.
 ///
-/// Spotify has no way to hand audio to a third-party player, so Medley drives a real Spotify player:
+/// Spotify has no way to hand audio to a third-party player, so OpenMusic drives a real Spotify player:
 /// it asks for exactly one track, watches it (1 Hz for the app, every 5 s for Connect, faster near the end),
 /// and when the track ends pauses Spotify and reports `.finished` so `PlayerController` picks what's next.
 /// Nothing is polled while paused.
@@ -391,7 +391,7 @@ public final class SpotifyPlaybackEngine: PlaybackEngine {
             onEvent?(.time(current: currentTime, duration: duration))
             return EndOfTrackDetector.nextPollInterval(position: sample.position, duration: duration, base: route.pollInterval)
         case .paused:
-            // Paused from Spotify itself (or its own controls). Stop polling until the listener resumes in Medley.
+            // Paused from Spotify itself (or its own controls). Stop polling until the listener resumes in OpenMusic.
             isPlaying = false
             currentTime = sample.position
             stopLoop()
@@ -403,7 +403,7 @@ public final class SpotifyPlaybackEngine: PlaybackEngine {
             needsStart = true
             stopLoop()
             if sample.state == .playing {
-                // Spotify moved on to its own next track; stop it so Medley's queue decides.
+                // Spotify moved on to its own next track; stop it so OpenMusic's queue decides.
                 enqueue { try? await route.pause() }
             }
             currentTime = duration ?? currentTime
@@ -411,7 +411,7 @@ public final class SpotifyPlaybackEngine: PlaybackEngine {
             onEvent?(.finished)
             return route.pollInterval
         case .replaced:
-            // The listener picked something else in Spotify. Step back; pressing play in Medley restarts our track.
+            // The listener picked something else in Spotify. Step back; pressing play in OpenMusic restarts our track.
             isPlaying = false
             needsStart = true
             stopLoop()

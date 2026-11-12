@@ -1,5 +1,5 @@
 import Foundation
-import MedleyCore
+import OpenMusicCore
 
 /// The parts of a `/player` response the resolver needs.
 struct PlayerInfo: Sendable {
@@ -152,7 +152,7 @@ public actor YouTubeStreamResolver: StreamResolver {
 
     private func resolveOnce(videoId: String) async throws -> Resolution {
         var clients = Self.order
-        if let only = ProcessInfo.processInfo.environment["MEDLEY_YTM_CLIENT"] { // testing: force one client
+        if let only = LaunchEnvironment.current["OPENMUSIC_YTM_CLIENT"] { // testing: force one client
             clients = clients.filter { $0.0 == only }
         }
         if let preferred, let i = clients.firstIndex(where: { $0.0 == preferred }), i > 0 {
@@ -182,7 +182,7 @@ public actor YouTubeStreamResolver: StreamResolver {
     private func usable(_ info: PlayerInfo, client name: String, profile: InnerTubeProfile) async throws -> Resolution? {
         let expires = Date().addingTimeInterval(info.expiresIn ?? 6 * 3600)
         let headers = ["User-Agent": profile.userAgent]
-        let mode = ProcessInfo.processInfo.environment["MEDLEY_YTM_STREAM"] // "hls" | "direct" (testing)
+        let mode = LaunchEnvironment.current["OPENMUSIC_YTM_STREAM"] // "hls" | "direct" (testing)
 
         // 1. HLS audio-only rendition. Preferred: AVPlayer gets exact durations and precise seeking from it.
         //    (YouTube's fragmented itag-140 MP4s carry the full duration in both `mvhd` and the fragments,

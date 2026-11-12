@@ -1,5 +1,5 @@
 import Foundation
-import MedleyCore
+import OpenMusicCore
 
 /// A loosely typed InnerTube JSON object. Parsing stays inside `YTMusicAPI` (off the main actor);
 /// only `Sendable` models leave it.

@@ -1,5 +1,5 @@
 import Foundation
-import MedleyCore
+import OpenMusicCore
 import Testing
 @testable import SpotifyKit
 
@@ -148,10 +148,10 @@ private func token(_ name: String, expiresIn: TimeInterval = 3600) -> SpotifyTok
     }
 
     func provider(_ transport: any SpotifyTransport, store: MemoryTokenStore, log: AccountLog) -> SpotifyProvider {
-        let defaults = UserDefaults(suiteName: "medley.tests.\(UUID().uuidString)")!
+        let defaults = UserDefaults(suiteName: "openmusic.tests.\(UUID().uuidString)")!
         let provider = SpotifyProvider(defaults: defaults, transport: transport, tokenStore: store)
         provider.saveAccount = { log.saved.append($0) }
-        // The "browser": approve straight away, echoing the state Medley sent.
+        // The "browser": approve straight away, echoing the state OpenMusic sent.
         provider.authorize = { _, makeURL in
             let redirectURI = "http://127.0.0.1:8898/login"
             let url = makeURL(redirectURI)
@@ -310,7 +310,7 @@ final class FakeRoute: SpotifyPlaybackRoute, @unchecked Sendable {
     let track = Track(providerID: "abc", provider: .spotify, title: "T", duration: 200)
 
     func engine(_ route: FakeRoute) -> (SpotifyPlaybackEngine, EventLog) {
-        let defaults = UserDefaults(suiteName: "medley.tests.\(UUID().uuidString)")!
+        let defaults = UserDefaults(suiteName: "openmusic.tests.\(UUID().uuidString)")!
         let api = SpotifyAPI(transport: FakeTransport(fixtureRoutes), tokenStore: MemoryTokenStore(validToken()), clientID: { "c" })
         let engine = SpotifyPlaybackEngine(service: SpotifyService(api: api), defaults: defaults,
                                            isSignedIn: { true }, appInstalled: { false }, makeRoute: { _ in route })
@@ -336,7 +336,7 @@ final class FakeRoute: SpotifyPlaybackRoute, @unchecked Sendable {
         try await load.value
         await engine.waitForCommands()
 
-        // Spotify had already been told to play, so it's paused again; Medley never reports playing.
+        // Spotify had already been told to play, so it's paused again; OpenMusic never reports playing.
         #expect(route.transport == ["start spotify:track:abc", "pause"])
         #expect(!log.states.contains("playing"))
         #expect(log.states.last == "paused")

@@ -1,4 +1,4 @@
-import MedleyCore
+import OpenMusicCore
 import SwiftUI
 
 /// YouTube Music's sections in Settings > Accounts. The Accounts pane shows the account row and owns

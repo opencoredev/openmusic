@@ -3,17 +3,18 @@
 # Runs on the build Mac. From the Linux checkout:
 #   scripts/mac.sh shots 'scripts/demo-shots.sh'            # everything: mac, ios, compose
 #   scripts/mac.sh shots 'scripts/demo-shots.sh mac'        # or one step: mac | ios | compose
-#   rsync -az "$OPENMUSIC_MAC_HOST:agents/medley-shots/build/demo-shots/final/" <dir>/
+#   rsync -az "$OPENMUSIC_MAC_HOST:agents/openmusic-shots/build/demo-shots/final/" <dir>/
 # Output: build/demo-shots/raw (captures) and build/demo-shots/final (the images to post).
 #
-# mac      Debug bundle with MEDLEY_MOCK=demo. Starts a temporary 2x virtual display the size of the current
+# mac      Debug bundle with OPENMUSIC_MOCK=demo. Starts a temporary 2x virtual display the size of the current
 #          screen in points (scripts/virtual-display.m), so the window is captured at Retina density, and stops
 #          it when the captures are done.
-# ios      Its own iPhone 17 Pro Max simulator (agent-medley-demo-<slot>), status bar 9:41 / full battery (no charging bolt) /
-#          full signal, -MedleyMock demo, one launch per screen and appearance. The simulator is deleted after.
+# ios      Its own iPhone 17 Pro Max simulator (agent-openmusic-demo-<slot>), status bar 9:41 / full battery (no charging bolt) /
+#          full signal, -OpenMusicMock demo, one launch per screen and appearance. The simulator is deleted after.
 # compose  Hero images (1600x900 and 1080x1080) and framed single shots (scripts/demo-compose.swift).
 set -euo pipefail
 cd "$(dirname "$0")/.."
+source scripts/env.sh
 root="$PWD"
 out="$root/build/demo-shots"
 art="$root/build/demo-art"
@@ -57,9 +58,9 @@ mac_shots() {
   sleep 3
   rm -f "${raw:?}"/mac-*.png
   # Through `open`, so the app starts in the GUI session as the frontmost app and its window is key.
-  timeout 240 open -W -n --env MEDLEY_MOCK=demo --env MEDLEY_DEMO_ART="$art" --env MEDLEY_SNAPSHOT_DIR="$raw" \
-    --env MEDLEY_SNAPSHOT_ONLY=demo --env MEDLEY_DEMO_SIZE="${MEDLEY_DEMO_SIZE:-1440x900}" \
-    ${MEDLEY_DEMO_SHOTS:+--env MEDLEY_DEMO_SHOTS="$MEDLEY_DEMO_SHOTS"} build/OpenMusic.app || status=$?
+  timeout 240 open -W -n --env OPENMUSIC_MOCK=demo --env OPENMUSIC_DEMO_ART="$art" --env OPENMUSIC_SNAPSHOT_DIR="$raw" \
+    --env OPENMUSIC_SNAPSHOT_ONLY=demo --env OPENMUSIC_DEMO_SIZE="${OPENMUSIC_DEMO_SIZE:-1440x900}" \
+    ${OPENMUSIC_DEMO_SHOTS:+--env OPENMUSIC_DEMO_SHOTS="$OPENMUSIC_DEMO_SHOTS"} build/OpenMusic.app || status=$?
   cleanup
   if [[ "${status:-0}" -eq 124 ]]; then echo "mac captures timed out after 240 s" >&2; return 1; fi
   [[ -f "$raw/demo.txt" ]] || { echo "mac captures wrote no log" >&2; return 1; }
@@ -69,10 +70,10 @@ mac_shots() {
 
 ios_shots() {
   scripts/demo-art.sh "$art"
-  local slot="${MEDLEY_SLOT:-shots}" bundle="dev.openmusic.OpenMusicMobile" derived="build/ios-dd"
-  udid="$(xcrun simctl create "agent-medley-demo-$slot" "${MEDLEY_DEMO_DEVICE:-iPhone 17 Pro Max}")"
+  local slot="${OPENMUSIC_SLOT:-shots}" bundle="dev.openmusic.OpenMusicMobile" derived="build/ios-dd"
+  udid="$(xcrun simctl create "agent-openmusic-demo-$slot" "${OPENMUSIC_DEMO_DEVICE:-iPhone 17 Pro Max}")"
   /opt/homebrew/bin/xcodegen generate --spec iOS/project.yml --quiet
-  xcodebuild -project iOS/MedleyMobile.xcodeproj -scheme MedleyMobile -configuration Debug \
+  xcodebuild -project iOS/OpenMusic.xcodeproj -scheme OpenMusic -configuration Debug \
     -destination "id=$udid" -derivedDataPath "$derived" build > build/ios-demo-build.log 2>&1 || { grep -E "error:" build/ios-demo-build.log | head -20; return 1; }
   xcrun simctl boot "$udid" >/dev/null 2>&1 || true
   xcrun simctl bootstatus "$udid" -b >/dev/null 2>&1 || true
@@ -87,7 +88,7 @@ ios_shots() {
     sleep 3  # let the switch settle, or the first capture can catch a transient Dynamic Island
     for screen in $screens; do
       xcrun simctl terminate "$udid" "$bundle" >/dev/null 2>&1 || true
-      xcrun simctl launch "$udid" "$bundle" -MedleyMock demo -MedleyDemoArt "$art" -MedleyScreen "$screen" >/dev/null
+      xcrun simctl launch "$udid" "$bundle" -OpenMusicMock demo -OpenMusicDemoArt "$art" -OpenMusicScreen "$screen" >/dev/null
       sleep "${SNAP_WAIT:-5}"
       xcrun simctl io "$udid" screenshot --type=png "$raw/ios-$screen-$appearance.png" >/dev/null
       echo "ios-$screen-$appearance.png"

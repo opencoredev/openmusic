@@ -3,7 +3,7 @@ import AppKit
 #else
 import UIKit
 #endif
-import MedleyCore
+import OpenMusicCore
 import SwiftUI
 
 #if os(macOS)
@@ -297,7 +297,7 @@ struct SpotifyPlaybackSection: View {
 
 // MARK: Snapshots
 
-/// Every state of the Spotify sign-in sheet and settings, for `medley-probe spotify render-views`.
+/// Every state of the Spotify sign-in sheet and settings, for `openmusic-probe spotify render-views`.
 @MainActor
 public enum SpotifyViewSnapshots {
     public static func signInStates() -> [(name: String, view: AnyView)] {
@@ -316,7 +316,7 @@ public enum SpotifyViewSnapshots {
     /// Uses throwaway providers, so nothing is read from or written to the real settings or Keychain.
     public static func settingsStates() -> [(name: String, view: AnyView)] {
         func form(ownClientID: Bool) -> AnyView {
-            let suite = UserDefaults(suiteName: "medley.snapshots.\(UUID().uuidString)")!
+            let suite = UserDefaults(suiteName: "openmusic.snapshots.\(UUID().uuidString)")!
             let provider = SpotifyProvider(defaults: suite, transport: URLSessionTransport(), tokenStore: MemoryTokenStore())
             provider.usesOwnClientID = ownClientID
             return AnyView(Form {

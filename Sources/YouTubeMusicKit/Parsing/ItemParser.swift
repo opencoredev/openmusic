@@ -1,7 +1,7 @@
 import Foundation
-import MedleyCore
+import OpenMusicCore
 
-/// Turns the InnerTube item renderers YouTube Music uses everywhere into Medley models.
+/// Turns the InnerTube item renderers YouTube Music uses everywhere into OpenMusic models.
 ///
 /// Classification relies on endpoints (watch vs. browse + page type) rather than on display text,
 /// so it works the same in search, shelves, library grids, playlists, and album pages.
@@ -106,7 +106,7 @@ enum ItemParser {
         id.hasPrefix("MPLA") ? String(id.dropFirst(4)) : id
     }
 
-    /// Playlist browse ids are `VL<playlistId>`; Medley keeps the bare playlist id.
+    /// Playlist browse ids are `VL<playlistId>`; OpenMusic keeps the bare playlist id.
     static func playlistID(fromBrowseID id: String) -> String {
         id.hasPrefix("VL") ? String(id.dropFirst(2)) : id
     }

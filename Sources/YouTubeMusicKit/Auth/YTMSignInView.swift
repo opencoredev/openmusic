@@ -5,13 +5,13 @@ import UIKit
 #endif
 import Combine
 import Foundation
-import MedleyCore
+import OpenMusicCore
 import SwiftUI
 import WebKit
 
 /// Google sign-in for music.youtube.com inside an embedded browser.
 ///
-/// The web view uses its own persistent `WKWebsiteDataStore` (Medley only, separate from Safari) and a
+/// The web view uses its own persistent `WKWebsiteDataStore` (OpenMusic only, separate from Safari) and a
 /// Safari user agent so Google serves its normal sign-in page instead of "This browser may not be secure".
 /// When the flow lands back on music.youtube.com with session cookies, they're stored in the Keychain.
 @MainActor
@@ -55,7 +55,7 @@ enum YTMSignInWebView {
         return view
     }
 
-    /// Session cookies for youtube.com currently in the Medley web data store.
+    /// Session cookies for youtube.com currently in the OpenMusic web data store.
     static func youtubeCookies(in store: WKWebsiteDataStore) async -> YTMCredentials? {
         let cookies = await store.httpCookieStore.allCookies()
         var jar: [String: String] = [:]
@@ -82,7 +82,7 @@ enum YTMSignInWebView {
 
 #if os(macOS)
 /// Sign-in sheet. It first offers the YouTube login the person's own browser already has (one click, then
-/// macOS asks once to let Medley read it). Signing in with Google inside Medley is the fallback.
+/// macOS asks once to let OpenMusic read it). Signing in with Google inside OpenMusic is the fallback.
 struct YTMSignInView: View {
     let provider: YouTubeMusicProvider
     let onFinish: @MainActor () -> Void
@@ -120,7 +120,7 @@ struct YTMSignInView: View {
         self.isPreview = false
     }
 
-    /// A still of the browser step for `medley-probe ytm render-signin`.
+    /// A still of the browser step for `openmusic-probe ytm render-signin`.
     init(preview scan: BrowserLoginScan, importing: Bool = false, status: String? = nil, accounts: [BrowserAccount]? = nil) {
         self.provider = YouTubeMusicProvider(validateAccount: { _ in throw CancellationError() })
         self.onFinish = {}
@@ -410,7 +410,7 @@ struct YTMSignInView: View {
         guard mode != .embedded else { return }
         scan = found
         if found.logins.isEmpty && found.defaultBrowser == nil {
-            // Safari, Firefox or no readable browser: sign in inside Medley, as before.
+            // Safari, Firefox or no readable browser: sign in inside OpenMusic, as before.
             mode = .embedded
         } else {
             mode = .browser
@@ -466,7 +466,7 @@ struct YTMSignInView: View {
         }
     }
 
-    // MARK: Sign in inside Medley
+    // MARK: Sign in inside OpenMusic
 
     private var embedded: some View {
         VStack(spacing: 0) {
@@ -685,7 +685,7 @@ final class YTMSignInNavigator: NSObject, WKNavigationDelegate {
     }
 }
 
-// MARK: - Snapshots (used by `medley-probe ytm render-signin`)
+// MARK: - Snapshots (used by `openmusic-probe ytm render-signin`)
 
 #if os(macOS)
 
@@ -719,7 +719,7 @@ public enum YTMViewSnapshots {
 
 #endif
 
-// MARK: - Headless check (used by `medley-probe ytm signin-check`)
+// MARK: - Headless check (used by `openmusic-probe ytm signin-check`)
 
 /// Loads the sign-in page in an off-screen web view and reports what Google served.
 @MainActor

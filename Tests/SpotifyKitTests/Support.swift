@@ -1,5 +1,5 @@
 import Foundation
-import MedleyCore
+import OpenMusicCore
 @testable import SpotifyKit
 
 enum Fixture {

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Create (once) the stable self-signed code-signing identity that scripts/bundle.sh signs Medley with. Runs on the
+# Create (once) the stable self-signed code-signing identity that scripts/bundle.sh signs OpenMusic with. Runs on the
 # Mac that builds (the build Mac). Safe to run again: it reuses what exists.
 #
 # Why: the Keychain ties an item to the designated requirement of the app that wrote it. An ad-hoc signature's

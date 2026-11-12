@@ -1,5 +1,5 @@
 import Foundation
-import MedleyCore
+import OpenMusicCore
 import Testing
 @testable import SpotifyKit
 
@@ -133,7 +133,7 @@ import Testing
 @MainActor
 @Suite struct EngineTests {
     func engine(appInstalled: Bool, signedIn: Bool, preference: SpotifyPlaybackEngine.RoutePreference = .automatic) async -> SpotifyPlaybackEngine {
-        let defaults = UserDefaults(suiteName: "medley.tests.\(UUID().uuidString)")!
+        let defaults = UserDefaults(suiteName: "openmusic.tests.\(UUID().uuidString)")!
         let (service, _) = await makeService(fixtureRoutes)
         let engine = SpotifyPlaybackEngine(service: service, defaults: defaults, isSignedIn: { signedIn }, appInstalled: { appInstalled })
         engine.preference = preference
@@ -162,7 +162,7 @@ import Testing
     }
 
     private func syncResolve(appInstalled: Bool, signedIn: Bool, _ preference: SpotifyPlaybackEngine.RoutePreference) throws -> SpotifyPlaybackEngine.ActiveRoute {
-        let defaults = UserDefaults(suiteName: "medley.tests.\(UUID().uuidString)")!
+        let defaults = UserDefaults(suiteName: "openmusic.tests.\(UUID().uuidString)")!
         let api = SpotifyAPI(transport: FakeTransport(fixtureRoutes), tokenStore: MemoryTokenStore(), clientID: { nil })
         let engine = SpotifyPlaybackEngine(service: SpotifyService(api: api), defaults: defaults, isSignedIn: { signedIn }, appInstalled: { appInstalled })
         engine.preference = preference
@@ -170,7 +170,7 @@ import Testing
     }
 
     @Test func loadWithoutAutoplayDoesNotTouchSpotify() async throws {
-        let defaults = UserDefaults(suiteName: "medley.tests.\(UUID().uuidString)")!
+        let defaults = UserDefaults(suiteName: "openmusic.tests.\(UUID().uuidString)")!
         let transport = FakeTransport(fixtureRoutes)
         let api = SpotifyAPI(transport: transport, tokenStore: MemoryTokenStore(validToken()), clientID: { "c" })
         let engine = SpotifyPlaybackEngine(service: SpotifyService(api: api), defaults: defaults, isSignedIn: { true }, appInstalled: { false })
@@ -194,7 +194,7 @@ import Testing
     }
 
     @Test func connectAutoplayStartsOnPreferredDevice() async throws {
-        let defaults = UserDefaults(suiteName: "medley.tests.\(UUID().uuidString)")!
+        let defaults = UserDefaults(suiteName: "openmusic.tests.\(UUID().uuidString)")!
         let transport = FakeTransport(fixtureRoutes)
         let api = SpotifyAPI(transport: transport, tokenStore: MemoryTokenStore(validToken()), clientID: { "c" })
         let engine = SpotifyPlaybackEngine(service: SpotifyService(api: api), defaults: defaults, isSignedIn: { true }, appInstalled: { false })
@@ -208,7 +208,7 @@ import Testing
     }
 
     @Test func settingsPersist() async {
-        let suite = "medley.tests.\(UUID().uuidString)"
+        let suite = "openmusic.tests.\(UUID().uuidString)"
         let defaults = UserDefaults(suiteName: suite)!
         let api = SpotifyAPI(transport: FakeTransport(fixtureRoutes), tokenStore: MemoryTokenStore(), clientID: { nil })
         let engine = SpotifyPlaybackEngine(service: SpotifyService(api: api), defaults: defaults)

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# Checks that a Release build of the Mac app carries no test hooks: no MEDLEY_SELFTEST self-test types except the
+# Checks that a Release build of the Mac app carries no test hooks: no OPENMUSIC_SELFTEST self-test types except the
 # sidebar benchmarks `sidebar` and `sidebarscroll` (which Release builds keep on purpose, see AGENTS.md "Mac app: frame timing"), no sync self-test,
-# no fake test sign-ins and no snapshot runner (`MEDLEY_SNAPSHOT_DIR` walks the app, runs interaction and live checks,
+# no fake test sign-ins and no snapshot runner (`OPENMUSIC_SNAPSHOT_DIR` walks the app, runs interaction and live checks,
 # writes files and quits; snapshot scripts build Debug). Runs on macOS after `scripts/bundle.sh` (release).
 #   scripts/check-release-hooks.sh [path to the OpenMusic binary]
 set -euo pipefail
@@ -12,7 +12,7 @@ binary="${1:-build/OpenMusic.app/Contents/MacOS/OpenMusic}"
 # Swift keeps type names in its metadata, so a self-test type compiled into the binary shows up by name.
 absent=(FullScreenSelfTest InspectorSelfTest InspectorWidthSelfTest ResizeSelfTest FindSelfTest MenuSelfTest
         LaunchSelfTest HoverSelfTest LayoutSelfTest LyricsSelfTest TourSelfTest SyncSelfTest CouncilShots
-        MEDLEY_TEST_SIGNIN medley-test-signin SnapshotRunner MEDLEY_SNAPSHOT_DIR MEDLEY_SNAPSHOT_ONLY)
+        MEDLEY_TEST_SIGNIN medley-test-signin SnapshotRunner OPENMUSIC_SNAPSHOT_DIR OPENMUSIC_SNAPSHOT_ONLY)
 present=(SidebarSelfTest SidebarScrollSelfTest)
 
 status=0

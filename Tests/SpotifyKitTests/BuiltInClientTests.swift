@@ -1,5 +1,5 @@
 import Foundation
-import MedleyCore
+import OpenMusicCore
 import Testing
 @testable import SpotifyKit
 
@@ -14,7 +14,7 @@ import Testing
     func provider(_ transport: FakeTransport = FakeTransport(SignInCancellationTests.routes),
                   store: MemoryTokenStore = MemoryTokenStore(), captured: Captured = Captured(),
                   port: UInt16 = 8898) -> SpotifyProvider {
-        let defaults = UserDefaults(suiteName: "medley.tests.\(UUID().uuidString)")!
+        let defaults = UserDefaults(suiteName: "openmusic.tests.\(UUID().uuidString)")!
         let p = SpotifyProvider(defaults: defaults, transport: transport, tokenStore: store)
         p.saveAccount = { _ in }
         p.authorize = { target, makeURL in
@@ -91,7 +91,7 @@ import Testing
     }
 
     @Test func settingsPersist() {
-        let defaults = UserDefaults(suiteName: "medley.tests.\(UUID().uuidString)")!
+        let defaults = UserDefaults(suiteName: "openmusic.tests.\(UUID().uuidString)")!
         let a = SpotifyProvider(defaults: defaults, transport: FakeTransport(fixtureRoutes), tokenStore: MemoryTokenStore())
         a.usesOwnClientID = true
         a.clientID = "abc"

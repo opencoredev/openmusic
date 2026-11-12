@@ -1,7 +1,7 @@
 import Foundation
-import MedleyCore
+import OpenMusicCore
 
-/// Turns Spotify API objects into Medley models.
+/// Turns Spotify API objects into OpenMusic models.
 enum SpotifyMapping {
     static func artwork(_ images: [SP.Image]?) -> Artwork? {
         guard let images, !images.isEmpty else { return nil }
@@ -177,7 +177,7 @@ enum SpotifyMapping {
         return formatter.string(from: date)
     }
 
-    /// Spotify URI for anything Medley shows.
+    /// Spotify URI for anything OpenMusic shows.
     static func uri(_ item: MediaItem) -> String {
         switch item {
         case .track(let t): t.extra["uri"] ?? "spotify:track:\(t.providerID)"

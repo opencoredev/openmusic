@@ -1,13 +1,13 @@
 # XcodeGen spec for the iPhone app. Generate with `xcodegen generate --spec iOS/project.yml` (scripts/ios.sh does it).
-# The generated MedleyMobile.xcodeproj is gitignored.
-name: MedleyMobile
+# The generated OpenMusic.xcodeproj is gitignored.
+name: OpenMusic
 options:
   bundleIdPrefix: dev.openmusic
   deploymentTarget:
     iOS: "26.0"
   createIntermediateGroups: true
 packages:
-  Medley:
+  OpenMusic:
     path: ..
 settings:
   base:
@@ -17,25 +17,25 @@ settings:
     MARKETING_VERSION: "1.0"
     CURRENT_PROJECT_VERSION: "1"
 targets:
-  MedleyMobile:
+  OpenMusic:
     type: application
     platform: iOS
     # The council's UI tests run from this scheme (scripts/ios-council-shots.sh); building it builds only the app.
     scheme:
-      testTargets: [CouncilUITests]
+      testTargets: [ScreenshotUITests]
     sources:
-      - path: Medley
+      - path: OpenMusic
     dependencies:
-      - package: Medley
-        product: MedleyCore
-      - package: Medley
+      - package: OpenMusic
+        product: OpenMusicCore
+      - package: OpenMusic
         product: YouTubeMusicKit
-      - package: Medley
+      - package: OpenMusic
         product: SpotifyKit
-      - package: Medley
-        product: MedleySync
+      - package: OpenMusic
+        product: OpenMusicSync
     info:
-      path: Medley/Info.plist
+      path: OpenMusic/Info.plist
       properties:
         CFBundleDisplayName: OpenMusic
         CFBundleShortVersionString: $(MARKETING_VERSION)
@@ -78,18 +78,18 @@ targets:
         Release:
           OPENMUSIC_SYNC_URL: https://insightful-roadrunner-835.convex.cloud
   # Touch-driven screenshots for the design council (scripts/ios-council-shots.sh): a long press, typing, a drag.
-  # Debug only and never shipped; it drives the app through the same -MedleyScreen states as the snapshots.
-  CouncilUITests:
+  # Debug only and never shipped; it drives the app through the same -OpenMusicScreen states as the snapshots.
+  ScreenshotUITests:
     type: bundle.ui-testing
     platform: iOS
     sources:
-      - path: CouncilUITests
+      - path: ScreenshotUITests
     dependencies:
-      - target: MedleyMobile
+      - target: OpenMusic
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: dev.openmusic.OpenMusicMobile.CouncilUITests
-        TEST_TARGET_NAME: MedleyMobile
+        PRODUCT_BUNDLE_IDENTIFIER: dev.openmusic.OpenMusicMobile.ScreenshotUITests
+        TEST_TARGET_NAME: OpenMusic
         CODE_SIGN_STYLE: Manual
         CODE_SIGN_IDENTITY: "-"
         DEVELOPMENT_TEAM: ""

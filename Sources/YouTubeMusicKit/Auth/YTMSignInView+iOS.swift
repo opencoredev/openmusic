@@ -1,11 +1,11 @@
 #if os(iOS)
-import MedleyCore
+import OpenMusicCore
 import SwiftUI
 import UIKit
 import WebKit
 
 /// Google sign-in for YouTube Music on iPhone: Google's own pages in a web view, then (when the Google account
-/// has several channels or brand accounts) a picker for which one Medley uses. Same flow as the Mac's embedded
+/// has several channels or brand accounts) a picker for which one OpenMusic uses. Same flow as the Mac's embedded
 /// sign-in; borrowing a browser's login is macOS only.
 struct YTMSignInView: View {
     let provider: YouTubeMusicProvider

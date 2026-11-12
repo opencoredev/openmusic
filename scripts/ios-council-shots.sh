@@ -4,9 +4,9 @@
 # layout subset on a small iPhone (SE 3rd generation, or 16e where the runtime has no SE).
 #   scripts/ios-council-shots.sh <out-dir>      from the Linux checkout: sync, capture on the build Mac, pull PNGs
 #   scripts/ios-council-shots.sh --remote         on the build Mac (called by the line above)
-# Most screens are a launch with -MedleyScreen <name> (iOS/Medley/App/SnapshotDriver.swift) and `simctl io
+# Most screens are a launch with -OpenMusicScreen <name> (iOS/OpenMusic/App/SnapshotDriver.swift) and `simctl io
 # screenshot`. The ones that need a finger (a long press, typing, a drag, the route picker) are UI tests in
-# iOS/CouncilUITests. One simulator at a time, created for this run and deleted after it, even on failure. The
+# iOS/ScreenshotUITests. One simulator at a time, created for this run and deleted after it, even on failure. The
 # capture holds /tmp/medley-ui.lock so it never overlaps other workers' frame-timing runs on the shared build Mac.
 #   COUNCIL_DEVICES="pro se"        which devices (default both)
 #   COUNCIL_SCREENS="home album"    only these simctl screens
@@ -26,8 +26,8 @@ if [[ "${1:-}" != --remote && "${1:-}" != --capture ]]; then
   dirty=""
   if [[ -n "$(git status --porcelain 2>/dev/null)" ]]; then dirty="+uncommitted"; fi
   scripts/mac.sh "$slot" "COUNCIL_DEVICES='${COUNCIL_DEVICES:-}' COUNCIL_SCREENS='${COUNCIL_SCREENS:-}' COUNCIL_TESTS='${COUNCIL_TESTS:-}' scripts/ios-council-shots.sh --remote"
-  rsync -az --delete -e "ssh -o BatchMode=yes" "$mini:agents/medley-$slot/build/ios-council/shots/" "$dest/shots/"
-  rsync -az -e "ssh -o BatchMode=yes" "$mini:agents/medley-$slot/build/ios-council/capture.log" "$dest/" || true
+  rsync -az --delete -e "ssh -o BatchMode=yes" "$mini:agents/openmusic-$slot/build/ios-council/shots/" "$dest/shots/"
+  rsync -az -e "ssh -o BatchMode=yes" "$mini:agents/openmusic-$slot/build/ios-council/capture.log" "$dest/" || true
   echo "$rev$dirty" > "$dest/revision.txt"
   echo "pulled $(ls "$dest/shots" | wc -l) images to $dest/shots ($rev$dirty)"
   exit 0
@@ -50,7 +50,7 @@ if [[ "$1" == --remote ]]; then
   mkdir -p "$shots"
   scripts/demo-art.sh "$art" >/dev/null
   /opt/homebrew/bin/xcodegen generate --spec iOS/project.yml --quiet
-  if ! xcodebuild build-for-testing -project iOS/MedleyMobile.xcodeproj -scheme MedleyMobile -configuration Debug \
+  if ! xcodebuild build-for-testing -project iOS/OpenMusic.xcodeproj -scheme OpenMusic -configuration Debug \
       -destination "generic/platform=iOS Simulator" -derivedDataPath "$derived" > "$out/build.log" 2>&1; then
     grep -E "error:" "$out/build.log" | sort -u | head -40
     echo "build failed" >&2
@@ -82,7 +82,7 @@ device_type() {
     pro) echo "iPhone 17 Pro" ;;
     se)
       local probe
-      if probe="$(xcrun simctl create agent-medley-council-probe "iPhone SE (3rd generation)" 2>/dev/null)"; then
+      if probe="$(xcrun simctl create agent-openmusic-council-probe "iPhone SE (3rd generation)" 2>/dev/null)"; then
         xcrun simctl delete "$probe" >/dev/null 2>&1 || true
         echo "iPhone SE (3rd generation)"
       else
@@ -104,8 +104,8 @@ ui_test() { # <test name> <file suffix>
     ) &
   fi
   timeout 240 env TEST_RUNNER_COUNCIL_OUT="$shots" TEST_RUNNER_COUNCIL_SUFFIX="$suffix" TEST_RUNNER_COUNCIL_ART="$art" \
-    xcodebuild test-without-building -project iOS/MedleyMobile.xcodeproj -scheme MedleyMobile -destination "id=$udid" \
-    -derivedDataPath "$derived" -only-testing:"CouncilUITests/$id" > "$out/test-$name$suffix.log" 2>&1 || status=$?
+    xcodebuild test-without-building -project iOS/OpenMusic.xcodeproj -scheme OpenMusic -destination "id=$udid" \
+    -derivedDataPath "$derived" -only-testing:"ScreenshotUITests/$id" > "$out/test-$name$suffix.log" 2>&1 || status=$?
   wait 2>/dev/null || true
   rm -f "${marker:?}"
   echo "ui $name$suffix: exit $status" >> "$log"
@@ -113,7 +113,7 @@ ui_test() { # <test name> <file suffix>
 
 for dev in ${COUNCIL_DEVICES:-pro se}; do
   type="$(device_type "$dev")"
-  udid="$(xcrun simctl create "agent-medley-council-$dev" "$type")"
+  udid="$(xcrun simctl create "agent-openmusic-council-$dev" "$type")"
   echo "$dev: $type $udid" >> "$log"
   xcrun simctl boot "$udid" >/dev/null 2>&1 || true
   xcrun simctl bootstatus "$udid" -b >/dev/null 2>&1 || true
@@ -133,7 +133,7 @@ for dev in ${COUNCIL_DEVICES:-pro se}; do
     sleep 3
     for screen in $screens; do
       xcrun simctl terminate "$udid" "$bundle" >/dev/null 2>&1 || true
-      xcrun simctl launch "$udid" "$bundle" -MedleyMock demo -MedleyDemoArt "$art" -MedleyScreen "$screen" >/dev/null
+      xcrun simctl launch "$udid" "$bundle" -OpenMusicMock demo -OpenMusicDemoArt "$art" -OpenMusicScreen "$screen" >/dev/null
       sleep "${SNAP_WAIT:-5}"
       if xcrun simctl io "$udid" screenshot --type=png "$shots/$screen-$appearance$suffix_dev.png" >/dev/null 2>&1; then
         echo "shot $screen-$appearance$suffix_dev" >> "$log"

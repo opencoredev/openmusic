@@ -1,5 +1,5 @@
 import Foundation
-import MedleyCore
+import OpenMusicCore
 import Testing
 @testable import SpotifyKit
 
@@ -94,7 +94,7 @@ import Testing
     @MainActor
     @Test func anUndoCheckedAsASendsNothingOnceBsTokenLanded() async throws {
         let transport = FakeTransport(routes)
-        let defaults = try #require(UserDefaults(suiteName: "medley.tests.\(UUID().uuidString)"))
+        let defaults = try #require(UserDefaults(suiteName: "openmusic.tests.\(UUID().uuidString)"))
         let provider = SpotifyProvider(defaults: defaults, transport: transport, tokenStore: MemoryTokenStore())
         provider.saveAccount = { _ in }
         try await provider.adoptTransferredSignIn(token("A"), account: AccountInfo(name: "A", id: "user-A"), userID: "user-A")

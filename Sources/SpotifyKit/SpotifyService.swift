@@ -1,7 +1,7 @@
 import Foundation
-import MedleyCore
+import OpenMusicCore
 
-/// Everything Medley asks of the Spotify Web API, mapped to Medley models.
+/// Everything OpenMusic asks of the Spotify Web API, mapped to OpenMusic models.
 ///
 /// Written against the API as it stands for development-mode apps after the February 2026 changes:
 /// - No `/browse/*`, `/artists/{id}/top-tracks`, recommendations, or related artists. Clients outside development

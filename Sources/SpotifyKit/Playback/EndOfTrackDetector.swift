@@ -25,7 +25,7 @@ public struct RemoteSample: Sendable, Hashable {
     }
 }
 
-/// Decides, from successive samples, whether the track Medley asked Spotify to play is still playing,
+/// Decides, from successive samples, whether the track OpenMusic asked Spotify to play is still playing,
 /// was paused, ended on its own, or was replaced by the user.
 ///
 /// Spotify keeps going after our track ends (into its own queue or autoplay) or stops, so "the end" shows up as:

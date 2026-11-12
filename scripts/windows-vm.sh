@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Build, run and screenshot OpenMusic for Windows in the test VM through its helper (OPENMUSIC_WIN_VM, see windows/README.md).
-#   scripts/windows-vm.sh build [Debug|Release]      push windows/ to C:\medley\<slot> and build Medley.App (x64)
+#   scripts/windows-vm.sh build [Debug|Release]      push windows/ to C:\medley\<slot> and build OpenMusic.App (x64)
 #   scripts/windows-vm.sh publish                    self-contained Release publish to C:\medley\<slot>\publish
 #   scripts/windows-vm.sh run [args...]              start the built app in the VM's desktop session
 #   scripts/windows-vm.sh snapshot <local-dir>       run --snapshot in the VM and copy the PNGs to <local-dir>
@@ -9,15 +9,15 @@
 #   scripts/windows-vm.sh kill                       stop the app
 #   scripts/windows-vm.sh uia <op> <AutomationId> [text]   UI Automation in the desktop session (scripts/windows-uia.ps1):
 #                                                    click, set, text, exists, dump; prints the result, fails on ERROR
-# MEDLEY_VM_SLOT picks the slot (default: win). Pushed files keep the host's mtimes, which the VM reads as older than
+# OPENMUSIC_VM_SLOT picks the slot (default: win). Pushed files keep the host's mtimes, which the VM reads as older than
 # its build output, so `build` touches them after each push to keep incremental builds honest (and drops build output
 # dated in the future, which a clock or time-zone jump in the VM leaves behind).
 set -euo pipefail
 . "$(dirname "$0")/env.sh"
-W="${MEDLEY_VM:-${OPENMUSIC_WIN_VM:-$HOME/vms/medley-win/win.sh}}"
-SLOT="${MEDLEY_VM_SLOT:-win}"
+W="${OPENMUSIC_VM:-${OPENMUSIC_WIN_VM:-$HOME/vms/medley-win/win.sh}}"
+SLOT="${OPENMUSIC_VM_SLOT:-win}"
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-CONFIG_DIR='src\Medley.App\bin\x64'
+CONFIG_DIR='src\OpenMusic.App\bin\x64'
 EXE_REL='net10.0-windows10.0.22621.0\win-x64\OpenMusic.exe'
 cmd="${1:-}"; shift || true
 
@@ -34,19 +34,19 @@ case "$cmd" in
     config="${1:-Debug}"
     "$W" kill OpenMusic >/dev/null
     push
-    "$W" ps "Start-Sleep 1; cd C:\\medley\\$SLOT; dotnet build src\\Medley.App\\Medley.App.csproj -c $config -p:Platform=x64 -nologo -clp:NoSummary 2>&1 | Select-String -Pattern ' error |warning MSB3|Build succeeded|Time Elapsed' | ForEach-Object { \$_.Line } | Sort-Object -Unique" ;;
+    "$W" ps "Start-Sleep 1; cd C:\\medley\\$SLOT; dotnet build src\\OpenMusic.App\\OpenMusic.App.csproj -c $config -p:Platform=x64 -nologo -clp:NoSummary 2>&1 | Select-String -Pattern ' error |warning MSB3|Build succeeded|Time Elapsed' | ForEach-Object { \$_.Line } | Sort-Object -Unique" ;;
   publish)
     "$W" kill OpenMusic >/dev/null
     push
-    "$W" ps "Start-Sleep 1; cd C:\\medley\\$SLOT; dotnet publish src\\Medley.App\\Medley.App.csproj -c Release -r win-x64 -p:Platform=x64 -o publish -nologo 2>&1 | Select-String -Pattern ' error |Medley.App ->' | ForEach-Object { \$_.Line }; \$s = (Get-ChildItem publish -Recurse | Measure-Object Length -Sum).Sum; 'publish: {0:N1} MB, {1} files' -f (\$s/1MB), (Get-ChildItem publish -Recurse -File).Count" ;;
+    "$W" ps "Start-Sleep 1; cd C:\\medley\\$SLOT; dotnet publish src\\OpenMusic.App\\OpenMusic.App.csproj -c Release -r win-x64 -p:Platform=x64 -o publish -nologo 2>&1 | Select-String -Pattern ' error |OpenMusic.App ->' | ForEach-Object { \$_.Line }; \$s = (Get-ChildItem publish -Recurse | Measure-Object Length -Sum).Sum; 'publish: {0:N1} MB, {1} files' -f (\$s/1MB), (Get-ChildItem publish -Recurse -File).Count" ;;
   run)
-    exe="C:\\medley\\$SLOT\\$CONFIG_DIR\\${MEDLEY_CONFIG:-Debug}\\$EXE_REL"
-    [[ "${MEDLEY_PUBLISHED:-}" == 1 ]] && exe="C:\\medley\\$SLOT\\publish\\OpenMusic.exe"
+    exe="C:\\medley\\$SLOT\\$CONFIG_DIR\\${OPENMUSIC_CONFIG:-Debug}\\$EXE_REL"
+    [[ "${OPENMUSIC_PUBLISHED:-}" == 1 ]] && exe="C:\\medley\\$SLOT\\publish\\OpenMusic.exe"
     "$W" kill OpenMusic >/dev/null
     "$W" gui "$SLOT" "$exe $*" ;;
   snapshot)
     out="${1:?local dir}"
-    exe="C:\\medley\\$SLOT\\$CONFIG_DIR\\${MEDLEY_CONFIG:-Debug}\\$EXE_REL"
+    exe="C:\\medley\\$SLOT\\$CONFIG_DIR\\${OPENMUSIC_CONFIG:-Debug}\\$EXE_REL"
     "$W" kill OpenMusic >/dev/null
     "$W" ps "Remove-Item C:\\medley\\$SLOT\\snapshots -Recurse -ErrorAction SilentlyContinue" || true
     "$W" gui "$SLOT" "$exe --snapshot C:\\medley\\$SLOT\\snapshots" >/dev/null
@@ -63,7 +63,7 @@ case "$cmd" in
     # The script runs in the desktop session (a gui task); its answer comes back through a file.
     op="${1:?op}"; id="${2:-}"; text="${3:-}"
     U="C:\\medley\\$SLOT-uia"
-    if [[ "${MEDLEY_UIA_PUSHED:-}" != 1 ]]; then
+    if [[ "${OPENMUSIC_UIA_PUSHED:-}" != 1 ]]; then
       d="$(mktemp -d)"; cp "$ROOT/scripts/windows-uia.ps1" "$d/"; "$W" push "$d" "$SLOT-uia" >/dev/null; rm -rf "${d:?}"
     fi
     b64=$(printf '%s\n%s\n%s\n' "$op" "$id" "$text" | base64 -w0)

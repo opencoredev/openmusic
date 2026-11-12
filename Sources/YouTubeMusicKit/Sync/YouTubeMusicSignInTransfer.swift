@@ -1,14 +1,14 @@
 import Foundation
-import MedleyCore
+import OpenMusicCore
 
-/// Moves the YouTube Music sign-in between devices for Medley Sync (`MedleySync.SignInTransfer`).
+/// Moves the YouTube Music sign-in between devices for OpenMusic Sync (`OpenMusicSync.SignInTransfer`).
 ///
 /// It has the exact shape of `SignInTransfer`, so an app that links both kits declares the conformance in one line
 /// (`extension YouTubeMusicSignInTransfer: @retroactive SignInTransfer {}`) and registers it with
-/// `sync.signIns.register(_:)`. YouTubeMusicKit itself doesn't depend on MedleySync.
+/// `sync.signIns.register(_:)`. YouTubeMusicKit itself doesn't depend on OpenMusicSync.
 ///
 /// What travels: the session cookies, the Google account index (`authUser`) and the selected channel
-/// (`datasyncId`), plus the account name and photo so the other device can show who is signed in. MedleySync seals
+/// (`datasyncId`), plus the account name and photo so the other device can show who is signed in. OpenMusicSync seals
 /// it with the library key; this type never logs it.
 ///
 /// Google rotates a few cookies (`__Secure-*PSIDTS`, `SIDCC`) every few minutes of use. Syncing each rotation would
@@ -153,7 +153,7 @@ public final class YouTubeMusicSignInTransfer {
 
 // MARK: - Payload
 
-/// The blob that travels, sealed by MedleySync. Version 1.
+/// The blob that travels, sealed by OpenMusicSync. Version 1.
 struct YouTubeMusicSignInPayload: Codable, Sendable, CustomStringConvertible {
     var version = 1
     var credentials: YTMCredentials
@@ -183,10 +183,10 @@ extension YouTubeMusicSignInTransfer {
     // The fake test sign-in and the verifier that accepts it exist in Debug builds only (self-tests, the probe and
     // unit tests). Release builds can neither make nor accept one.
     #if DEBUG
-    /// A sign-in payload with fake cookies, for `medley-probe sync` to check the transfer end to end without real
+    /// A sign-in payload with fake cookies, for `openmusic-probe sync` to check the transfer end to end without real
     /// credentials. YouTube rejects it, so a device only accepts it with a test `Verifier` (`acceptingTestSignIns`).
     public nonisolated static func testPayload(accountName: String) -> Data {
-        let creds = YTMCredentials(cookies: ["SAPISID": "medley-test", "SID": "medley-test", YouTubeMusicSignInPayload.testCookie: "1"])
+        let creds = YTMCredentials(cookies: ["SAPISID": "openmusic-test", "SID": "openmusic-test", YouTubeMusicSignInPayload.testCookie: "1"])
         return (try? YouTubeMusicSignInPayload(credentials: creds, account: AccountInfo(name: accountName, detail: "Test sign-in")).encoded()) ?? Data()
     }
 

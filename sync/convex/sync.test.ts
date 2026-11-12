@@ -14,8 +14,8 @@ const modules = import.meta.glob("./**/*.ts");
 const mac = { name: "Studio Mac", platform: "mac" as const, model: "Mac16,10", appVersion: "1.0" };
 const phone = { name: "iPhone", platform: "ios" as const, model: "iPhone17,1", appVersion: "1.0" };
 
-const LEO = { subject: "user_leo", issuer: "https://clerk.medley.test", tokenIdentifier: "https://clerk.medley.test|user_leo" };
-const ANNA = { subject: "user_anna", issuer: "https://clerk.medley.test", tokenIdentifier: "https://clerk.medley.test|user_anna" };
+const LEO = { subject: "user_leo", issuer: "https://clerk.openmusic.test", tokenIdentifier: "https://clerk.openmusic.test|user_leo" };
+const ANNA = { subject: "user_anna", issuer: "https://clerk.openmusic.test", tokenIdentifier: "https://clerk.openmusic.test|user_anna" };
 
 const KEY_A = "a".repeat(32);
 const KEY_B = "b".repeat(32);

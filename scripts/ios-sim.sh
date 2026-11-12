@@ -3,12 +3,13 @@
 # Never shuts down, erases or kills other simulators.
 set -euo pipefail
 cd "$(dirname "$0")/.."
-slot="${MEDLEY_SLOT:-ios}"
+source scripts/env.sh
+slot="${OPENMUSIC_SLOT:-ios}"
 bundle="dev.openmusic.OpenMusicMobile"
 udid_file="build/sim-udid"
 derived="build/ios-dd"
-# MEDLEY_CONFIG=Release builds and installs the Release configuration (no self-test code).
-config="${MEDLEY_CONFIG:-Debug}"
+# OPENMUSIC_CONFIG=Release builds and installs the Release configuration (no self-test code).
+config="${OPENMUSIC_CONFIG:-Debug}"
 app="$derived/Build/Products/$config-iphonesimulator/OpenMusic.app"
 shots="build/shots"
 mkdir -p build "$shots"
@@ -26,7 +27,7 @@ sim() {
   if [[ -s "$udid_file" ]] && xcrun simctl list devices | grep -q "$(cat "$udid_file")"; then
     cat "$udid_file"; return
   fi
-  xcrun simctl create "agent-medley-$slot" "iPhone 17 Pro" > "$udid_file"
+  xcrun simctl create "agent-openmusic-$slot" "iPhone 17 Pro" > "$udid_file"
   cat "$udid_file"
 }
 
@@ -43,11 +44,11 @@ build() {
   local u; u="$(sim)"
   /opt/homebrew/bin/xcodegen generate --spec iOS/project.yml --quiet
   set +e
-  xcodebuild -project iOS/MedleyMobile.xcodeproj -scheme MedleyMobile -configuration "$config" \
+  xcodebuild -project iOS/OpenMusic.xcodeproj -scheme OpenMusic -configuration "$config" \
     -destination "id=$u" -derivedDataPath "$derived" build > build/ios-build.log 2>&1
   local status=$?
   set -e
-  grep -E "error:|warning: .*iOS/Medley|\*\* BUILD" build/ios-build.log | sort -u | head -80
+  grep -E "error:|warning: .*iOS/OpenMusic|\*\* BUILD" build/ios-build.log | sort -u | head -80
   return $status
 }
 
@@ -76,9 +77,9 @@ snapshots() {
     xcrun simctl ui "$u" appearance "$appearance"
     for s in $screens; do
       if [[ "$s" == "library-signedout" ]]; then
-        launch -MedleyMock YES -MedleyScreen "$s" -MedleySignedOut YES >/dev/null
+        launch -OpenMusicMock YES -OpenMusicScreen "$s" -OpenMusicSignedOut YES >/dev/null
       else
-        launch -MedleyMock YES -MedleyScreen "$s" >/dev/null
+        launch -OpenMusicMock YES -OpenMusicScreen "$s" >/dev/null
       fi
       sleep "${SNAP_WAIT:-4}"
       shot "$s-$appearance"
@@ -92,7 +93,7 @@ selftest() {
   local u; u="$(boot)"
   install
   xcrun simctl ui "$u" appearance dark
-  launch -MedleySelfTest live >/dev/null
+  launch -OpenMusicSelfTest live >/dev/null
   local data log
   data="$(xcrun simctl get_app_container "$u" "$bundle" data)"
   log="$data/Documents/selftest.log"
@@ -124,7 +125,7 @@ perf() {
   local u; u="$(boot)"
   install
   xcrun simctl ui "$u" appearance dark
-  launch -MedleyMock YES -MedleySelfTest perf ${PERF_ONLY:+-MedleyPerfOnly "$PERF_ONLY"} >/dev/null
+  launch -OpenMusicMock YES -OpenMusicSelfTest perf ${PERF_ONLY:+-OpenMusicPerfOnly "$PERF_ONLY"} >/dev/null
   local data log
   data="$(xcrun simctl get_app_container "$u" "$bundle" data)"
   log="$data/Documents/perf.log"

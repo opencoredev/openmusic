@@ -35,7 +35,7 @@ quiet_run() {
     sleep 5
   done
   echo "load $(sysctl -n vm.loadavg)"
-  timeout 240 open -W -n --env MEDLEY_MOCK=1 --env MEDLEY_SELFTEST=sidebarscroll --env MEDLEY_SELFTEST_OUT="$result" build/OpenMusic.app || true
+  timeout 240 open -W -n --env OPENMUSIC_MOCK=1 --env OPENMUSIC_SELFTEST=sidebarscroll --env OPENMUSIC_SELFTEST_OUT="$result" build/OpenMusic.app || true
 }
 export -f quiet_run
 export result

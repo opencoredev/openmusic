@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Home and New: the provider's shelves, top to bottom. Drawn from the cache at once, refreshed behind it. -->
+<Page
+    x:Class="OpenMusic.App.Pages.ShelvesPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:OpenMusic.App.Controls"
+    xmlns:vm="using:OpenMusic.App.ViewModels"
+    NavigationCacheMode="Enabled">
+    <ScrollViewer x:Name="Scroller">
+        <StackPanel Padding="{StaticResource PagePadding}">
+            <TextBlock x:Name="Heading" Style="{StaticResource PageTitleTextStyle}" AutomationProperties.AutomationId="PageHeading" />
+            <ProgressRing x:Name="Loading" IsActive="False" Visibility="{x:Bind Loading.IsActive, Mode=OneWay}" Width="32" Height="32" HorizontalAlignment="Left" Margin="0,40,0,0" />
+            <!-- Virtualized: only the shelves near the viewport exist, and their views are reused as the page scrolls. -->
+            <ItemsRepeater x:Name="ShelfHost" AutomationProperties.AutomationId="ShelfHost" VerticalCacheLength="1">
+                <ItemsRepeater.ItemTemplate>
+                    <DataTemplate x:DataType="vm:ShelfModel">
+                        <controls:ShelfView Shelf="{x:Bind}" />
+                    </DataTemplate>
+                </ItemsRepeater.ItemTemplate>
+            </ItemsRepeater>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

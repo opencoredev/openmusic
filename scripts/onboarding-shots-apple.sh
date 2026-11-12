@@ -7,10 +7,10 @@
 # The Linux side makes two Clerk test users (`+clerk_test` addresses: every email code is 424242) through the Backend
 # API with the secret in ~/.config/openmusic/clerk-dev.env (it never leaves that machine; ~/.config/openmusic/onb/clerk.sh,
 # a local helper that is not in the repo: `create <email>`, `jwt <user>`, `delete <user>`), pushes a
-# fresh Convex JWT for each to the build Mac every 45 s (0600 files, for medley-probe's stand-in devices), and deletes the
+# fresh Convex JWT for each to the build Mac every 45 s (0600 files, for openmusic-probe's stand-in devices), and deletes the
 # users and the files on exit, also after a failure.
 #
-# On the build Mac: a Debug bundle, medley-probe and the iPhone app are built, then the captures run under
+# On the build Mac: a Debug bundle, openmusic-probe and the iPhone app are built, then the captures run under
 # /tmp/medley-ui.lock with a 2x virtual display. Each app starts as a fresh install (the Mac's preferences moved
 # aside and put back afterwards, its Keychain kept in files by the sync self-test; the slot's own simulator erased)
 # and is driven through its self-test command file, the code paths the buttons take. The probe plays the account's
@@ -20,7 +20,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 slot=onb-shots
-rdir="agents/medley-$slot"
+rdir="agents/openmusic-$slot"
 clerk="$HOME/.config/openmusic/onb/clerk.sh"
 
 # ---------------------------------------------------------------- Linux side
@@ -79,19 +79,19 @@ out="$base/out"
 lock=/tmp/medley-ui.lock
 app="$root/build/OpenMusic.app"
 exe="$app/Contents/MacOS/OpenMusic"
-probe="$root/.build/debug/medley-probe"
+probe="$root/.build/debug/openmusic-probe"
 bundle=dev.openmusic.OpenMusicMobile
 
 if [[ "$1" == --remote ]]; then
   what="${2:-both}"
   start=$(date +%s)
   if [[ "$what" != ios ]]; then CONFIG=debug scripts/bundle.sh | tail -1; fi
-  swift build --product medley-probe 2>&1 | grep -E "error|Build complete" | tail -2
+  swift build --product openmusic-probe 2>&1 | grep -E "error|Build complete" | tail -2
   clang -fobjc-arc -framework Foundation -framework CoreGraphics scripts/virtual-display.m -o build/virtual-display
   if [[ "$what" != mac ]]; then
-    MEDLEY_SLOT="$slot" scripts/ios-sim.sh build | tail -3
-    # The VoiceOver check (iOS/CouncilUITests/OnboardingAccessibility.swift) runs from its own test build.
-    xcodebuild build-for-testing -project iOS/MedleyMobile.xcodeproj -scheme MedleyMobile -configuration Debug \
+    OPENMUSIC_SLOT="$slot" scripts/ios-sim.sh build | tail -3
+    # The VoiceOver check (iOS/ScreenshotUITests/OnboardingAccessibility.swift) runs from its own test build.
+    xcodebuild build-for-testing -project iOS/OpenMusic.xcodeproj -scheme OpenMusic -configuration Debug \
       -destination "generic/platform=iOS Simulator" -derivedDataPath build/onb-ui-dd > build/onb-ui-build.log 2>&1 \
       || { grep -E "error:" build/onb-ui-build.log | head; echo "UI test build failed" >&2; }
   fi
@@ -196,7 +196,7 @@ cleanup() {
   # Nothing left on the test accounts: the apps sign out, the probes too.
   if pgrep -qf "$exe"; then mcmd signout-account; sleep 4; fi
   if [[ -n "$data" ]]; then icmd signout-account; sleep 4; fi
-  pkill -f "medley-probe sync fake-play" 2>/dev/null
+  pkill -f "openmusic-probe sync fake-play" 2>/dev/null
   for st in mac-holder mac-ipad ios-holder ios-ipad; do
     [[ -s "$run/probe-$st.json" ]] || continue
     case "$st" in mac-*) j=mac ;; *) j=ios ;; esac
@@ -240,8 +240,8 @@ fresh_mac() {
 launch_mac() { # <run dir> <device name>
   use_mac_dir "$1"
   mkdir -p "$mdir"
-  open -n -F "$app" --args -MedleySyncSelfTest YES -MedleySyncDir "$mdir" -MedleySyncState "$mdir/state.json" \
-    -MedleySyncDeviceName "$2"
+  open -n -F "$app" --args -OpenMusicSyncSelfTest YES -OpenMusicSyncDir "$mdir" -OpenMusicSyncState "$mdir/state.json" \
+    -OpenMusicSyncDeviceName "$2"
   for _ in $(seq 1 80); do grep -q STARTED "$maclog" 2>/dev/null && break; sleep 0.5; done
 }
 
@@ -382,7 +382,7 @@ mac_run() {
 
   say "Mac: the holder's prompt: another device (\"Riley's iPad\") asks this Mac"
   # The probe playing for the banner holds the key too and would answer the iPad first: only this Mac answers.
-  pkill -f "medley-probe sync fake-play" 2>/dev/null || true
+  pkill -f "openmusic-probe sync fake-play" 2>/dev/null || true
   sleep 2
   msnap
   P mac-ipad mac "Riley's iPad" ios sign-in || fail "second probe sign-in"
@@ -431,7 +431,7 @@ mac_run() {
   mwait "code=sent" 25 || fail "Mac (second): Send Code"
   mfr "code=424242" 0.2
   mwait "FIRSTRUN step=approve" 45 || fail "Mac (second): no Approve step: $(mlast FIRSTRUN)"
-  pkill -f "medley-probe sync fake-play" 2>/dev/null || true
+  pkill -f "openmusic-probe sync fake-play" 2>/dev/null || true
   msnap; mfr "do=later" 2
   if mwait "FIRSTRUN closed" 8; then pass "Mac: Do This Later lands on Home"; else fail "Mac: Do This Later: $(mlast FIRSTRUN)"; fi
   if mwait "BANNER approve this Mac" 150; then pass "Mac: a quiet Approve banner stays after Do This Later"; else fail "Mac: no approval banner: $(mlast BANNER)"; fi
@@ -444,7 +444,7 @@ mac_run() {
 }
 
 # ---------------------------------------------------------------- iPhone
-ios_launch() { xcrun simctl terminate "$u" "$bundle" >/dev/null 2>&1 || true; xcrun simctl launch "$u" "$bundle" -MedleySyncSelfTest YES -MedleySyncDeviceName "Riley's iPhone" "$@" >/dev/null; }
+ios_launch() { xcrun simctl terminate "$u" "$bundle" >/dev/null 2>&1 || true; xcrun simctl launch "$u" "$bundle" -OpenMusicSyncSelfTest YES -OpenMusicSyncDeviceName "Riley's iPhone" "$@" >/dev/null; }
 ios_fresh() { # erase, boot, install: a fresh iPhone
   xcrun simctl shutdown "$u" >/dev/null 2>&1 || true
   xcrun simctl erase "$u"
@@ -461,7 +461,7 @@ ios_wait_start() { for _ in $(seq 1 60); do [[ -s "$ioslog" ]] && break; sleep 0
 
 ios_run() {
   local ios_code probe_code se
-  u="$(MEDLEY_SLOT="$slot" scripts/ios-sim.sh udid)"
+  u="$(OPENMUSIC_SLOT="$slot" scripts/ios-sim.sh udid)"
   say "iPhone: the probe signs in first (the holder, \"Riley's Mac\")"
   P ios-holder ios "Riley's Mac" mac sign-in || fail "probe sign-in (iPhone account)"
   P ios-holder ios "Riley's Mac" mac keys || true
@@ -563,7 +563,7 @@ ios_run() {
   ishot 18-home-continue
 
   say "iPhone: the holder's prompt"
-  pkill -f "medley-probe sync fake-play" 2>/dev/null || true
+  pkill -f "openmusic-probe sync fake-play" 2>/dev/null || true
   sleep 2
   isnap
   P ios-ipad ios "Riley's iPad" ios sign-in || fail "second probe sign-in (iPhone account)"
@@ -578,7 +578,7 @@ ios_run() {
   icmd allow; sleep 2
   P ios-ipad ios "Riley's iPad" ios confirm || true
   P ios-ipad ios "Riley's iPad" ios sign-out || true
-  pkill -f "medley-probe sync fake-play" 2>/dev/null || true
+  pkill -f "openmusic-probe sync fake-play" 2>/dev/null || true
 
   say "iPhone: relaunch: no first-run flow"
   cp "$ioslog" "$out/logs/iphone-synctest-main.log"
@@ -590,9 +590,9 @@ ios_run() {
   say "iPhone: VoiceOver labels on every step, default and largest text size (XCUITest, fresh install)"
   ios_fresh
   local axlog="$out/logs/onboarding-ax-test.log"
-  if timeout 600 env TEST_RUNNER_COUNCIL_OUT="$out/logs" xcodebuild test-without-building -project iOS/MedleyMobile.xcodeproj \
-      -scheme MedleyMobile -destination "id=$u" -derivedDataPath build/onb-ui-dd \
-      -only-testing:CouncilUITests/OnboardingAccessibility > "$axlog" 2>&1; then
+  if timeout 600 env TEST_RUNNER_COUNCIL_OUT="$out/logs" xcodebuild test-without-building -project iOS/OpenMusic.xcodeproj \
+      -scheme OpenMusic -destination "id=$u" -derivedDataPath build/onb-ui-dd \
+      -only-testing:ScreenshotUITests/OnboardingAccessibility > "$axlog" 2>&1; then
     pass "iPhone VoiceOver: every control on Welcome, Your music, Sync, Use your own server and the guide has a label, default and AX5 ($(grep -c 'controls$' "$out/logs/onboarding-ax.txt" 2>/dev/null || echo 0) screens audited, nothing off screen)"
   else
     fail "iPhone VoiceOver XCUITest: $(grep -E "error: -\[|XCTAssert|failed" "$axlog" | head -3 | tr '\n' ' ')"
@@ -610,7 +610,7 @@ ios_run() {
   xcrun simctl shutdown "$u" >/dev/null 2>&1 || true
 
   say "iPhone: an SE-sized screen"
-  se="$(xcrun simctl create agent-medley-onb-se "iPhone SE (3rd generation)" 2>/dev/null || xcrun simctl create agent-medley-onb-se "iPhone 16e")"
+  se="$(xcrun simctl create agent-openmusic-onb-se "iPhone SE (3rd generation)" 2>/dev/null || xcrun simctl create agent-openmusic-onb-se "iPhone 16e")"
   u="$se"
   ios_fresh
   ios_launch; ios_wait_start
@@ -625,7 +625,7 @@ ios_run() {
   xcrun simctl terminate "$u" "$bundle" >/dev/null 2>&1 || true
   xcrun simctl shutdown "$u" >/dev/null 2>&1 || true
   xcrun simctl delete "$se" >/dev/null 2>&1 || true
-  u="$(MEDLEY_SLOT="$slot" scripts/ios-sim.sh udid)"
+  u="$(OPENMUSIC_SLOT="$slot" scripts/ios-sim.sh udid)"
 }
 
 if [[ "$what" != ios ]]; then mac_run; fi

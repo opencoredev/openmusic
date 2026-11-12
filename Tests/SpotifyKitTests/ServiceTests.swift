@@ -1,5 +1,5 @@
 import Foundation
-import MedleyCore
+import OpenMusicCore
 import Testing
 @testable import SpotifyKit
 
@@ -155,7 +155,7 @@ import Testing
         #expect(page.continuation == nil)
     }
 
-    /// Entries Medley leaves out (a local file with no id, an episode, a `null`) still take their place: each song's
+    /// Entries OpenMusic leaves out (a local file with no id, an episode, a `null`) still take their place: each song's
     /// position is the page's offset plus its index among every entry Spotify listed, so `[A, local, X, B, X]` puts X
     /// at 2 and 4 (Undo of a removal puts it back there), and the page reports every entry it listed.
     @Test func playlistPositionsCountEntriesLeftOut() async throws {

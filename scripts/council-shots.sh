@@ -1,17 +1,18 @@
 #!/usr/bin/env bash
 # The screens design review looks at: every main Mac screen with the demo data, 2x, 1440x900
-# window, light and dark (Sources/Medley/App/CouncilShots.swift). Runs on the build Mac. From the Linux checkout:
+# window, light and dark (Sources/OpenMusic/App/CouncilShots.swift). Runs on the build Mac. From the Linux checkout:
 #   scripts/mac.sh council 'scripts/council-shots.sh'
-#   rsync -az "$OPENMUSIC_MAC_HOST:agents/medley-council/build/council/" <dir>/
+#   rsync -az "$OPENMUSIC_MAC_HOST:agents/openmusic-council/build/council/" <dir>/
 # Output in build/council: shots/<name>-<light|dark>.png, contact-sheet.png, index.md, council.txt (the app's log).
 #
 # The build Mac is shared with workers measuring frame timing: the part that adds the 2x virtual display and runs the
 # app holds /tmp/medley-ui.lock (lockf), so it never overlaps their runs. Afterwards nothing of this run is left:
 # no app process, no virtual display, and the real app's preferences and saved window state are put back.
-#   MEDLEY_COUNCIL_SHOTS=home,album   only these shots (names as in index.md)
-#   MEDLEY_DEMO_SIZE=1440x900         main window size in points
+#   OPENMUSIC_COUNCIL_SHOTS=home,album   only these shots (names as in index.md)
+#   OPENMUSIC_DEMO_SIZE=1440x900         main window size in points
 set -euo pipefail
 cd "$(dirname "$0")/.."
+source scripts/env.sh
 root="$PWD"
 out="$root/build/council"
 shots="$out/shots"
@@ -55,23 +56,23 @@ if [[ "${1:-}" == "--locked" ]]; then
   sleep 3
   status=0
   # Through `open`, so the app starts in the GUI session as the frontmost app and its window is key.
-  timeout 960 open -W -n --env MEDLEY_MOCK=demo --env MEDLEY_DEMO_ART="$art" --env MEDLEY_SNAPSHOT_DIR="$shots" \
-    --env MEDLEY_SNAPSHOT_ONLY=council --env MEDLEY_DEMO_SIZE="${MEDLEY_DEMO_SIZE:-1440x900}" \
-    ${MEDLEY_COUNCIL_SHOTS:+--env MEDLEY_COUNCIL_SHOTS="$MEDLEY_COUNCIL_SHOTS"} build/OpenMusic.app || status=$?
+  timeout 960 open -W -n --env OPENMUSIC_MOCK=demo --env OPENMUSIC_DEMO_ART="$art" --env OPENMUSIC_SNAPSHOT_DIR="$shots" \
+    --env OPENMUSIC_SNAPSHOT_ONLY=council --env OPENMUSIC_DEMO_SIZE="${OPENMUSIC_DEMO_SIZE:-1440x900}" \
+    ${OPENMUSIC_COUNCIL_SHOTS:+--env OPENMUSIC_COUNCIL_SHOTS="$OPENMUSIC_COUNCIL_SHOTS"} build/OpenMusic.app || status=$?
   # Space on focused buttons needs Keyboard Navigation (without it a SwiftUI button takes no focus): a second, short
   # launch with it on. AppKit reads the setting from the global domain only (an argument or app-domain value is
   # ignored), so it is set there for this launch and put back right after, with no change notification, so apps
   # already running keep theirs.
-  if [[ "$status" -eq 0 && ( -z "${MEDLEY_COUNCIL_SHOTS:-}" || ",$MEDLEY_COUNCIL_SHOTS," == *",space-keys,"* ) ]]; then
+  if [[ "$status" -eq 0 && ( -z "${OPENMUSIC_COUNCIL_SHOTS:-}" || ",$OPENMUSIC_COUNCIL_SHOTS," == *",space-keys,"* ) ]]; then
     kn_before=$(defaults read -g AppleKeyboardUIMode 2>/dev/null || echo none)
     restore_kn() {
       if [[ "$kn_before" == none ]]; then defaults delete -g AppleKeyboardUIMode >/dev/null 2>&1 || true
       else defaults write -g AppleKeyboardUIMode -int "$kn_before"; fi
     }
     defaults write -g AppleKeyboardUIMode -int 2
-    timeout 240 open -W -n --env MEDLEY_MOCK=demo --env MEDLEY_DEMO_ART="$art" --env MEDLEY_SNAPSHOT_DIR="$shots" \
-      --env MEDLEY_SNAPSHOT_ONLY=council --env MEDLEY_DEMO_SIZE="${MEDLEY_DEMO_SIZE:-1440x900}" \
-      --env MEDLEY_COUNCIL_SHOTS=space-keys --env MEDLEY_COUNCIL_LOG=council-space.txt build/OpenMusic.app || status=$?
+    timeout 240 open -W -n --env OPENMUSIC_MOCK=demo --env OPENMUSIC_DEMO_ART="$art" --env OPENMUSIC_SNAPSHOT_DIR="$shots" \
+      --env OPENMUSIC_SNAPSHOT_ONLY=council --env OPENMUSIC_DEMO_SIZE="${OPENMUSIC_DEMO_SIZE:-1440x900}" \
+      --env OPENMUSIC_COUNCIL_SHOTS=space-keys --env OPENMUSIC_COUNCIL_LOG=council-space.txt build/OpenMusic.app || status=$?
     restore_kn; unset -f restore_kn
   fi
   cleanup
@@ -109,7 +110,7 @@ build/council-sheet "$shots" "$shots/manifest.tsv" "$out/contact-sheet.png"
   echo "# OpenMusic Mac UI: council capture"
   echo
   echo "Demo data (real chart albums, a made-up listener \"Riley Calder\", \"the cure\" playing 1:12 in), Debug build,"
-  echo "main window ${MEDLEY_DEMO_SIZE:-1440x900} pt on a 2x display, light and dark. Captured $(date '+%Y-%m-%d %H:%M %Z')"
+  echo "main window ${OPENMUSIC_DEMO_SIZE:-1440x900} pt on a 2x display, light and dark. Captured $(date '+%Y-%m-%d %H:%M %Z')"
   echo "from $(git rev-parse --short HEAD 2>/dev/null || echo "an rsynced checkout")."
   echo "Window captures never show the pointer; hover shots have an arrow drawn where it rests."
   echo

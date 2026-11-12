@@ -1,5 +1,5 @@
 import Foundation
-import MedleyCore
+import OpenMusicCore
 
 /// YouTube Music operations. They live on `InnerTubeClient` so raw JSON never leaves the actor;
 /// only `Sendable` models are returned.

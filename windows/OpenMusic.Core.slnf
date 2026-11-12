@@ -1,0 +1,15 @@
+{
+  "solution": {
+    "path": "OpenMusic.sln",
+    "projects": [
+      "src\\OpenMusic.Core\\OpenMusic.Core.csproj",
+      "src\\OpenMusic.Probe\\OpenMusic.Probe.csproj",
+      "src\\OpenMusic.Providers.YouTube\\OpenMusic.Providers.YouTube.csproj",
+      "src\\OpenMusic.SyncProbe\\OpenMusic.SyncProbe.csproj",
+      "src\\OpenMusic.Sync\\OpenMusic.Sync.csproj",
+      "tests\\OpenMusic.Core.Tests\\OpenMusic.Core.Tests.csproj",
+      "tests\\OpenMusic.Providers.YouTube.Tests\\OpenMusic.Providers.YouTube.Tests.csproj",
+      "tests\\OpenMusic.Sync.Tests\\OpenMusic.Sync.Tests.csproj"
+    ]
+  }
+}

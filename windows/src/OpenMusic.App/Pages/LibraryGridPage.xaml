@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Library › Albums, Artists and Recently Added: a grid of cards. -->
+<Page
+    x:Class="OpenMusic.App.Pages.LibraryGridPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:OpenMusic.App.Controls"
+    xmlns:vm="using:OpenMusic.App.ViewModels"
+    NavigationCacheMode="Enabled">
+    <Page.Resources>
+        <DataTemplate x:Key="GridCardTemplate" x:DataType="vm:CardItem">
+            <StackPanel Width="{StaticResource CardWidth}" Padding="0,0,0,6">
+                <controls:ArtworkView Width="{StaticResource CardArtworkSize}" Height="{StaticResource CardArtworkSize}" Source="{x:Bind Artwork}" Pixels="200"
+                                      CornerRadius="{x:Bind controls:ShelfView.CardCorner(IsArtist)}" />
+                <TextBlock Text="{x:Bind Title}" Style="{StaticResource CardTwoLineTitleTextStyle}" ToolTipService.ToolTip="{x:Bind Title}" Margin="0,8,0,0" HorizontalAlignment="{x:Bind controls:ShelfView.CardAlignment(IsArtist)}" />
+                <TextBlock Text="{x:Bind Subtitle}" Style="{StaticResource CardSubtitleTextStyle}" HorizontalAlignment="{x:Bind controls:ShelfView.CardAlignment(IsArtist)}" />
+            </StackPanel>
+        </DataTemplate>
+    </Page.Resources>
+    <GridView
+        x:Name="Grid"
+        Padding="36,0,36,24"
+        SelectionMode="None"
+        IsItemClickEnabled="True"
+        ItemClick="Grid_ItemClick"
+        ItemsSource="{x:Bind ViewModel.Cards, Mode=OneWay}"
+        ItemTemplate="{StaticResource GridCardTemplate}"
+        ItemContainerStyle="{StaticResource CardGridItemStyle}"
+        SizeChanged="Grid_SizeChanged"
+        ContainerContentChanging="Grid_ContainerContentChanging">
+        <GridView.ItemsPanel>
+            <ItemsPanelTemplate>
+                <ItemsWrapGrid Orientation="Horizontal" />
+            </ItemsPanelTemplate>
+        </GridView.ItemsPanel>
+        <GridView.Header>
+            <StackPanel Padding="0,20,0,16" Spacing="4">
+                <TextBlock x:Name="Heading" Style="{StaticResource PageTitleTextStyle}" />
+                <TextBlock Text="{x:Bind ViewModel.Summary, Mode=OneWay}" Style="{StaticResource SecondaryBodyTextStyle}" />
+            </StackPanel>
+        </GridView.Header>
+    </GridView>
+</Page>

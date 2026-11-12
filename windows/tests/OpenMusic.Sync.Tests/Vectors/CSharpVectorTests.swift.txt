@@ -1,0 +1,108 @@
+// Cross-language vectors for the C# port (windows/OpenMusic.Sync). Not part of the Swift package: scripts copy this file
+// into Tests/OpenMusicSyncTests/ of a scratch checkout on the build Mac and run
+//   swift test --filter CSharpVectorTests
+// It prints the vectors the Swift implementation makes (OPENMUSIC_VECTORS_OUT=<path> writes them to a file), and, when
+// OPENMUSIC_CSHARP_VECTORS=<path> names the C# side's output, opens every blob the C# code sealed and checks its derivations.
+import CryptoKit
+import Foundation
+import OpenMusicCore
+import Testing
+@testable import OpenMusicSync
+
+@Suite struct CSharpVectorTests {
+    static func bytes(_ seed: String) -> Data { Data(SHA256.hash(data: Data(seed.utf8))) }
+    static func b64(_ d: Data) -> String { d.base64EncodedString() }
+
+    @Test func emitVectors() throws {
+        let privA = Self.bytes("medley-vector-A")
+        let privB = Self.bytes("medley-vector-B")
+        let a = DeviceKeyPair(try Curve25519.KeyAgreement.PrivateKey(rawRepresentation: privA))
+        let b = DeviceKeyPair(try Curve25519.KeyAgreement.PrivateKey(rawRepresentation: privB))
+        let k1 = LibraryKey(SymmetricKey(data: Self.bytes("vector-K1")))
+        let k2 = LibraryKey(SymmetricKey(data: Self.bytes("vector-K2")))
+        let library = LibraryID(rawValue: "kh7vector0library")
+        let holderID = DeviceID("jd7vectorholderA")
+        let requesterID = DeviceID("jd7vectorrequestB")
+        let nB = Self.bytes("nB")
+        let commitment = try #require(KeyExchange.commitment(publicKey: b.publicKey, nonce: nB))
+        let nA = try #require(KeyExchange.answerNonce(holder: a, holderID: holderID, libraryID: library, requester: requesterID,
+                                                       requesterKey: b.publicKey, commitment: commitment))
+        let transcript = KeyExchange.Transcript(libraryID: library, requester: requesterID, requesterKey: b.publicKey, requesterNonce: nB,
+                                                holder: holderID, holderKey: a.publicKey, holderNonce: nA)
+        let grant = try KeyExchange.wrap(k1, transcript: transcript, holder: a)
+        let rotation = try KeyRotation.wrap(k2, replacing: k1, to: a.publicKey, libraryID: library, deviceID: holderID)
+        let plaintext = Data("{\"cookie\":\"SID=vector; HSID=ü\",\"channel\":\"UC123\"}".utf8)
+        let sealed = try SignInSealing.seal(plaintext, provider: .youtubeMusic, revision: 3, key: k1)
+        let sealedSpotify = try SignInSealing.seal(Data("refresh-token-vector".utf8), provider: .spotify, revision: 1, key: k2)
+        let legacy = try SignInSealing.sealLegacy(Data("legacy-vector".utf8), provider: .spotify, key: k1)
+        // Codes over many holder nonces, so leading zeros and the modulus are covered.
+        var codes: [[String: String]] = []
+        for i in 0..<64 {
+            let n = Self.bytes("code-\(i)")
+            let t = KeyExchange.Transcript(libraryID: library, requester: requesterID, requesterKey: b.publicKey, requesterNonce: nB,
+                                           holder: holderID, holderKey: a.publicKey, holderNonce: n)
+            codes.append(["holderNonce": Self.b64(n), "digest": Self.b64(t.digest), "code": t.code])
+        }
+        // A key pair made by CryptoKit itself (BoringSSL leaves raw private keys unclamped on purpose).
+        let native = Curve25519.KeyAgreement.PrivateKey()
+        let nativePeer = Curve25519.KeyAgreement.PrivateKey()
+        let nativeShared = try native.sharedSecretFromKeyAgreement(with: nativePeer.publicKey).withUnsafeBytes { Data($0) }
+        let vectors: [String: Any] = [
+            "privateA": Self.b64(privA), "privateB": Self.b64(privB),
+            "publicA": a.publicKey, "publicB": b.publicKey,
+            "k1": k1.encoded, "k1Id": k1.id, "k2": k2.encoded, "k2Id": k2.id,
+            "libraryId": library.rawValue, "holderId": holderID.rawValue, "requesterId": requesterID.rawValue,
+            "requesterNonce": Self.b64(nB), "commitment": commitment, "holderNonce": Self.b64(nA),
+            "digest": Self.b64(transcript.digest), "code": transcript.code,
+            "grant": grant, "rotation": rotation,
+            "plaintext": Self.b64(plaintext), "sealed": sealed, "sealedRevision": 3,
+            "sealedSpotify": sealedSpotify, "legacy": legacy,
+            "codes": codes,
+            "nativePrivate": Self.b64(native.rawRepresentation), "nativePeerPublic": Self.b64(nativePeer.publicKey.rawRepresentation),
+            "nativePublic": Self.b64(native.publicKey.rawRepresentation), "nativeShared": Self.b64(nativeShared),
+            "deviceToken": newDeviceToken(),
+        ]
+        let json = try JSONSerialization.data(withJSONObject: vectors, options: [.prettyPrinted, .sortedKeys])
+        if let out = LaunchEnvironment.current["OPENMUSIC_VECTORS_OUT"] {
+            try json.write(to: URL(fileURLWithPath: out))
+        }
+        print("OPENMUSIC-VECTORS-BEGIN")
+        print(String(decoding: json, as: UTF8.self))
+        print("OPENMUSIC-VECTORS-END")
+    }
+
+    /// Opens what the C# code sealed and checks what it derived.
+    @Test func openCSharpVectors() throws {
+        guard let path = LaunchEnvironment.current["OPENMUSIC_CSHARP_VECTORS"] else { return }
+        let object = try JSONSerialization.jsonObject(with: Data(contentsOf: URL(fileURLWithPath: path))) as! [String: Any]
+        func s(_ k: String) -> String { object[k] as! String }
+        func d(_ k: String) -> Data { Data(base64Encoded: s(k))! }
+        let a = DeviceKeyPair(try Curve25519.KeyAgreement.PrivateKey(rawRepresentation: d("privateA")))
+        let b = DeviceKeyPair(try Curve25519.KeyAgreement.PrivateKey(rawRepresentation: d("privateB")))
+        #expect(a.publicKey == s("publicA"))
+        #expect(b.publicKey == s("publicB"))
+        let k1 = try #require(LibraryKey(encoded: s("k1")))
+        let k2 = try #require(LibraryKey(encoded: s("k2")))
+        #expect(k1.id == s("k1Id"))
+        let library = LibraryID(rawValue: s("libraryId"))
+        let holderID = DeviceID(s("holderId"))
+        let requesterID = DeviceID(s("requesterId"))
+        let nB = d("requesterNonce")
+        #expect(KeyExchange.commitment(publicKey: b.publicKey, nonce: nB) == s("commitment"))
+        let nA = try #require(KeyExchange.answerNonce(holder: a, holderID: holderID, libraryID: library, requester: requesterID,
+                                                       requesterKey: b.publicKey, commitment: s("commitment")))
+        #expect(nA.base64EncodedString() == s("holderNonce"))
+        let transcript = KeyExchange.Transcript(libraryID: library, requester: requesterID, requesterKey: b.publicKey, requesterNonce: nB,
+                                                holder: holderID, holderKey: a.publicKey, holderNonce: nA)
+        #expect(transcript.code == s("code"))
+        let granted = try KeyExchange.unwrap(s("grant"), transcript: transcript, requester: b, keyId: k1.id)
+        #expect(granted == k1)
+        let rotated = try KeyRotation.unwrap(s("rotation"), with: a, replacing: k1, libraryID: library, deviceID: holderID, keyId: k2.id)
+        #expect(rotated == k2)
+        let opened = try SignInSealing.open(s("sealed"), provider: .youtubeMusic, revision: object["sealedRevision"] as! Int, key: k1)
+        #expect(opened == d("plaintext"))
+        #expect(throws: (any Error).self) { try SignInSealing.open(s("sealed"), provider: .youtubeMusic, revision: 4, key: k1) }
+        #expect(try SignInSealing.openLegacy(s("legacy"), provider: .spotify, key: k1) == Data("legacy-vector".utf8))
+        print("OPENMUSIC-CSHARP-VECTORS-OK")
+    }
+}

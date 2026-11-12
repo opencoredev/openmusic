@@ -1,10 +1,10 @@
 import Foundation
-import MedleyCore
+import OpenMusicCore
 import Observation
 import SwiftUI
 
 /// Spotify through the Web API (OAuth PKCE with the built-in client, or the listener's own Client ID), playing
-/// through the Spotify app or Spotify Connect. See `SpotifyService` for what the current API allows and how Medley works around the rest.
+/// through the Spotify app or Spotify Connect. See `SpotifyService` for what the current API allows and how OpenMusic works around the rest.
 @MainActor
 @Observable
 public final class SpotifyProvider: MusicProvider {

@@ -1,16 +1,17 @@
 #!/usr/bin/env bash
 # Build OpenMusic.app (release, arm64) into build/OpenMusic.app. Runs on macOS.
-# CONFIG=debug builds a debug app instead: it also has the Keychain probe (Sources/Medley/App/KeychainProbe.swift),
+# CONFIG=debug builds a debug app instead: it also has the Keychain probe (Sources/OpenMusic/App/KeychainProbe.swift),
 # which release builds leave out. Never install a debug build as the copy you use day to day.
 set -euo pipefail
 cd "$(dirname "$0")/.."
+source scripts/env.sh
 config="${CONFIG:-release}"
-swift build -c "$config" --arch arm64 --product Medley
+swift build -c "$config" --arch arm64 --product OpenMusic
 bin="$(swift build -c "$config" --arch arm64 --show-bin-path)"
 app="build/OpenMusic.app"
 rm -rf "${app:?}"
 mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources"
-cp "$bin/Medley" "$app/Contents/MacOS/OpenMusic"
+cp "$bin/OpenMusic" "$app/Contents/MacOS/OpenMusic"
 # SwiftPM records the deployment target (15.0) as the SDK version too. macOS gives the current design
 # (Liquid Glass toolbar, floating sidebar) only to apps linked against a current SDK, so stamp the real one.
 sdk="$(xcrun --show-sdk-version)"
@@ -31,10 +32,10 @@ if [ -f Resources/AppIcon.icns ]; then cp Resources/AppIcon.icns "$app/Contents/
 #   It is built once per version of its source and Info.plist and reused byte for byte, so its cdhash (the Keychain
 #   partition of a team-less app) never changes. See Resources/KeychainService/main.swift.
 # Without the identity the app is signed ad-hoc, has neither, and every new build starts signed out.
-identity="${MEDLEY_SIGNING_IDENTITY:-Medley Self-Signed}"
+identity="${OPENMUSIC_SIGNING_IDENTITY:-Medley Self-Signed}"
 signing_dir="$HOME/agents/medley-signing"
-keychain="${MEDLEY_SIGNING_KEYCHAIN:-$signing_dir/medley-signing.keychain-db}"
-password_file="${MEDLEY_SIGNING_PASSWORD_FILE:-$signing_dir/keychain-password}"
+keychain="${OPENMUSIC_SIGNING_KEYCHAIN:-$signing_dir/medley-signing.keychain-db}"
+password_file="${OPENMUSIC_SIGNING_PASSWORD_FILE:-$signing_dir/keychain-password}"
 signed_with="ad-hoc"
 unlock() {
   # `security -i` reads its command from stdin, so the password is never in any process's arguments (the process
@@ -66,11 +67,11 @@ if [ -f "$keychain" ] && [ -r "$password_file" ] && unlock \
   fi
   mkdir -p "$app/Contents/XPCServices"
   cp -R "$service" "$app/Contents/XPCServices/"
-  codesign --force --sign "$identity" --keychain "$keychain" --entitlements Resources/Medley.entitlements --options runtime "$app"
+  codesign --force --sign "$identity" --keychain "$keychain" --entitlements Resources/OpenMusic.entitlements --options runtime "$app"
   signed_with="$identity"
 else
   echo "warning: signing identity \"$identity\" not found in $keychain; signing ad-hoc, without the Keychain service." >&2
   echo "warning: an ad-hoc build can't read sign-ins saved by other builds. Run scripts/signing-identity.sh once on this Mac." >&2
-  codesign --force --sign - --entitlements Resources/Medley.entitlements --options runtime "$app"
+  codesign --force --sign - --entitlements Resources/OpenMusic.entitlements --options runtime "$app"
 fi
 echo "built $app ($(du -sh "$app" | cut -f1), signed: $signed_with)"

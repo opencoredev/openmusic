@@ -3,11 +3,11 @@ import AppKit
 import CommonCrypto
 import CryptoKit
 import Foundation
-import MedleyCore
+import OpenMusicCore
 import Security
 import SQLite3
 
-/// A Chromium-family browser Medley knows how to borrow a YouTube login from.
+/// A Chromium-family browser OpenMusic knows how to borrow a YouTube login from.
 ///
 /// Chromium on macOS encrypts cookie values with AES-128-CBC. The key comes from a password the browser keeps in
 /// the login keychain ("<Name> Safe Storage"); reading it makes macOS ask the person for permission once.
@@ -52,19 +52,19 @@ public struct BrowserLogin: Sendable, Hashable, Identifiable {
 public struct BrowserLoginScan: Sendable {
     /// Signed-in profiles, default browser first.
     public var logins: [BrowserLogin]
-    /// The default browser, when Medley knows how to read it.
+    /// The default browser, when OpenMusic knows how to read it.
     public var defaultBrowser: KnownBrowser?
     /// The default browser's display name even when it isn't supported (Safari, Firefox), for copy.
     public var defaultBrowserName: String?
 
-    /// True when the person's default browser is one Medley can read but it has no YouTube login.
+    /// True when the person's default browser is one OpenMusic can read but it has no YouTube login.
     public var defaultBrowserNeedsSignIn: Bool {
         guard let defaultBrowser else { return false }
         return !logins.contains { $0.browser == defaultBrowser }
     }
 }
 
-/// Finds YouTube logins in the person's browsers and copies one into Medley.
+/// Finds YouTube logins in the person's browsers and copies one into OpenMusic.
 ///
 /// Only cookie names are read while scanning (no keychain access). Values are decrypted only for the
 /// login the person picks, and only the youtube.com cookies are kept. Nothing is logged.
@@ -233,7 +233,7 @@ public enum BrowserLogins {
         }
     }
 
-    /// The host Medley sends YouTube Music requests to. Only cookies a browser would send here are used.
+    /// The host OpenMusic sends YouTube Music requests to. Only cookies a browser would send here are used.
     static let musicHost = "music.youtube.com"
 
     /// Whether a cookie stored under `host` (Chromium's `host_key`) is sent with requests to music.youtube.com.
@@ -273,12 +273,12 @@ public enum BrowserLogins {
     }
 
     /// Opens a private copy of the database. The browser keeps the original open (and locked) while it runs, so
-    /// Medley copies the main file plus any write-ahead log, shared-memory and rollback-journal files. A copy taken
+    /// OpenMusic copies the main file plus any write-ahead log, shared-memory and rollback-journal files. A copy taken
     /// mid-write is at worst a moment stale: the main file is self-consistent without the log, which only adds
     /// newer committed writes. The copy is removed afterwards.
     nonisolated static func withCopiedDatabase<T>(_ url: URL, _ body: (OpaquePointer) throws -> T) throws -> T {
         let fm = FileManager.default
-        let dir = fm.temporaryDirectory.appendingPathComponent("medley-cookies-" + UUID().uuidString, isDirectory: true)
+        let dir = fm.temporaryDirectory.appendingPathComponent("openmusic-cookies-" + UUID().uuidString, isDirectory: true)
         try fm.createDirectory(at: dir, withIntermediateDirectories: true, attributes: [.posixPermissions: 0o700])
         defer { try? fm.removeItem(at: dir) }
         let copy = dir.appendingPathComponent("Cookies")
@@ -335,7 +335,7 @@ public enum BrowserLogins {
         }
     }
 
-    // MARK: Diagnostics (medley-probe)
+    // MARK: Diagnostics (openmusic-probe)
 
     /// Decrypts every cookie in a Chromium cookie database with a given storage password and counts how many
     /// pass the host-hash check. Prints nothing and returns no values; used to check the algorithm against a

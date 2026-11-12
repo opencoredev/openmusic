@@ -14,7 +14,7 @@ root="$(cd "$(dirname "$0")/.." && pwd)"
 . "$root/scripts/env.sh"
 need OPENMUSIC_DEVICE_HOST OPENMUSIC_IPHONE_UDID OPENMUSIC_DEV_IDENTITY OPENMUSIC_TEAM_ID OPENMUSIC_PROFILE_UUID
 host="$OPENMUSIC_DEVICE_HOST"
-remote=agents/medley-device
+remote=agents/openmusic-device
 # Drops the login profile's cargo warning on the owner's Mac; never fails the pipeline on empty output.
 quiet() { grep -v cargo || true; }
 # The signing values go to the remote command in single quotes, which every login shell reads literally.
@@ -27,7 +27,7 @@ rsync -az --delete \
 
 echo "building"
 remote_run "$host" "cd ~/${remote} && mkdir -p build && /opt/homebrew/bin/xcodegen generate --spec iOS/project.yml --quiet \
-  && xcodebuild -project iOS/MedleyMobile.xcodeproj -scheme MedleyMobile -configuration Release \
+  && xcodebuild -project iOS/OpenMusic.xcodeproj -scheme OpenMusic -configuration Release \
        -destination generic/platform=iOS -derivedDataPath build/device CODE_SIGNING_ALLOWED=NO build \
        > build/device-build.log 2>&1 \
   || { tail -40 build/device-build.log; exit 1; }" 2>&1 | quiet

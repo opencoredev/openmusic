@@ -8,7 +8,7 @@ need OPENMUSIC_MAC_HOST OPENMUSIC_DEVICE_HOST
 scripts/mac.sh main 'scripts/bundle.sh 2>&1 | grep -E "error:|built" && cd build && rm -f OpenMusic.zip && ditto -c -k --keepParent OpenMusic.app OpenMusic.zip'
 T=$(mktemp -d)
 trap 'rm -rf -- "${T:?}"' EXIT
-scp -q "${OPENMUSIC_SSH_OPTS[@]}" "$(remote_prefix "$OPENMUSIC_MAC_HOST")agents/medley-main/build/OpenMusic.zip" "$T/OpenMusic.zip"
-remote_run "$OPENMUSIC_DEVICE_HOST" 'mkdir -p ~/agents/medley' >/dev/null 2>&1
-scp -q "${OPENMUSIC_SSH_OPTS[@]}" "$T/OpenMusic.zip" "$(remote_prefix "$OPENMUSIC_DEVICE_HOST")agents/medley/"
-remote_run "$OPENMUSIC_DEVICE_HOST" 'cd ~/agents/medley && (osascript -e "quit app \"OpenMusic\"" 2>/dev/null || true); sleep 1; pkill -x OpenMusic || true; ditto -x -k OpenMusic.zip . && rm -rf /Applications/OpenMusic.app && mv OpenMusic.app /Applications/ && codesign --verify --deep /Applications/OpenMusic.app && echo installed && cd ~ && rm -rf ~/agents/medley' 2>&1 | grep -v cargo
+scp -q "${OPENMUSIC_SSH_OPTS[@]}" "$(remote_prefix "$OPENMUSIC_MAC_HOST")agents/openmusic-main/build/OpenMusic.zip" "$T/OpenMusic.zip"
+remote_run "$OPENMUSIC_DEVICE_HOST" 'mkdir -p ~/agents/openmusic' >/dev/null 2>&1
+scp -q "${OPENMUSIC_SSH_OPTS[@]}" "$T/OpenMusic.zip" "$(remote_prefix "$OPENMUSIC_DEVICE_HOST")agents/openmusic/"
+remote_run "$OPENMUSIC_DEVICE_HOST" 'cd ~/agents/openmusic && (osascript -e "quit app \"OpenMusic\"" 2>/dev/null || true); sleep 1; pkill -x OpenMusic || true; ditto -x -k OpenMusic.zip . && rm -rf /Applications/OpenMusic.app && mv OpenMusic.app /Applications/ && codesign --verify --deep /Applications/OpenMusic.app && echo installed && cd ~ && rm -rf ~/agents/openmusic' 2>&1 | grep -v cargo

@@ -29,7 +29,7 @@ Spotify). Settings › General › "Show Again…" opens the flow on the Mac.
 
 ## When it shows
 
-`FirstRun.shouldShow` (`Sources/MedleySync/FirstRun.swift`), decided at launch from local state only, before any
+`FirstRun.shouldShow` (`Sources/OpenMusicSync/FirstRun.swift`), decided at launch from local state only, before any
 network: shown on a fresh install; not shown once `firstRunFinished` is set (finishing or skipping sets it, and a
 version bump doesn't clear it), not for an install that answered the welcome sheets before it (`didShowAccountWelcome`,
 `didOnboard`), and not when a YouTube Music or Spotify sign-in was restored (an iPhone reinstall keeps its Keychain).
@@ -39,14 +39,14 @@ otherwise.
 
 ## Mac and iPhone
 
-- Mac (`Sources/Medley/Onboarding/`): `FirstRunFlow` holds the state; `FirstRunView` covers the whole main window in
+- Mac (`Sources/OpenMusic/Onboarding/`): `FirstRunFlow` holds the state; `FirstRunView` covers the whole main window in
   the manner of Setup Assistant (symbol, title and line at the top, a narrow column, Back bottom-left, the step's
   action bottom-right). The split view underneath is disabled and hidden from VoiceOver, and the toolbar hides, while
   it shows. Return is the step's action, Escape its way past (Not Now, Do This Later) or Back, ⌘[ Back. Transitions go
   through `Motion.Transition.firstRunForward`/`firstRunBack` (a crossfade with Reduce Motion). The window's minimum
   (900 × 560) gets a compact header and a scrolling column. The service sign-ins are the existing sheets
   (`AppModel.signInRequest`).
-- iPhone (`iOS/Medley/Onboarding/`): a full-screen cover with a navigation stack (swipe back works; Approve has no
+- iPhone (`iOS/OpenMusic/Onboarding/`): a full-screen cover with a navigation stack (swipe back works; Approve has no
   Back). Liquid Glass buttons (`.glassProminent` for the step's action), Continue with Apple in Apple's black (white in
   dark mode) style. At accessibility text sizes the buttons scroll with the page instead of sitting in the bottom bar.
 - Do This Later sets `firstRunApprovalDeferred`; the hub shows a quiet "Approve this Mac/iPhone" banner in the
@@ -59,7 +59,7 @@ otherwise.
 ## Checking it
 
 `scripts/onboarding-shots-apple.sh <dir> [mac|ios|both]` (from a Linux checkout with the Clerk helper; see the script) makes two Clerk test users, runs both apps from
-a fresh install through every step live against the dev deployment, with `medley-probe` as the account's other
+a fresh install through every step live against the dev deployment, with `openmusic-probe` as the account's other
 devices (the holder that approves, a device asking this one, the device playing for the Continue banner), and writes
 the captures (light and dark, the Mac at 1200 × 780 and its 900 × 560 minimum, iPhone 17 Pro, the largest
 accessibility text size, an SE-sized screen) and PASS/FAIL lines to `<dir>`. It deletes the users afterwards. The apps
